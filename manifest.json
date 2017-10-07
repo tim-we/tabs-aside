@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+  "name": "Tabs Aside!",
+  "version": "1.0",
+  "description": "Put all your tabs aside (-> bookmarks)",
+  "author": "Tim Weissenfels",
+
+  "icons": {
+    "48": "icons/arrow-left-48.png"
+  },
+
+  "permissions": [
+    "bookmarks",
+    "tabs",
+    "storage"
+  ],
+
+  "browser_action": {
+    "default_icon": "icons/arrow-left-32.png",
+    "default_title": "Tabs aside!"
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  }
+
+}
