@@ -17,6 +17,12 @@ function allowClick() {
 // attach click listeners
 aside.addEventListener("click", () => {
 	if (allowClick()) {
-		browser.runtime.sendMessage({command:"aside"});
+		browser.runtime.sendMessage({ command: "aside" });
+		
+		browser.sidebarAction.open();
 	}
+});
+
+session.addEventListener("click", () => {
+	browser.sidebarAction.open();
 });

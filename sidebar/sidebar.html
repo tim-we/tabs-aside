@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Tabs Aside Sidebar</title>
+
+		<style>
+			body {
+				padding-top: 6px;
+			}
+
+			.session {
+				margin-bottom: 6px;
+			}
+
+			.titlebar {
+				position: relative;
+				height: 32px;
+				line-height: 32px;
+				background-repeat: no-repeat;
+				background-position: top left;
+			}
+
+			.session.collapsed > .titlebar { background-image: url('../icons/down.png'); }
+			.session.expanded > .titlebar { background-image: url('../icons/up.png'); }
+
+			.title {
+				position: absolute;
+				top: 0px;
+				left: 18px;
+				height: 32px;
+				line-height: 32px;
+			}
+
+			.counter {
+				position: absolute;
+				top: 0px;
+				right: 6px;
+				text-align: right;
+				color: #6D6D6D;
+				font-size: 1em;
+			}
+
+			.session:hover > .titlebar {
+				background-color: #F0F0F0;
+			}
+
+			.titlebar:active {
+				background-color: #E8E8E8;
+			}
+
+			.controls {
+				position: relative;
+				text-align: right;
+				padding-right: 6px;
+			}
+
+			.tabs {
+				margin-top: -6px;
+			}
+
+			.session.collapsed > .tabs, .session.collapsed > .controls {
+				display: none;
+			}
+
+			ol {
+				padding-left: 20px;
+			}
+
+			li {
+				margin: 0px;
+				margin-top: 2px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="list">
+
+		</div>
+
+		<script src="sidebar.js"></script>
+	</body>
+
+</html>

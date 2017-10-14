@@ -1,6 +1,8 @@
+const FOLDERNAME = "Tabs Aside";
+const BMPREFIX = "Session #";
+
 var session = -1;
 var bookmarkFolder = null;
-const FOLDERNAME = "Tabs Aside";
 
 // basic error handler
 function onRejected(error) {
@@ -21,15 +23,16 @@ browser.storage.local.get("session").then(data => {
 }, onRejected);
 
 // load root bookmark folder (Tabs Aside folder)
-browser.bookmarks.getTree().then((data) => {
+browser.bookmarks.getTree().then(data => {
   let root = data[0];
 
   console.log("searching for Tabs Aside folder");
+
   outerloop: for (rbm of root.children) {
     for (bm of rbm.children) {
-      if (bm.title === FOLDERNAME) {
+      if (bm.title === FOLDERNAME && bm.type === "folder") {
         bookmarkFolder = bm;
-        console.log("Folder found!");
+        //console.log("Folder found!");
         break outerloop;
       }
     }
@@ -41,8 +44,8 @@ browser.bookmarks.getTree().then((data) => {
 
     browser.bookmarks.create({
       title: FOLDERNAME
-    }).then((bm) => {
-      console.log("folder successfully created");
+    }).then(bm => {
+      console.log("Folder successfully created");
 
       bookmarkFolder = bm;
     }, onRejected);
@@ -52,10 +55,6 @@ browser.bookmarks.getTree().then((data) => {
 
 // tab filter function
 function tabFilter(tab) {
-  /*let isAbout = tab.url.indexOf("about:") === 0;
-  
-  return !isAbout;*/
-
   // only http(s)
   return tab.url.indexOf("http") === 0;
 }
@@ -67,7 +66,7 @@ function aside(tabs) {
     // create session bm folder
     browser.bookmarks.create({
       parentId: bookmarkFolder.id,
-      title: `Session #${session}`
+      title: BMPREFIX + session
     }).then(bm => {
       // move tabs aside one by one
       asideOne(tabs, bm.id);
@@ -100,12 +99,15 @@ function asideOne(tabs, pID) {
     }).then(() => {
       // close tab
       return browser.tabs.remove(tab.id);
-    }).then(() => {
-      // next one
-      asideOne(tabs, pID);
+      }).then(() => {
+      
+        if (tabs.length === 0) {
+          browser.runtime.sendMessage({ command: "refresh" });
+        } else {
+          // next one
+          asideOne(tabs, pID);
+        }
     }).catch(onRejected);
-  } else {
-    //console.log("nothing else to move aside");
   }
 }
 

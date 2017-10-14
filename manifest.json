@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Tabs Aside!",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Put all your tabs aside (-> bookmarks)",
   "author": "Tim Weissenfels",
 
@@ -20,6 +20,12 @@
     "default_title": "Tabs aside!",
     "default_popup": "popup/menu.html",
     "browser_style": true
+  },
+
+  "sidebar_action": {
+    "default_title": "Tabs you've set aside",
+    "default_panel": "sidebar/sidebar.html",
+    "default_icon": "icons/tabs.png"
   },
 
   "background": {
