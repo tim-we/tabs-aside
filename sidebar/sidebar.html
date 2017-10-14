@@ -4,10 +4,15 @@
 		<meta charset="utf-8">
 		<title>Tabs Aside Sidebar</title>
 
+		<script src="TabSession.js"></script>
+
 		<style>
 			body {
 				padding-top: 6px;
+				overflow-x: hidden;
 			}
+
+			a:visited { color: rgb(0, 0, 238); }
 
 			.session {
 				margin-bottom: 6px;
@@ -41,6 +46,22 @@
 				font-size: 1em;
 			}
 
+			.delete {
+				display: inline-block;
+				position: relative;
+				top: 4px;
+				width: 16px;
+				height: 16px;
+				margin-left: 5px;
+				margin-right: -3px;
+				background-image: url('../icons/close10.png');
+				background-repeat: no-repeat;
+				background-position: center;
+			}
+
+			.delete:hover { opacity: 1; }
+			.delete:active { background-color: red; }
+
 			.session:hover > .titlebar {
 				background-color: #F0F0F0;
 			}
@@ -53,6 +74,7 @@
 				position: relative;
 				text-align: right;
 				padding-right: 6px;
+				white-space: nowrap;
 			}
 
 			.tabs {
@@ -70,6 +92,16 @@
 			li {
 				margin: 0px;
 				margin-top: 2px;
+				white-space: nowrap;
+			}
+
+			#empty-msg {
+				padding-left: 6px;
+				padding-right: 6px;
+			}
+
+			#empty-msg:not(.show) {
+				display: none;
 			}
 		</style>
 	</head>
@@ -77,6 +109,12 @@
 	<body>
 		<div id="list">
 
+		</div>
+
+		<div id="empty-msg">
+			<p style="font-size: 2em">Set aside your tabs</p>
+			<p>Click the browser action button in your toolbar to set aside your tabs.</p>
+			<p>Restore them later to pick up where you left off.</p>
 		</div>
 
 		<script src="sidebar.js"></script>

@@ -88,7 +88,7 @@ function aside(tabs) {
 function asideOne(tabs, pID) {
 
   if (tabs.length > 0) {
-    let tab = tabs.pop();
+    let tab = tabs.shift();
 
     //console.log("create bookmark for " + tab.title);
     // create bookmark
