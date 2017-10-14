@@ -49,14 +49,18 @@ browser.bookmarks.getTree().then((data) => {
   }
 }, onRejected);
 
+
+// tab filter function
+function tabFilter(tab) {
+  /*let isAbout = tab.url.indexOf("about:") === 0;
+  
+  return !isAbout;*/
+
+  // only http(s)
+  return tab.url.indexOf("http") === 0;
+}
+
 function aside(tabs) {
-  // filter
-  tabs = tabs.filter(tab => {
-    let isAbout = tab.url.indexOf("about:") === 0;
-
-    return !isAbout;
-  });
-
   if (tabs.length > 0) {
     session++;
 
@@ -77,7 +81,7 @@ function aside(tabs) {
     }).catch(onRejected);
     
   } else {
-    console.log("no tabs to move aside!");
+    //console.log("no tabs to move aside!");
   }
 }
 
@@ -87,7 +91,7 @@ function asideOne(tabs, pID) {
   if (tabs.length > 0) {
     let tab = tabs.pop();
 
-    console.log("create bookmark for " + tab.title);
+    //console.log("create bookmark for " + tab.title);
     // create bookmark
     browser.bookmarks.create({
       parentId: pID,
@@ -101,20 +105,43 @@ function asideOne(tabs, pID) {
       asideOne(tabs, pID);
     }).catch(onRejected);
   } else {
-    console.log("nothing else to move aside");
+    //console.log("nothing else to move aside");
   }
 }
 
-browser.browserAction.onClicked.addListener(() => {
+/*browser.browserAction.onClicked.addListener(() => {
   // browser action button clicked
 
   browser.tabs.query({
     currentWindow: true,
     pinned: false,
-    active: false
+    //active: false
   }).then((tabs) => {
     console.log("query returned " + tabs.length + " tabs");
-    aside(tabs);
+    //aside(tabs.filter(tabFilter));
   }).catch(onRejected);
   
+});*/
+
+// message listener
+browser.runtime.onMessage.addListener(message => {
+  if (message.command === "aside") {
+
+    browser.tabs.query({
+      currentWindow: true,
+      pinned: false,
+      //active: false
+    }).then((tabs) => {
+      console.log("query returned " + tabs.length + " tabs");
+
+      // open a new empty tab (async)
+      browser.tabs.create({});
+
+      // tabs aside!
+      aside(tabs.filter(tabFilter));
+    }).catch(onRejected);
+    
+  } else {
+    console.error("Unknown message: " + JSON.stringify(message));
+  }
 });

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Tabs Aside Menu</title>
+
+		<style>
+			body {
+				padding-top: 6px;
+				padding-bottom: 6px;
+			}
+
+			.button {
+				height: 25px;
+				line-height: 25px;
+				color: black;
+				padding-left: 36px;
+				padding-right: 12px;
+
+				background-repeat: no-repeat;
+				background-position-x: left;
+			}
+
+			.button:hover {
+				background-color: #F0F0F0;
+			}
+
+			.button:active {
+				background-color: #E8E8E8;
+			}
+
+			.button.disabled {
+				background-color: transparent;
+				opacity: 0.5;
+			}
+
+			#aside-btn { background-image: url('../icons/aside1.png'); }
+			#session-btn { background-image: url('../icons/sessions.png'); }
+		</style>
+
+	</head>
+
+	<body>
+		<div class="button" id="aside-btn" title="closes all tabs &amp; stores them in your bookmarks">tabs aside</div>
+		<!--<div class="button" id="session-btn" title="Tabs you've set aside">show sessions</div>-->
+		<div class="button disabled" id="session-btn" title="coming soon">show sessions</div>
+
+		<script src="menu.js"></script>
+	</body>
+</html>
