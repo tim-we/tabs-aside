@@ -11,15 +11,20 @@ function onRejected(error) {
 	console.log(`An error: ${error}`);
 }
 
+// tmp bookmark API fix
+function isBMFolder(bm) {
+	return bm.type === "folder" || !bm.url;
+}
+
 function loadBMRoot() {
 	return new Promise((resolve, reject) => {
 		// load root bookmark folder (Tabs Aside folder)
 		browser.bookmarks.getTree().then(data => {
 			let root = data[0];
 		
-			outerloop: for (rbm of root.children) {
+			for (rbm of root.children) {
 				for (bm of rbm.children) {
-					if (bm.title === FOLDERNAME && bm.type === "folder") {
+					if (bm.title === FOLDERNAME && isBMFolder(bm)) {
 						bookmarkFolder = bm;
 
 						resolve(bm);
@@ -39,7 +44,7 @@ function getSessions() {
 		let sessions = [];
 
 		for (bm of bookmarkFolder.children) {
-			if (bm.type === "folder" && bm.title.indexOf(BMPREFIX) === 0) {
+			if (isBMFolder(bm) && bm.title.indexOf(BMPREFIX) === 0) {
 				sessions.push(new TabSession(bm));
 			}
 		}

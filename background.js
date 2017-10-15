@@ -9,6 +9,11 @@ function onRejected(error) {
   console.log(`An error: ${error}`);
 }
 
+// tmp bookmark API fix
+function isBMFolder(bm) {
+  return bm.type === "folder" || !bm.url;
+}
+
 // load session index
 browser.storage.local.get("session").then(data => {
   if (data.session) {
@@ -30,7 +35,7 @@ browser.bookmarks.getTree().then(data => {
 
   outerloop: for (rbm of root.children) {
     for (bm of rbm.children) {
-      if (bm.title === FOLDERNAME && bm.type === "folder") {
+      if (bm.title === FOLDERNAME && isBMFolder(bm)) {
         bookmarkFolder = bm;
         //console.log("Folder found!");
         break outerloop;
@@ -48,6 +53,8 @@ browser.bookmarks.getTree().then(data => {
       console.log("Folder successfully created");
 
       bookmarkFolder = bm;
+
+      setTimeout(refresh, 42);
     }, onRejected);
   }
 }, onRejected);
@@ -102,7 +109,7 @@ function asideOne(tabs, pID) {
       }).then(() => {
       
         if (tabs.length === 0) {
-          browser.runtime.sendMessage({ command: "refresh" });
+          refresh();
         } else {
           // next one
           asideOne(tabs, pID);
@@ -143,7 +150,13 @@ browser.runtime.onMessage.addListener(message => {
       aside(tabs.filter(tabFilter));
     }).catch(onRejected);
     
+  } else if (message.command === "refresh") {
+    // don't do anything...
   } else {
     console.error("Unknown message: " + JSON.stringify(message));
   }
 });
+
+function refresh() {
+  browser.runtime.sendMessage({ command: "refresh" });
+}

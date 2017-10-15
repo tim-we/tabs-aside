@@ -1,5 +1,6 @@
 const COOLDOWN = 300;
 let lastClick = 0;
+const FFVERSION = getFFVersion();
 
 function allowClick() {
 	if (Date.now() - lastClick > COOLDOWN) {
@@ -17,7 +18,7 @@ class TabSession {
 			
 			this.bmID = bm.id;  // bookmark node ID
 
-			this.tabs = bm.children.filter(x => x.type === 'bookmark');
+			this.tabs = (FFVERSION < 57) ? bm.children : bm.children.filter(x => x.type === 'bookmark');
 	
 			this.expanded = false;
 	
@@ -137,4 +138,22 @@ class TabSession {
 
 			browser.runtime.sendMessage({ command: "refresh" });
 		}
+}
+	
+function getFFVersion() {
+	try {
+		let data = navigator.userAgent.split(" ");
+		
+		for (let i = 0; i < data.length; i++) {
+			if (data[i].indexOf("Firefox/") === 0) {
+				let version = data[i].substr(8).trim();
+	
+				return parseInt(version, 10);
+			}
+		}
+		
+		return 56;
+	} catch (e) {
+		return -1;
 	}
+}

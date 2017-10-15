@@ -14,15 +14,24 @@ function allowClick() {
 	return false;
 }
 
+function openSidebar() {
+	if (browser.sidebarAction && browser.sidebarAction.open) {
+		browser.sidebarAction.open();
+	}
+}
+
 // attach click listeners
 aside.addEventListener("click", () => {
 	if (allowClick()) {
 		browser.runtime.sendMessage({ command: "aside" });
 		
-		browser.sidebarAction.open();
+		openSidebar();
 	}
 });
 
-session.addEventListener("click", () => {
-	browser.sidebarAction.open();
-});
+if (browser.sidebarAction && browser.sidebarAction.open) {
+	session.addEventListener("click", openSidebar);
+} else {
+	session.classList.add("disabled");
+	session.title = "This feature requires Firefox 57 or higher";
+}
