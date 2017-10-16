@@ -141,7 +141,7 @@ browser.runtime.onMessage.addListener(message => {
       pinned: false,
       //active: false
     }).then((tabs) => {
-      console.log("query returned " + tabs.length + " tabs");
+      //console.log("query returned " + tabs.length + " tabs");
 
       // open a new empty tab (async)
       browser.tabs.create({});

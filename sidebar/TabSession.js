@@ -1,6 +1,5 @@
 const COOLDOWN = 300;
 let lastClick = 0;
-const FFVERSION = getFFVersion();
 
 function allowClick() {
 	if (Date.now() - lastClick > COOLDOWN) {
@@ -11,6 +10,18 @@ function allowClick() {
 	return false;
 }
 
+function createProperties(tab) {
+	let o = {
+		url: tab.url
+	};
+
+	if (targetWindowID !== null) {
+		o.windowId = targetWindowID;
+	}
+
+	return o;
+}
+
 class TabSession {
 	
 		constructor(bm) {
@@ -18,7 +29,8 @@ class TabSession {
 			
 			this.bmID = bm.id;  // bookmark node ID
 
-			this.tabs = (FFVERSION < 57) ? bm.children : bm.children.filter(x => x.type === 'bookmark');
+			//this.tabs = bm.children.filter(x => x.type === 'bookmark');
+			this.tabs = bm.children.filter(x => !!x.url);
 	
 			this.expanded = false;
 	
@@ -117,10 +129,12 @@ class TabSession {
 			console.log("restoring tabs from " + this.title);
 	
 			this.collapse();
-			
-			let p = Promise.all(this.tabs.map(tab => browser.tabs.create({
-				url: tab.url
-			})));
+
+			let p = Promise.all(
+				this.tabs.map(
+					tab => browser.tabs.create(createProperties(tab))
+				)
+			);
 
 			if (!keep) {
 				p = p.then(() => { this.remove(); });
@@ -130,30 +144,16 @@ class TabSession {
 		}
 	
 		remove() {
-			// this is async and returns a promise
-			browser.bookmarks.removeTree(this.bmID);
-
 			this.html.remove();
 			this.html = null;
 
-			browser.runtime.sendMessage({ command: "refresh" });
+			browser.bookmarks.removeTree(this.bmID).then(() => {
+					return browser.runtime.sendMessage({ command: "refresh" });
+				}
+			).then(() => {
+				if (params && params.has("popup")) {
+					window.close();
+				}
+			});
 		}
-}
-	
-function getFFVersion() {
-	try {
-		let data = navigator.userAgent.split(" ");
-		
-		for (let i = 0; i < data.length; i++) {
-			if (data[i].indexOf("Firefox/") === 0) {
-				let version = data[i].substr(8).trim();
-	
-				return parseInt(version, 10);
-			}
-		}
-		
-		return 56;
-	} catch (e) {
-		return -1;
-	}
 }

@@ -14,9 +14,13 @@ function allowClick() {
 	return false;
 }
 
-function openSidebar() {
+function openSidebar(auto = false) {
 	if (browser.sidebarAction && browser.sidebarAction.open) {
 		browser.sidebarAction.open();
+	} else {
+		setTimeout(() => {
+			window.open("../sidebar/sidebar.html?popup", null, "height=600,width=400,status=no,toolbar=no,menubar=no,location=no");
+		}, auto ? 200 : 10);
 	}
 }
 
@@ -25,13 +29,8 @@ aside.addEventListener("click", () => {
 	if (allowClick()) {
 		browser.runtime.sendMessage({ command: "aside" });
 		
-		openSidebar();
+		openSidebar(true);
 	}
 });
 
-if (browser.sidebarAction && browser.sidebarAction.open) {
-	session.addEventListener("click", openSidebar);
-} else {
-	session.classList.add("disabled");
-	session.title = "This feature requires Firefox 57 or higher";
-}
+session.addEventListener("click", openSidebar);

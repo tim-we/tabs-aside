@@ -6,6 +6,30 @@ let list = document.getElementById("list");
 let emptyMsg = document.getElementById("empty-msg")
 let sessions = [];
 
+// parse url
+var targetWindowID = null;
+
+let params = (new URL(location.href)).searchParams;
+
+if (params.has("popup")) {
+
+	browser.windows.getCurrent({
+		populate: false
+	}).then(w => {
+
+		return browser.windows.getAll({
+			populate: false,
+			windowTypes: ['normal']
+		}).then(ws => {
+			ws = ws.filter(window => window.id !== w.id);
+
+			if (ws.length > 0) {
+				targetWindowID = ws[0].id;
+			}
+		});
+	});
+}
+
 // basic error handler
 function onRejected(error) {
 	console.log(`An error: ${error}`);
@@ -53,7 +77,7 @@ function getSessions() {
 	});
 }
 
-function refresh() {
+function refresh(close = false) {
 	loadBMRoot().then(getSessions).then(data => {
 		data.reverse();
 		sessions = data;
@@ -82,6 +106,10 @@ window.addEventListener("load", () => {
 
 browser.runtime.onMessage.addListener(message => {
 	if (message.command === "refresh") {
-		refresh();
+		refresh(true);
 	}
+});
+
+browser.bookmarks.onChanged.addListener(() => {
+	refresh(true);
 });
