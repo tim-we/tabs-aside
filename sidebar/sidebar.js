@@ -68,7 +68,10 @@ function getSessions() {
 		let sessions = [];
 
 		for (bm of bookmarkFolder.children) {
-			if (isBMFolder(bm) && bm.title.indexOf(BMPREFIX) === 0) {
+			/*if (isBMFolder(bm) && bm.title.indexOf(BMPREFIX) === 0) {
+				sessions.push(new TabSession(bm));
+			}*/
+			if (isBMFolder(bm)) {
 				sessions.push(new TabSession(bm));
 			}
 		}

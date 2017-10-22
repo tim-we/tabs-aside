@@ -60,7 +60,9 @@ class TabSession {
 			// control
 			let controls = document.createElement("div");
 			controls.classList.add("controls");
-	
+			this.html.appendChild(controls);
+
+			// restore
 			let a = document.createElement("a");
 			a.innerText = "Restore tabs";
 			a.href = "#";
@@ -75,12 +77,30 @@ class TabSession {
 				}
 			});
 			controls.appendChild(a);
-	
-			this.html.appendChild(controls);
+			
+			// edit
+			let edit = document.createElement("div");
+			edit.classList.add("edit", "button");
+			edit.title = "rename session";
+			controls.appendChild(edit);
+			edit.addEventListener("click", e => {
+				e.stopPropagation();
+
+				let title = prompt("Enter session title:", this.title).trim();
+
+				if (title.length > 0) {
+					this.title = title;
+
+					browser.bookmarks.update(this.bmID, {
+						title: title
+					});
+				}
+
+			});
 
 			// delete button
 			let del = document.createElement("div");
-			del.classList.add("delete");
+			del.classList.add("delete", "button");
 			del.title = "Remove";
 			controls.appendChild(del);
 			del.addEventListener("click", e => {

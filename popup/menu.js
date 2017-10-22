@@ -17,10 +17,8 @@ function allowClick() {
 function openSidebar(auto = false) {
 	if (browser.sidebarAction && browser.sidebarAction.open) {
 		browser.sidebarAction.open();
-	} else {
-		setTimeout(() => {
-			window.open("../sidebar/sidebar.html?popup", null, "height=600,width=400,status=no,toolbar=no,menubar=no,location=no");
-		}, auto ? 200 : 10);
+	} else if(!auto) {
+		window.open("../sidebar/sidebar.html?popup", null, "height=600,width=400,status=no,toolbar=no,menubar=no,location=no");
 	}
 }
 
