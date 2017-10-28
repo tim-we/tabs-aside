@@ -37,7 +37,7 @@ browser.bookmarks.getTree().then(data => {
     for (bm of rbm.children) {
       if (bm.title === FOLDERNAME && isBMFolder(bm)) {
         bookmarkFolder = bm;
-        //console.log("Folder found!");
+        // Folder found
         break outerloop;
       }
     }
@@ -62,8 +62,10 @@ browser.bookmarks.getTree().then(data => {
 
 // tab filter function
 function tabFilter(tab) {
-  // only http(s)
-  return tab.url.indexOf("http") === 0;
+  let url = tab.url;
+
+  // only http(s), file and view-source
+  return url.indexOf("http") === 0 || url.indexOf("view-source:") === 0;
 }
 
 function aside(tabs) {
@@ -120,15 +122,6 @@ function asideOne(tabs, pID) {
 
 /*browser.browserAction.onClicked.addListener(() => {
   // browser action button clicked
-
-  browser.tabs.query({
-    currentWindow: true,
-    pinned: false,
-    //active: false
-  }).then((tabs) => {
-    console.log("query returned " + tabs.length + " tabs");
-    //aside(tabs.filter(tabFilter));
-  }).catch(onRejected);
   
 });*/
 
@@ -138,8 +131,7 @@ browser.runtime.onMessage.addListener(message => {
 
     browser.tabs.query({
       currentWindow: true,
-      pinned: false,
-      //active: false
+      pinned: false
     }).then((tabs) => {
       //console.log("query returned " + tabs.length + " tabs");
 

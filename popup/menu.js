@@ -1,17 +1,18 @@
-const COOLDOWN = 500; // ms
-let lastTS = 0;
+let btnLock = false;
 
 // get button elements
 let aside = document.getElementById("aside-btn");
 let session = document.getElementById("session-btn");
 
-function allowClick() {
-	if (Date.now() - lastTS > COOLDOWN) {
-		lastTS = Date.now();
-		return true;
-	}
+function lockButton() {
+	btnLock = true;
+	aside.disabled = true;
+	aside.classList.add("disabled");
+}
 
-	return false;
+function unlockButton() {
+	btnLock = false;
+	aside.classList.remove("disabled");
 }
 
 function openSidebar(auto = false) {
@@ -24,7 +25,8 @@ function openSidebar(auto = false) {
 
 // attach click listeners
 aside.addEventListener("click", () => {
-	if (allowClick()) {
+	if (!btnLock) {
+		lockButton();
 		browser.runtime.sendMessage({ command: "aside" });
 		
 		openSidebar(true);
@@ -32,3 +34,10 @@ aside.addEventListener("click", () => {
 });
 
 session.addEventListener("click", openSidebar);
+
+browser.runtime.onMessage.addListener(message => {
+	if (message.command === "refresh") {
+		// setting tabs aside done
+		unlockButton();
+	}
+});
