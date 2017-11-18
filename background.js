@@ -68,7 +68,7 @@ function tabFilter(tab) {
   return url.indexOf("http") === 0 || url.indexOf("view-source:") === 0;
 }
 
-function aside(tabs) {
+function aside(tabs, closeTabs) {
   if (tabs.length > 0) {
     session++;
 
@@ -78,7 +78,7 @@ function aside(tabs) {
       title: BMPREFIX + session
     }).then(bm => {
       // move tabs aside one by one
-      asideOne(tabs, bm.id);
+      asideOne(tabs, bm.id, closeTabs);
 
       // WARNING: this is not synchronous code
 
@@ -94,7 +94,7 @@ function aside(tabs) {
 }
 
 // functional style :D
-function asideOne(tabs, pID) {
+function asideOne(tabs, pID, closeTabs) {
 
   if (tabs.length > 0) {
     let tab = tabs.shift();
@@ -106,16 +106,20 @@ function asideOne(tabs, pID) {
       title: tab.title,
       url: tab.url
     }).then(() => {
-      // close tab
-      return browser.tabs.remove(tab.id);
-      }).then(() => {
+      if (closeTabs) {
+        // close tab
+        return browser.tabs.remove(tab.id);
+      } else {
+        return Promise.resolve();
+      }
+    }).then(() => {
       
-        if (tabs.length === 0) {
-          refresh();
-        } else {
-          // next one
-          asideOne(tabs, pID);
-        }
+      if (tabs.length === 0) {
+        refresh();
+      } else {
+        // next one
+        asideOne(tabs, pID, closeTabs);
+      }
     }).catch(onRejected);
   }
 }
@@ -129,17 +133,19 @@ function asideOne(tabs, pID) {
 browser.runtime.onMessage.addListener(message => {
   if (message.command === "aside") {
 
+    var closeTabs = message.save !== true;
+
     browser.tabs.query({
       currentWindow: true,
       pinned: false
     }).then((tabs) => {
-      //console.log("query returned " + tabs.length + " tabs");
-
-      // open a new empty tab (async)
-      browser.tabs.create({});
+      if (closeTabs) {
+        // open a new empty tab (async)
+        browser.tabs.create({});
+      }
 
       // tabs aside!
-      aside(tabs.filter(tabFilter));
+      aside(tabs.filter(tabFilter), closeTabs);
     }).catch(onRejected);
     
   } else if (message.command === "refresh") {

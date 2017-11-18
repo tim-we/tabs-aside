@@ -147,8 +147,6 @@ class TabSession {
 	
 		restore(keep = false) {
 			console.log("restoring tabs from " + this.title);
-	
-			this.collapse();
 
 			let p = Promise.all(
 				this.tabs.map(
@@ -157,6 +155,8 @@ class TabSession {
 			);
 
 			if (!keep) {
+				this.collapse();
+				
 				p = p.then(() => { this.remove(); });
 			}
 
@@ -170,10 +170,6 @@ class TabSession {
 			browser.bookmarks.removeTree(this.bmID).then(() => {
 					return browser.runtime.sendMessage({ command: "refresh" });
 				}
-			).then(() => {
-				if (params && params.has("popup")) {
-					window.close();
-				}
-			});
+			);
 		}
 }

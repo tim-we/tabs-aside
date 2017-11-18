@@ -8,6 +8,7 @@
 			body {
 				padding-top: 6px;
 				padding-bottom: 6px;
+				background-color: white;
 			}
 
 			.button {
@@ -17,6 +18,7 @@
 				padding-left: 36px;
 				padding-right: 12px;
 
+				background-color: white;
 				background-repeat: no-repeat;
 				background-position-x: left;
 			}
@@ -36,6 +38,7 @@
 
 			#aside-btn { background-image: url('../icons/aside1.png'); }
 			#session-btn { background-image: url('../icons/sessions.png'); }
+			#save-btn { background-image: url('../icons/save.png'); }
 
 			#aside-btn.disabled {
 				opacity: 0.42;
@@ -49,7 +52,8 @@
 	</head>
 
 	<body>
-		<div class="button" id="aside-btn" title="closes all tabs &amp; stores them in your bookmarks">tabs aside</div>
+		<div class="button" id="aside-btn" title="close all tabs &amp; store them in your bookmarks">tabs aside</div>
+		<div class="button" id="save-btn" title="save all tabs (does not close tabs)">save tabs</div>
 		<div class="button" id="session-btn" title="show previous sessions">show sessions</div>
 
 		<script src="menu.js"></script>

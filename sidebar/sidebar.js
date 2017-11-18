@@ -11,7 +11,9 @@ var targetWindowID = null;
 
 let params = (new URL(location.href)).searchParams;
 
-if (params.has("popup")) {
+/*if (params.has("popup")) {
+
+	// if sidebar is a popup open tabs in a different window
 
 	browser.windows.getCurrent({
 		populate: false
@@ -28,7 +30,7 @@ if (params.has("popup")) {
 			}
 		});
 	});
-}
+}*/
 
 // basic error handler
 function onRejected(error) {
@@ -115,4 +117,18 @@ browser.runtime.onMessage.addListener(message => {
 
 browser.bookmarks.onChanged.addListener(() => {
 	refresh(true);
+});
+
+window.addEventListener("load", () => {
+	browser.storage.local.get().then(data => {
+		var tipID = -1;
+
+		if (data.tipData && data.tipData.id !== undefined) {
+			tipID = Math.max(0, data.tipData.id);
+		}
+
+		if (tipID === -1) {
+			showTip("To keep the session after restoring press CTRL while clicking on <Restore tabs>", 0);
+		}
+	});
 });
