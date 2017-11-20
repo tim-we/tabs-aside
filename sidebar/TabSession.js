@@ -12,6 +12,7 @@ function allowClick() {
 
 function createProperties(tab) {
 	let o = {
+		active: false,
 		url: tab.url
 	};
 
@@ -147,6 +148,18 @@ class TabSession {
 	
 		restore(keep = false) {
 			console.log("restoring tabs from " + this.title);
+
+			if (this.tabs.length > 50) {
+				let msg = "Warning:\nOpening this many tabs at once might cause problems on some systems.";
+				
+				if (!keep) {
+					msg += "\n" + "Therefore you will have to manually remove the session after the tabs have been restored.";
+				}
+				
+				alert(msg);
+
+				keep = true;
+			}
 
 			let p = Promise.all(
 				this.tabs.map(
