@@ -6,155 +6,152 @@ var bookmarkFolder = null;
 
 // basic error handler
 function onRejected(error) {
-  console.log(`An error: ${error}`);
+	console.log(`An error: ${error}`);
 }
 
 // tmp bookmark API fix
 function isBMFolder(bm) {
-  return bm.type === "folder" || !bm.url;
+	return bm.type === "folder" || !bm.url;
 }
 
 // load session index
 browser.storage.local.get("session").then(data => {
-  if (data.session) {
-    session = data.session;
-  } else {
-    session = 0;
+	if (data.session) {
+	session = data.session;
+	} else {
+	session = 0;
 
-    browser.storage.local.set({
-      session: session
-    });
-  }
+	browser.storage.local.set({
+		session: session
+	});
+	}
 }, onRejected);
 
 // load root bookmark folder (Tabs Aside folder)
 browser.bookmarks.getTree().then(data => {
-  let root = data[0];
+	let root = data[0];
 
-  console.log("searching for Tabs Aside folder");
+	console.log("searching for Tabs Aside folder");
 
-  outerloop: for (rbm of root.children) {
-    for (bm of rbm.children) {
-      if (bm.title === FOLDERNAME && isBMFolder(bm)) {
-        bookmarkFolder = bm;
-        // Folder found
-        break outerloop;
-      }
-    }
-  }
+	outerloop: for (rbm of root.children) {
+		for (bm of rbm.children) {
+			if (bm.title === FOLDERNAME && isBMFolder(bm)) {
+			bookmarkFolder = bm;
+			// Folder found
+			break outerloop;
+			}
+		}
+	}
 
-  // Tabs Aside folder wasnt found
-  if (bookmarkFolder === null) {
-    console.log("Folder not found, lets create it!");
+	// Tabs Aside folder wasnt found
+	if (bookmarkFolder === null) {
+		console.log("Folder not found, lets create it!");
 
-    browser.bookmarks.create({
-      title: FOLDERNAME
-    }).then(bm => {
-      console.log("Folder successfully created");
+		browser.bookmarks.create({
+			title: FOLDERNAME
+		}).then(bm => {
+			console.log("Folder successfully created");
 
-      bookmarkFolder = bm;
+			bookmarkFolder = bm;
 
-      setTimeout(refresh, 42);
-    }, onRejected);
-  }
+			setTimeout(refresh, 42);
+		}, onRejected);
+	}
 }, onRejected);
-
 
 // tab filter function
 function tabFilter(tab) {
-  let url = tab.url;
+	let url = tab.url;
 
-  // only http(s), file and view-source
-  return url.indexOf("http") === 0 || url.indexOf("view-source:") === 0;
+	// only http(s), file and view-source
+	return url.indexOf("http") === 0 || url.indexOf("view-source:") === 0;
 }
 
+// sets the tabs aside (returns a promise)
 function aside(tabs, closeTabs) {
-  if (tabs.length > 0) {
-    session++;
+	// this sessions bookmark folder id
+	var pID = null;
 
-    // create session bm folder
-    browser.bookmarks.create({
-      parentId: bookmarkFolder.id,
-      title: BMPREFIX + session
-    }).then(bm => {
-      // move tabs aside one by one
-      asideOne(tabs, bm.id, closeTabs);
+	// a function that closes & stores the tabs one by one recursively
+	function asideOne() {
+		// get the first tab & remove it fram tab array
+		let tab = tabs.shift();
 
-      // WARNING: this is not synchronous code
+		// create bookmark (& return this promise chain)
+		return browser.bookmarks.create({
+			parentId: pID,
+			title: tab.title,
+			url: tab.url
+	}).then(() => {
+			// close tab or skip (return resolved promise)
+			return closeTabs ? browser.tabs.remove(tab.id) : Promise.resolve();
+		}).then(() => {
+			return tabs.length > 0 ? asideOne() : Promise.resolve();
+		});
+	}
 
-      // update storage
-      browser.storage.local.set({
-        session: session
-      });
-    }).catch(onRejected);
-    
-  } else {
-    //console.log("no tabs to move aside!");
-  }
+	if (tabs.length > 0) {
+		session++;
+
+		// create session bm folder (& return promise chain)
+		return browser.bookmarks.create({
+			parentId: bookmarkFolder.id,
+			title: BMPREFIX + session
+		}).then(bm => {
+			pID = bm.id;
+
+			// update storage
+			browser.storage.local.set({
+				session: session
+			});
+
+			// move tabs aside one by one
+			return asideOne(tabs, bm.id, closeTabs);
+		}).then(() => {
+			return refresh();
+		}).catch(onRejected);
+	
+	} else {
+		return refresh();
+	}
 }
 
-// functional style :D
-function asideOne(tabs, pID, closeTabs) {
+function hasAboutNewTab(tabs) {
+	for (let i = 0; i < tabs.length; i++) {
+		if (tabs[i].url === "about:newtab") {
+			return true;
+		}
+	}
 
-  if (tabs.length > 0) {
-    let tab = tabs.shift();
-
-    //console.log("create bookmark for " + tab.title);
-    // create bookmark
-    browser.bookmarks.create({
-      parentId: pID,
-      title: tab.title,
-      url: tab.url
-    }).then(() => {
-      if (closeTabs) {
-        // close tab
-        return browser.tabs.remove(tab.id);
-      } else {
-        return Promise.resolve();
-      }
-    }).then(() => {
-      
-      if (tabs.length === 0) {
-        refresh();
-      } else {
-        // next one
-        asideOne(tabs, pID, closeTabs);
-      }
-    }).catch(onRejected);
-  }
+	return false;
 }
-
-/*browser.browserAction.onClicked.addListener(() => {
-  // browser action button clicked
-  
-});*/
 
 // message listener
 browser.runtime.onMessage.addListener(message => {
-  if (message.command === "aside") {
+	if (message.command === "aside") {
 
-    var closeTabs = message.save !== true;
+		var closeTabs = !message.save;
 
-    browser.tabs.query({
-      currentWindow: true,
-      pinned: false
-    }).then((tabs) => {
-      if (closeTabs) {
-        // open a new empty tab (async)
-        browser.tabs.create({});
-      }
+		browser.tabs.query({
+			currentWindow: true,
+			pinned: false
+		}).then((tabs) => {
+			if (closeTabs && !hasAboutNewTab(tabs)) {
+				// open a new empty tab (async)
+				browser.tabs.create({});
+			}
 
-      // tabs aside!
-      aside(tabs.filter(tabFilter), closeTabs);
-    }).catch(onRejected);
-    
-  } else if (message.command === "refresh") {
-    // don't do anything...
-  } else {
-    console.error("Unknown message: " + JSON.stringify(message));
-  }
+			// tabs aside!
+			return aside(tabs.filter(tabFilter), closeTabs);
+		}).catch(onRejected);
+	
+	} else if (message.command === "refresh") {
+		// don't do anything...
+	} else {
+		console.error("Unknown message: " + JSON.stringify(message));
+	}
 });
 
 function refresh() {
-  browser.runtime.sendMessage({ command: "refresh" });
+	return browser.runtime.sendMessage({ command: "refresh" });
 }

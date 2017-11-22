@@ -70,6 +70,7 @@ class TabSession {
 			a.title = "Restore all tabs from this session";
 			a.addEventListener("click", e => {
 				e.stopPropagation();
+				e.preventDefault();
 				
 				let keep = e.ctrlKey || false;
 
@@ -181,8 +182,7 @@ class TabSession {
 			this.html = null;
 
 			browser.bookmarks.removeTree(this.bmID).then(() => {
-					return browser.runtime.sendMessage({ command: "refresh" });
-				}
-			);
+				return browser.runtime.sendMessage({ command: "refresh" });
+			});
 		}
 }
