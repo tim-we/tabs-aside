@@ -1,0 +1,32 @@
+body {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	background-color: white;
+	min-width: 122px;
+}
+
+.button {
+	height: 25px;
+	line-height: 25px;
+	color: black;
+	padding-left: 36px;
+	padding-right: 12px;
+	text-decoration: none;
+
+	background-color: white;
+	background-repeat: no-repeat;
+	background-position-x: left;
+}
+
+.button:hover {
+	background-color: #F0F0F0;
+}
+
+.button:active {
+	background-color: #E8E8E8;
+}
+
+.button.disabled {
+	background-color: transparent;
+	opacity: 0.5;
+}

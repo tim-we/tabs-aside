@@ -4,38 +4,9 @@
 		<meta charset="utf-8">
 		<title>Tabs Aside Menu</title>
 
+		<link href="popup.css" rel="stylesheet">
+
 		<style>
-			body {
-				padding-top: 6px;
-				padding-bottom: 6px;
-				background-color: white;
-			}
-
-			.button {
-				height: 25px;
-				line-height: 25px;
-				color: black;
-				padding-left: 36px;
-				padding-right: 12px;
-
-				background-color: white;
-				background-repeat: no-repeat;
-				background-position-x: left;
-			}
-
-			.button:hover {
-				background-color: #F0F0F0;
-			}
-
-			.button:active {
-				background-color: #E8E8E8;
-			}
-
-			.button.disabled {
-				background-color: transparent;
-				opacity: 0.5;
-			}
-
 			#aside-btn { background-image: url('../icons/aside1.png'); }
 			#session-btn { background-image: url('../icons/sessions.png'); }
 			#save-btn { background-image: url('../icons/save.png'); }
@@ -52,9 +23,10 @@
 	</head>
 
 	<body>
-		<div class="button" id="aside-btn" title="close all tabs &amp; store them in your bookmarks">tabs aside</div>
-		<div class="button" id="save-btn" title="save all tabs (does not close tabs)">save tabs</div>
-		<div class="button" id="session-btn" title="show previous sessions">show sessions</div>
+		<a class="button" id="aside-btn" title="close all tabs &amp; store them in your bookmarks">tabs aside</a>
+		<a class="button" id="save-btn" title="save all tabs (does not close tabs)">save tabs</a>
+		<a class="button" id="select-btn" title="select tabs to set aside" href="selector.html">select tabs</a>
+		<a class="button" id="session-btn" title="show previous sessions">show sessions</a>
 
 		<script src="menu.js"></script>
 	</body>

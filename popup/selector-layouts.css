@@ -1,0 +1,21 @@
+#tabs.cols1 {
+	grid-template-columns: repeat(1, 1fr);
+	min-width: 300px;
+}
+
+#tabs.cols2 {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+#tabs.cols3 {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+#tabs.cols4 {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+#tabs.cols5 {
+	grid-template-columns: repeat(5, 1fr);
+	min-width: 550px;
+}
