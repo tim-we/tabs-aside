@@ -3,7 +3,9 @@ let btnLock = false;
 // get button elements
 let aside   = document.getElementById("aside-btn");
 let session = document.getElementById("session-btn");
-let save    = document.getElementById("save-btn");
+let save = document.getElementById("save-btn");
+let select = document.getElementById("select-btn");
+let more = document.getElementById("more-btn");
 
 function lockButton() {
 	btnLock = true;
@@ -42,6 +44,13 @@ save.addEventListener("click", () => {
 
 		openSidebar(true);
 	}
+});
+
+more.addEventListener("click", () => {
+	save.classList.remove("hidden");
+	select.classList.remove("hidden");
+
+	more.remove();
 });
 
 browser.runtime.onMessage.addListener(message => {

@@ -7,77 +7,19 @@
 		<script src="selector.js"></script>
 
 		<link href="popup.css" rel="stylesheet">
-
-		<style>
-			body {
-				padding: 5px;
-			}
-
-			#tabs {
-				display: grid;
-				grid-template-columns: repeat(4, 1fr);
-				grid-gap: 1px;
-				min-width: 500px;
-			}
-
-			.tab {
-				position: relative;
-				border: none;
-				box-shadow: none;
-				height: 32px;
-				animation: 1s tab-in;
-			}
-
-			.tab:hover {
-				background-color: rgb(240,240,240);
-			}
-
-			.favicon {
-				position: absolute;
-				top: 8px;
-				left: 4px;
-				width: 16px;
-				height: 16px;
-			}
-
-			.tab-title {
-				position: absolute;
-				top: 0px;
-				left: 25px;
-				right: 1px;
-				bottom: 0px;
-				padding: 0px;
-				margin: 0px;
-				overflow: hidden;
-				white-space: nowrap;
-				line-height:32px;
-			}
-
-			.tab.no-favicon .tab-title {
-				left: 6px;
-			}
-
-			.tab.selected {
-				background-color: rgb(232,232,232);
-				box-shadow: 0px 0px 0px 1px rgb(202,202,202);
-			}
-
-			@keyframes tab-in {
-				0% { background-color: rgb(232,232,232); }
-				100% { background-color: transparent; }
-			}
-
-		</style>
-
+		<link href="selector.css" rel="stylesheet">
 		<link href="selector-layouts.css" rel="stylesheet">
 	</head>
 
 	<body>
+		<div id="title">Select tabs</div>
+		<a id="back" href="menu.html"></a>
 
-		<div id="tabs">
+		<div id="tabs"></div>
 
+		<div id="actions">
+			<a href="#">set aside</a>
+			<a href="#">save tabs</a>
 		</div>
-
-		<a href="menu.html">back</a>
 	</body>
 </html>

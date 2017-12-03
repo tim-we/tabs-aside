@@ -11,21 +11,20 @@
 			#session-btn { background-image: url('../icons/sessions.png'); }
 			#save-btn { background-image: url('../icons/save.png'); }
 
-			#aside-btn.disabled {
-				opacity: 0.42;
-			}
-
-			#aside-btn.disabled::after {
+			#aside-btn.disabled::after, #save-btn.disabled::after {
 				content: "...";
 			}
+
+			.button.hidden { display: none; }
 		</style>
 
 	</head>
 
 	<body>
 		<a class="button" id="aside-btn" title="close all tabs &amp; store them in your bookmarks">tabs aside</a>
-		<a class="button" id="save-btn" title="save all tabs (does not close tabs)">save tabs</a>
-		<a class="button" id="select-btn" title="select tabs to set aside" href="selector.html">select tabs</a>
+		<a class="button hidden" id="save-btn" title="save all tabs (does not close tabs)">save tabs</a>
+		<a class="button hidden" id="select-btn" title="select tabs to set aside" href="selector.html">select tabs</a>
+		<a class="button" id="more-btn" title="expand menu &amp; show more options">more options</a>
 		<a class="button" id="session-btn" title="show previous sessions">show sessions</a>
 
 		<script src="menu.js"></script>

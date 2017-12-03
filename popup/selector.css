@@ -1,0 +1,93 @@
+body {
+	padding: 0px;
+}
+
+#title {
+	border-bottom: 1px solid rgb(222,222,222);
+	padding-left: 5px;
+	padding-right: 5px;
+	height: 32px;
+	line-height: 32px;
+	text-align: center;
+}
+
+#back {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	width: 23px;
+	height: 23px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url("../icons/menu-back.png");
+}
+
+#back:hover {
+	background-color: rgb(240,240,240);
+}
+
+#tabs {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 1px;
+	min-width: 500px;
+	margin: 5px;
+}
+
+.tab {
+	position: relative;
+	border: none;
+	box-shadow: none;
+	height: 32px;
+	animation: 1s tab-in;
+}
+
+.tab:hover {
+	background-color: rgb(240,240,240);
+}
+
+.favicon {
+	position: absolute;
+	top: 8px;
+	left: 4px;
+	width: 16px;
+	height: 16px;
+}
+
+.tab-title {
+	position: absolute;
+	top: 0px;
+	left: 25px;
+	right: 1px;
+	bottom: 0px;
+	padding: 0px;
+	margin: 0px;
+	overflow: hidden;
+	white-space: nowrap;
+	line-height:32px;
+}
+
+.tab.no-favicon .tab-title {
+	left: 6px;
+}
+
+.tab.selected {
+	background-color: rgb(232,232,232);
+	box-shadow: 0px 0px 0px 1px rgb(202,202,202);
+}
+
+.tab:active {
+	background-color: rgb(232,232,232);
+	box-shadow: 0px 0px 0px 1px rgb(150,150,150);
+}
+
+@keyframes tab-in {
+	0% { background-color: rgb(232,232,232); }
+	100% { background-color: transparent; }
+}
+
+#actions {
+	border-top: 1px solid rgb(222,222,222);
+	height: 25px;
+	text-align: center;
+}

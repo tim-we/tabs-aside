@@ -1,35 +1,60 @@
+var tabs = [];
+var selectionMask;
+
 window.addEventListener("load", () => {
-	var test = document.getElementById("tabs");
+	var container = document.getElementById("tabs");
 
 	browser.tabs.query({
 		currentWindow: true,
 		pinned: false
-	}).then(tabs => {
-		test.classList.add(getLayout(tabs.length));
+	}).then(ts => {
+		tabs = ts;
 
-		var html = "";
+		// init selection mask (default value false)
+		selectionMask = new Array(tabs.length);
+
+		// set layout
+		container.classList.add(getLayout(tabs.length));
 		
-		tabs.forEach(tab => {
-			let classes = ["tab"];
-
-			if (!tab.favIconUrl) {
-				classes.push("no-favicon");
-			}
-
-			if (Math.random() < 0.42) {
-				classes.push("selected");
-			}
-
-			html += `<div class="${classes.join(" ")}">`;
-			if (tab.favIconUrl) {
-				html += `<img class="favicon" src="${tab.favIconUrl}" alt="favicon">`;
-			}
-			html += `<div class="tab-title">${tab.title}</div></div>`;
+		// generate tab list
+		tabs.forEach((tab, index) => {
+			container.appendChild(generateTabHTML(tab, index));
 		});
-	
-		test.innerHTML = html;
 	});
 });
+
+function generateTabHTML(tab, index) {
+	let html = document.createElement("div");
+	html.classList.add("tab");
+
+	if (tab.favIconUrl) {
+		let img = new Image();
+		img.src = tab.favIconUrl;
+		img.classList.add("favicon");
+		img.alt = "favicon";
+		html.appendChild(img);
+	} else {
+		html.classList.add("no-favicon");
+	}
+
+	let title = document.createElement("div");
+	title.classList.add("tab-title");
+	title.innerText = tab.title;
+
+	html.appendChild(title);
+
+	html.addEventListener("click", () => {
+		if (selectionMask[index]) {
+			html.classList.remove("selected");
+		} else {
+			html.classList.add("selected");
+		}
+
+		selectionMask[index] = !selectionMask[index];
+	});
+
+	return html;
+}
 
 function getLayout(n) {
 	if (n < 4) {
