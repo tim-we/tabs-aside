@@ -11,27 +11,6 @@ var targetWindowID = null;
 
 let params = (new URL(location.href)).searchParams;
 
-/*if (params.has("popup")) {
-
-	// if sidebar is a popup open tabs in a different window
-
-	browser.windows.getCurrent({
-		populate: false
-	}).then(w => {
-
-		return browser.windows.getAll({
-			populate: false,
-			windowTypes: ['normal']
-		}).then(ws => {
-			ws = ws.filter(window => window.id !== w.id);
-
-			if (ws.length > 0) {
-				targetWindowID = ws[0].id;
-			}
-		});
-	});
-}*/
-
 // basic error handler
 function onRejected(error) {
 	console.log(`An error: ${error}`);

@@ -4,10 +4,7 @@ var selectionMask;
 window.addEventListener("load", () => {
 	var container = document.getElementById("tabs");
 
-	browser.tabs.query({
-		currentWindow: true,
-		pinned: false
-	}).then(ts => {
+	getTabs().then(ts => {
 		tabs = ts;
 
 		// init selection mask (default value false)

@@ -39,7 +39,7 @@ body {
 	border: none;
 	box-shadow: none;
 	height: 32px;
-	animation: 1s tab-in;
+	animation: .75s tab-in;
 }
 
 .tab:hover {
