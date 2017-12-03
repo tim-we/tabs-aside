@@ -46,12 +46,11 @@ save.addEventListener("click", () => {
 	}
 });
 
-more.addEventListener("click", () => {
-	save.classList.remove("hidden");
-	select.classList.remove("hidden");
-
-	more.remove();
-});
+if (location.hash.replace("#", "").trim() === "expand") {
+	showMore();
+} else {
+	more.addEventListener("click", showMore);
+}
 
 browser.runtime.onMessage.addListener(message => {
 	if (message.command === "refresh") {
@@ -59,3 +58,10 @@ browser.runtime.onMessage.addListener(message => {
 		unlockButton();
 	}
 });
+
+function showMore() {
+	save.classList.remove("hidden");
+	select.classList.remove("hidden");
+
+	more.remove();
+}

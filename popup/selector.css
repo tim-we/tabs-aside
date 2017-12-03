@@ -9,6 +9,7 @@ body {
 	height: 32px;
 	line-height: 32px;
 	text-align: center;
+	font-size: 1.2em;
 }
 
 #back {
@@ -19,11 +20,15 @@ body {
 	height: 23px;
 	background-repeat: no-repeat;
 	background-position: center;
-	background-image: url("../icons/menu-back.png");
+	background-image: url("../icons/arrowhead-right-16.svg");
 }
 
 #back:hover {
 	background-color: rgb(240,240,240);
+}
+
+#back:active {
+	background-color: rgb(232,232,232);
 }
 
 #tabs {

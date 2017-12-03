@@ -15,7 +15,12 @@ body {
 
 	background-color: white;
 	background-repeat: no-repeat;
-	background-position-x: left;
+	background-position-x: 0px;
+	background-position-y: center;
+}
+
+.button.svg {
+	background-position: 12px;
 }
 
 .button:hover {
