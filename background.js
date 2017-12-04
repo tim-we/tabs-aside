@@ -38,9 +38,7 @@ browser.bookmarks.getTree().then(data => {
 			if (bm.title === FOLDERNAME && isBMFolder(bm)) {
 				bookmarkFolder = bm;
 
-				console.log("folder found!");
-
-				// Folder found
+				// folder found
 				return true;
 			}
 		});
@@ -63,8 +61,8 @@ browser.bookmarks.getTree().then(data => {
 
 // message listener
 browser.runtime.onMessage.addListener(message => {
-	if (message.command === "aside") {
-
+	if (message.command === "asideAll") {
+		// DEPRECATED
 		var closeTabs = !message.save;
 
 		getTabs().then((tabs) => {
@@ -77,6 +75,18 @@ browser.runtime.onMessage.addListener(message => {
 			return aside(tabs.filter(tabFilter), closeTabs, bookmarkFolder.id);
 		}).catch(onRejected);
 	
+	} else if (message.command === "aside" || message.command === "save") {
+		if (message.tabs) {
+			let closeTabs = message.command !== "save";
+
+			if (message.newtab) {
+				// open a new empty tab (async)
+				browser.tabs.create({});
+			}
+
+			// tabs aside!
+			aside(message.tabs, closeTabs, bookmarkFolder.id);
+		}
 	} else if (message.command === "refresh") {
 		// don't do anything...
 	} else {

@@ -19,30 +19,24 @@ function unlockButton() {
 	save.classList.remove("disabled");
 }
 
-function openSidebar() {
-	if (browser.sidebarAction && browser.sidebarAction.open) {
-		browser.sidebarAction.open();
-	}
-}
-
 // attach click listeners
 aside.addEventListener("click", () => {
 	if (!btnLock) {
 		lockButton();
 		browser.runtime.sendMessage({ command: "aside" });
 		
-		openSidebar(true);
+		browser.sidebarAction.open();
 	}
 });
 
-session.addEventListener("click", openSidebar);
+session.addEventListener("click", () => { browser.sidebarAction.open(); });
 
 save.addEventListener("click", () => {
 	if(!btnLock) {
 		lockButton();
-		browser.runtime.sendMessage({ command: "aside", save:true });
+		browser.runtime.sendMessage({ command: "asideAll", save:true });
 
-		openSidebar(true);
+		browser.sidebarAction.open();
 	}
 });
 

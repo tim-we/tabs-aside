@@ -17,5 +17,5 @@
 
 #tabs.cols5 {
 	grid-template-columns: repeat(5, 1fr);
-	min-width: 550px;
+	min-width: 580px;
 }

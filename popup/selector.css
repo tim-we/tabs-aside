@@ -9,7 +9,7 @@ body {
 	height: 32px;
 	line-height: 32px;
 	text-align: center;
-	font-size: 1.2em;
+	font-size: 1.25em;
 }
 
 #back {
@@ -93,6 +93,32 @@ body {
 
 #actions {
 	border-top: 1px solid rgb(222,222,222);
-	height: 25px;
+	height: 32px;
+	text-align: right;
+	font-size: 0px;
+}
+
+#actions.hidden {
+	display: none;
+}
+
+#actions button {
+	min-width: 100px;
+	height: 100%;
+	border: none;
+	border-left: 1px solid rgb(202,202,202);
+	background-color: rgb(232,232,232);
+	margin: 0px;
+	padding: 0px;
 	text-align: center;
+	font-size: 12px;
+	transition: .1s;
+}
+
+#actions button:hover {
+	background-color: rgb(240,240,240);
+}
+
+#actions button:active {
+	background-color: rgb(202,202,202);
 }

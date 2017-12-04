@@ -1,11 +1,14 @@
 var tabs = [];
 var selectionMask;
+var container = null;
 
 window.addEventListener("load", () => {
-	var container = document.getElementById("tabs");
+	container = document.getElementById("tabs");
+	var actions = document.getElementById("actions");
 
 	getTabs().then(ts => {
-		tabs = ts;
+		// filter tabs that could not be reopened by an extension
+		tabs = ts.filter(tabFilter);
 
 		// init selection mask (default value false)
 		selectionMask = new Array(tabs.length);
@@ -17,8 +20,46 @@ window.addEventListener("load", () => {
 		tabs.forEach((tab, index) => {
 			container.appendChild(generateTabHTML(tab, index));
 		});
+
+		actions.classList.remove("hidden");
+	});
+
+	// set up buttons
+	document.getElementById("aside-btn").addEventListener("click", () => {
+		actionHandler("aside");
+	});
+
+	document.getElementById("save-btn").addEventListener("click", () => {
+		actionHandler("save");
 	});
 });
+
+function selectionNotEmpty() {
+	return selectionMask.includes(true);
+}
+
+function actionHandler(cmd) {
+	if (selectionNotEmpty()) {
+		// hide tabs
+		container.remove();
+
+		let selection = tabs.filter((_, i) => selectionMask[i]);
+
+		// if all tabs are being closed -> open a new one
+		let newtab = selection.length === tabs.length;
+		
+		// tabs aside!
+		browser.runtime.sendMessage({
+			command: cmd,
+			newtab: newtab,
+			tabs: selection
+		}).then(() => {
+			browser.sidebarAction.open();
+			
+			window.close();
+		});
+	}
+}
 
 function generateTabHTML(tab, index) {
 	let html = document.createElement("div");
