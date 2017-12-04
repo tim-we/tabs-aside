@@ -1,7 +1,10 @@
-const BMPREFIX = "Session #";
+// basic error handler
+function onRejected(error) {
+	console.log(`An error: ${error}`);
+}
 
 // sets the tabs aside (returns a promise)
-function aside(tabs, closeTabs, parentBookmarkID) {
+function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 	// this sessions bookmark folder id
 	var pID = null;
 
@@ -24,25 +27,17 @@ function aside(tabs, closeTabs, parentBookmarkID) {
 	}
 
 	if (tabs.length > 0) {
-		session++;
-
 		// create session bm folder (& return promise chain)
 		return browser.bookmarks.create({
 			parentId: parentBookmarkID,
-			title: BMPREFIX + session
+			title: sessionTitle
 		}).then(bm => {
 			pID = bm.id;
 
-			// update storage
-			browser.storage.local.set({
-				session: session
-			});
-
 			// move tabs aside one by one
 			return asideOne(tabs, bm.id, closeTabs);
-		}).then(() => {
-			return refresh();
-		}).catch(onRejected);
+		}).then(refresh)
+		  .catch(onRejected);
 	
 	} else {
 		return refresh();
@@ -67,4 +62,8 @@ function tabFilter(tab) {
 
 function hasAboutNewTab(tabs) {
 	return tabs.some(tab => tab.url === "about:newtab");
+}
+
+function refresh() {
+	return browser.runtime.sendMessage({ command: "refresh" });
 }

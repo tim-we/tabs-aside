@@ -1,12 +1,8 @@
 const FOLDERNAME = "Tabs Aside";
+const BMPREFIX = "Session #";
 
 var session = -1;
 var bookmarkFolder = null;
-
-// basic error handler
-function onRejected(error) {
-	console.log(`An error: ${error}`);
-}
 
 // tmp bookmark API fix
 function isBMFolder(bm) {
@@ -16,13 +12,13 @@ function isBMFolder(bm) {
 // load session index
 browser.storage.local.get("session").then(data => {
 	if (data.session) {
-	session = data.session;
+		session = data.session;
 	} else {
-	session = 0;
+		session = 0;
 
-	browser.storage.local.set({
-		session: session
-	});
+		browser.storage.local.set({
+			session: session
+		});
 	}
 }, onRejected);
 
@@ -59,11 +55,24 @@ browser.bookmarks.getTree().then(data => {
 	}
 }, onRejected);
 
+function titleGenerator() {
+	session++;
+
+	// update storage
+	browser.storage.local.set({
+		session: session
+	});
+
+	return BMPREFIX + session;
+}
+
 // message listener
 browser.runtime.onMessage.addListener(message => {
 	if (message.command === "asideAll") {
 		// DEPRECATED
 		var closeTabs = !message.save;
+
+		console.log("debug1");
 
 		getTabs().then((tabs) => {
 			if (closeTabs && !hasAboutNewTab(tabs)) {
@@ -71,8 +80,15 @@ browser.runtime.onMessage.addListener(message => {
 				browser.tabs.create({});
 			}
 
+			console.log("debug2");
+
 			// tabs aside!
-			return aside(tabs.filter(tabFilter), closeTabs, bookmarkFolder.id);
+			return aside(
+				tabs.filter(tabFilter),
+				closeTabs,
+				bookmarkFolder.id,
+				titleGenerator()
+			);
 		}).catch(onRejected);
 	
 	} else if (message.command === "aside" || message.command === "save") {
@@ -84,8 +100,16 @@ browser.runtime.onMessage.addListener(message => {
 				browser.tabs.create({});
 			}
 
+			// custom title?
+			let title = (message.title) ? message.title : titleGenerator();
+
 			// tabs aside!
-			aside(message.tabs, closeTabs, bookmarkFolder.id);
+			aside(
+				message.tabs,
+				closeTabs,
+				bookmarkFolder.id,
+				title
+			);
 		}
 	} else if (message.command === "refresh") {
 		// don't do anything...
@@ -93,7 +117,3 @@ browser.runtime.onMessage.addListener(message => {
 		console.error("Unknown message: " + JSON.stringify(message));
 	}
 });
-
-function refresh() {
-	return browser.runtime.sendMessage({ command: "refresh" });
-}

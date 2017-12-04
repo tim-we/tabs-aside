@@ -23,7 +23,7 @@ function unlockButton() {
 aside.addEventListener("click", () => {
 	if (!btnLock) {
 		lockButton();
-		browser.runtime.sendMessage({ command: "aside" });
+		browser.runtime.sendMessage({ command: "asideAll" });
 		
 		browser.sidebarAction.open();
 	}
@@ -56,6 +56,8 @@ browser.runtime.onMessage.addListener(message => {
 function showMore() {
 	save.classList.remove("hidden");
 	select.classList.remove("hidden");
+
+	location.hash = "expand";
 
 	more.remove();
 }

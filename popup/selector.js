@@ -47,16 +47,19 @@ function actionHandler(cmd) {
 
 		// if all tabs are being closed -> open a new one
 		let newtab = selection.length === tabs.length;
+
+		let now = new Date();
 		
 		// tabs aside!
 		browser.runtime.sendMessage({
 			command: cmd,
 			newtab: newtab,
-			tabs: selection
+			tabs: selection,
+			title: `Selection ${now.getMonth()+1}/${now.getDate()}`
 		}).then(() => {
 			browser.sidebarAction.open();
 			
-			window.close();
+			history.back();
 		});
 	}
 }
