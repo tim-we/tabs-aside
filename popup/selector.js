@@ -67,6 +67,7 @@ function actionHandler(cmd) {
 function generateTabHTML(tab, index) {
 	let html = document.createElement("div");
 	html.classList.add("tab");
+	html.title = tab.title;
 
 	if (tab.favIconUrl) {
 		let img = new Image();
