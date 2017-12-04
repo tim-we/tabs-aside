@@ -13,9 +13,16 @@
 
 #tabs.cols4 {
 	grid-template-columns: repeat(4, 1fr);
+	min-width: 580px;
 }
 
 #tabs.cols5 {
 	grid-template-columns: repeat(5, 1fr);
-	min-width: 580px;
+	min-width: calc(800px - 10px);
+}
+
+#tabs.cols6 {
+	grid-template-columns: repeat(6, 1fr);
+	min-width: calc(800px - 10px);
+	letter-spacing: -1px;
 }

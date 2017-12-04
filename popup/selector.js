@@ -101,13 +101,15 @@ function generateTabHTML(tab, index) {
 function getLayout(n) {
 	if (n < 4) {
 		return "cols1";
-	} else if(n == 4) {
+	} else if (n == 4) {
 		return "cols2";
 	} else if (n <= 9) {
 		return "cols3";
 	} else if (n <= 16) {
 		return "cols4";
-	} else {
+	} else if (n <= 42) {
 		return "cols5";
+	} else {
+		return "cols6";
 	}
 }
