@@ -71,9 +71,17 @@ function generateTabHTML(tab, index) {
 
 	if (tab.favIconUrl) {
 		let img = new Image();
+
+		// if image can not be loaded (is broken, is missing)
+		img.onerror = () => {
+			img.remove();
+			html.classList.add("no-favicon");
+		};
+
 		img.src = tab.favIconUrl;
 		img.classList.add("favicon");
-		img.alt = "favicon";
+		img.alt = "icon";
+
 		html.appendChild(img);
 	} else {
 		html.classList.add("no-favicon");
