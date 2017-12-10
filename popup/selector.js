@@ -35,6 +35,7 @@ window.addEventListener("load", () => {
 		actionHandler("save");
 	});
 
+	// check if this panel was launched from the 'more tools' panel
 	if (document.body.clientWidth > window.innerWidth) {
 		document.body.classList.add("limited");
 	}
