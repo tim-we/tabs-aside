@@ -26,10 +26,12 @@ window.addEventListener("load", () => {
 
 	// set up buttons
 	document.getElementById("aside-btn").addEventListener("click", () => {
+		browser.sidebarAction.open();
 		actionHandler("aside");
 	});
 
 	document.getElementById("save-btn").addEventListener("click", () => {
+		browser.sidebarAction.open();
 		actionHandler("save");
 	});
 
@@ -55,14 +57,12 @@ function actionHandler(cmd) {
 		let now = new Date();
 		
 		// tabs aside!
-		browser.runtime.sendMessage({
+		return browser.runtime.sendMessage({
 			command: cmd,
 			newtab: newtab,
 			tabs: selection,
 			title: `Selection ${now.getMonth()+1}/${now.getDate()}`
 		}).then(() => {
-			browser.sidebarAction.open();
-			
 			history.back();
 		});
 	}
