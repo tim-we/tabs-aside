@@ -32,6 +32,10 @@ window.addEventListener("load", () => {
 	document.getElementById("save-btn").addEventListener("click", () => {
 		actionHandler("save");
 	});
+
+	if (document.body.clientWidth > window.innerWidth) {
+		document.body.classList.add("limited");
+	}
 });
 
 function selectionNotEmpty() {

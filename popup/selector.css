@@ -1,5 +1,6 @@
 body {
 	padding: 0px;
+	min-width: 400px;
 }
 
 #title {
@@ -96,6 +97,7 @@ body {
 	height: 25px;
 	text-align: right;
 	font-size: 0px;
+	min-width: 200px;
 }
 
 #actions.hidden {

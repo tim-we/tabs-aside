@@ -1,0 +1,63 @@
+/* if the selector window is opened from
+ * within the 'more tools' panel the body size
+ * seems to be limited to 348x164px
+ */
+
+body.limited {
+	max-width: 348px;
+	min-width: 300px;
+	max-height: 164px;
+}
+
+body.limited #back {
+	display: none;
+}
+
+body.limited #title {
+	display: block;
+	position: fixed;
+	top: -21px;
+	left: 0px;
+	right: 0px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 1em;
+	z-index: 42;
+	background-color: white;
+	animation: 2s title-quick;
+}
+
+body.limited #tabs {
+	max-height: calc(100vh - 20px);
+	max-width: 348px;
+	min-width: 342px;
+	overflow-y: scroll;
+	grid-template-columns: repeat(1, 1fr);
+	margin: 0px;
+}
+
+body.limited .tab {
+	height: 24px;
+}
+
+body.limited .tab-title {
+	line-height: 24px;
+}
+
+body.limited .favicon {
+	top: 4px;
+}
+
+@keyframes title-quick {
+	0% {
+		top: 0px;
+	}
+
+	80% {
+		top: 0px;
+	}
+
+	100% {
+		top: -20px;
+	}
+}
