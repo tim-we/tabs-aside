@@ -3,6 +3,7 @@ body {
 	padding-bottom: 6px;
 	background-color: white;
 	min-width: 122px;
+	min-height: calc(3 * 25px);
 }
 
 .button {

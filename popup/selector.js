@@ -34,6 +34,10 @@ window.addEventListener("load", () => {
 		browser.sidebarAction.open();
 		actionHandler("save");
 	});
+
+	if (document.body.clientWidth > window.innerWidth) {
+		document.body.classList.add("limited");
+	}
 });
 
 function selectionNotEmpty() {
@@ -67,12 +71,21 @@ function actionHandler(cmd) {
 function generateTabHTML(tab, index) {
 	let html = document.createElement("div");
 	html.classList.add("tab");
+	html.title = tab.title;
 
 	if (tab.favIconUrl) {
 		let img = new Image();
+
+		// if image can not be loaded (is broken, is missing)
+		img.onerror = () => {
+			img.remove();
+			html.classList.add("no-favicon");
+		};
+
 		img.src = tab.favIconUrl;
 		img.classList.add("favicon");
-		img.alt = "favicon";
+		img.alt = "icon";
+
 		html.appendChild(img);
 	} else {
 		html.classList.add("no-favicon");
@@ -100,13 +113,15 @@ function generateTabHTML(tab, index) {
 function getLayout(n) {
 	if (n < 4) {
 		return "cols1";
-	} else if(n == 4) {
+	} else if (n == 4) {
 		return "cols2";
 	} else if (n <= 9) {
 		return "cols3";
 	} else if (n <= 16) {
 		return "cols4";
-	} else {
+	} else if (n <= 42) {
 		return "cols5";
+	} else {
+		return "cols6";
 	}
 }
