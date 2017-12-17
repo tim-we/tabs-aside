@@ -36,10 +36,6 @@ class TabSession {
 			this.expanded = false;
 	
 			// create html structure
-			let tabhtml = this.tabs.map(
-				tab => `<li>${tab.title || tab.url}</li>`
-			).join("\n");
-	
 			this.html = document.createElement("div");
 			this.html.classList.add("session");
 			this.html.classList.add('collapsed');
@@ -71,11 +67,19 @@ class TabSession {
 			a.addEventListener("click", e => {
 				e.stopPropagation();
 				e.preventDefault();
-				
-				let keep = e.ctrlKey || false;
 
 				if (allowClick()) {
-					this.restore(keep);
+
+					let _this = this;
+
+					restoreTabsBehavior().then(behavior => {
+						let keep = (behavior === "keep");
+
+						// CTRL "inverts" behavior
+						if (e.ctrlKey) { keep = !keep; }
+
+						_this.restore(keep);
+					});
 				}
 			});
 			controls.appendChild(a);
@@ -114,14 +118,23 @@ class TabSession {
 			});
 			
 			// tabs
+			let tabsOL = this.tabs.reduce((ol, tab) => {
+				let li = document.createElement("li");
+
+				let a = document.createElement("a");
+				a.classList.add("tab");
+				a.href = tab.url;
+				let fallBackTitle = (new URL(tab.url)).hostname;
+				a.innerText = tab.title || fallBackTitle;
+				
+				li.appendChild(a);
+				ol.appendChild(li);
+				return ol;
+			}, document.createElement("ol"));
+
 			let tabsection = document.createElement("div");
 			tabsection.classList.add("tabs");
-			tabsection.innerHTML = `
-				<div class="tabs">
-					<ol>
-						${tabhtml}
-					</ol>
-				</div>`;
+			tabsection.appendChild(tabsOL);
 			this.html.appendChild(tabsection);
 		}
 	
@@ -185,4 +198,12 @@ class TabSession {
 				return browser.runtime.sendMessage({ command: "refresh" });
 			});
 		}
+}
+
+function restoreTabsBehavior() {
+	return browser.storage.local.get("restoreBehavior").then(data => {
+		return (data.restoreBehavior) ? data.restoreBehavior : "auto-remove";
+	}, () => {
+		return "auto-remove";
+	});
 }

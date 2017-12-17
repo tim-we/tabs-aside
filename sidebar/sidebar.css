@@ -103,6 +103,11 @@ li {
 	white-space: nowrap;
 }
 
+a.tab:not(:hover) {
+	color: #222426;
+	text-decoration: none;
+}
+
 #empty-msg {
 	padding-left: 6px;
 	padding-right: 6px;
