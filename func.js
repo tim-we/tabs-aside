@@ -57,7 +57,9 @@ function getTabs() {
 			currentWindow: true
 		};
 
-		if(!!data["ignore-pinned"]) {
+		let ignorePinned = (data["ignore-pinned"] === undefined) ? true : data["ignore-pinned"];
+
+		if(ignorePinned) {
 			options.pinned = false;
 		}
 
