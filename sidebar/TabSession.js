@@ -20,6 +20,10 @@ function createProperties(tab) {
 		o.windowId = targetWindowID;
 	}
 
+	if(tab.pinned) {
+		o.pinned = true;
+	}
+
 	return o;
 }
 
@@ -28,7 +32,7 @@ class TabSession {
 		constructor(bm) {
 			this.title = bm.title;
 			
-			this.bmID = bm.id;  // bookmark node ID
+			this.bmID = bm.id; // bookmark node ID
 
 			//this.tabs = bm.children.filter(x => x.type === 'bookmark');
 			this.tabs = bm.children.filter(x => !!x.url);
@@ -124,8 +128,21 @@ class TabSession {
 				let a = document.createElement("a");
 				a.classList.add("tab");
 				a.href = tab.url;
-				let fallBackTitle = (new URL(tab.url)).hostname;
-				a.innerText = tab.title || fallBackTitle;
+
+				let title = tab.title;
+
+				if(tab.title) {
+					if(tab.title.length > 9 && tab.title.substr(0, 9) === "[pinned] ") {
+						tab.pinned = true;
+						tab.title = title = tab.title.substr(9);
+						a.classList.add("pinned");
+					}
+				} else {
+					title = (new URL(tab.url)).hostname + " [no title]";
+					tab.pinned = false;
+				}
+
+				a.innerText = title;
 				
 				li.appendChild(a);
 				ol.appendChild(li);

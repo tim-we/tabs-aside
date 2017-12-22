@@ -25,3 +25,30 @@ restoreBehavior.addEventListener("change", e => {
 		restoreBehavior: r.options[r.selectedIndex].value
 	});
 });
+
+function setUpCheckbox(domID, defaultValue, sKey=domID) {
+	let checkbox = document.getElementById(domID);
+
+	// set initial value
+	browser.storage.local.get(sKey).then(data => {
+		if(data[sKey] !== undefined) {
+			let v = data[sKey]; // boolean
+
+			checkbox.checked = v;
+		} else {
+			checkbox.checked = defaultValue;
+		}
+	});
+
+	// state change handler
+	checkbox.addEventListener("change", () => {
+
+		let options = {};
+		options[sKey] = checkbox.checked;
+
+		browser.storage.local.set(options);
+	});
+}
+
+setUpCheckbox("ignore-pinned", true);
+setUpCheckbox("expand-menu", false);

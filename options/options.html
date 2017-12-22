@@ -1,18 +1,35 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" href="options.css">
 </head>
 
 <body>
-<form>
-	<label><u title="Sidebar -> Session -> Restore tabs">Restore tabs</u> default bahavior: </label>
-	<select id="restore-behavior">
-		<option value="auto-remove">restore &amp; remove from sessions</option>
-		<option value="keep">just restore (keep in sessions)</option>
-	</select>
-</form>
+<div class="section">
+
+	<div class="row">
+		<label><u title="Sidebar -> Session -> Restore tabs">Restore tabs</u> default bahavior: </label>
+		<select id="restore-behavior">
+			<option value="auto-remove">restore &amp; remove from sessions</option>
+			<option value="keep">just restore (keep in sessions)</option>
+		</select>
+		<br>
+		<span class="info">
+			Use <pre class="keyboard-shortcut">CTRL + click</pre> to use the other behavior.
+		</span>
+	</div>
+
+	<div class="row">
+		<label for="ignore-pinned" title="set pinned tabs aside?">Ignore pinned tabs</label>
+		<input id="ignore-pinned" type="checkbox">
+	</div>
+
+	<div class="row">
+		<label for="expand-menu" title="always expand the browser action menu">Always show all options in menu</label>
+		<input id="expand-menu" type="checkbox">
+	</div>
+</div>
 <script src="options.js"></script>
 </body>
 

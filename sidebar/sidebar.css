@@ -108,6 +108,17 @@ a.tab:not(:hover) {
 	text-decoration: none;
 }
 
+a.tab.pinned::before {
+	content: " ";
+	font-size: 0;
+	display: inline-block;
+	width:12px;
+	height:12px;
+	margin-right: 3px;
+	margin-left: -2px;
+	background-image: url('../icons/pin-12.svg');
+}
+
 #empty-msg {
 	padding-left: 6px;
 	padding-right: 6px;
@@ -115,53 +126,4 @@ a.tab:not(:hover) {
 
 #empty-msg:not(.show) {
 	display: none;
-}
-
-#tip {
-	position: fixed;
-	bottom: 5px;
-	left: 5px;
-	right: 5px;
-	background-color: rgb(13, 146, 255);
-	
-	padding-left: 5px;
-	padding-top: 2px;
-	padding-right: 20px;
-	padding-bottom: 2px;
-	box-shadow: inset 0px 0px 0px 1px rgb(0,0,0,0.075);
-
-	display: none;
-}
-
-#tip-msg {
-	font-size: 14px;
-	color: white;
-	text-shadow: rgba(0,0,0,0.2);
-}
-
-#tip.show {
-	display: block;
-	animation-duration: 1s;
-	animation-name: flyin;
-}
-
-#tip-close {
-	position: absolute;
-	top: 2px;
-	right: 2px;
-	border-radius: 0px;
-	background-color: rgba(255,255,255,0.0);
-	background-image: url('../icons/close10.png');
-}
-
-#tip:hover > #tip-close {
-	background-color: rgba(255,255,255,0.5);
-}
-
-#tip:hover > #tip-close:hover { background-color: rgba(255,255,255,1.0); }
-#tip:hover > #tip-close:active { background-color: rgb(255, 93, 44); }
-
-@keyframes flyin {
-	from { transform: translateY(100px); }
-	to   { transform: translateY(  0px); }
 }

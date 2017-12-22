@@ -72,15 +72,11 @@ browser.runtime.onMessage.addListener(message => {
 		// DEPRECATED
 		var closeTabs = !message.save;
 
-		console.log("debug1");
-
 		getTabs().then((tabs) => {
 			if (closeTabs && !hasAboutNewTab(tabs)) {
 				// open a new empty tab (async)
 				browser.tabs.create({});
 			}
-
-			console.log("debug2");
 
 			// tabs aside!
 			return aside(

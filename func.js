@@ -13,10 +13,16 @@ function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 		// get the first tab & remove it fram tab array
 		let tab = tabs.shift();
 
+		// bookmark title (may include some state info)
+		let title = tab.title.trim();
+		if(tab.pinned) {
+			title = '[pinned] ' + title;
+		}
+
 		// create bookmark (& return this promise chain)
 		return browser.bookmarks.create({
 			parentId: pID,
-			title: tab.title,
+			title: title,
 			url: tab.url
 	}).then(() => {
 			// close tab or skip (return resolved promise)
@@ -46,10 +52,17 @@ function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 
 // returns a promise
 function getTabs() {
-	return browser.tabs.query({
-		currentWindow: true,
-		pinned: false
-	});
+	return browser.storage.local.get("ignore-pinned").then(data => {
+		let options = {
+			currentWindow: true
+		};
+
+		if(!!data["ignore-pinned"]) {
+			options.pinned = false;
+		}
+
+		return options;
+	}).then(filter => browser.tabs.query(filter));
 }
 
 // tab filter function

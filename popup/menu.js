@@ -43,7 +43,15 @@ save.addEventListener("click", () => {
 if (location.hash.replace("#", "").trim() === "expand") {
 	showMore();
 } else {
-	more.addEventListener("click", showMore);
+	browser.storage.local.get("expand-menu").then(data => {
+		let expand = (data["expand-menu"] !== undefined) ? data["expand-menu"] : false;
+
+		if(expand) {
+			showMore();
+		} else {
+			more.addEventListener("click", showMore);
+		}
+	});
 }
 
 browser.runtime.onMessage.addListener(message => {

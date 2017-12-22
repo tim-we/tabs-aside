@@ -36,6 +36,10 @@ window.addEventListener("load", () => {
 		} else if (tipID === 0) {
 			let dir = "Other Bookmarks > Tabs Aside";
 			showTip(`To make further changes to your session switch to the bookmark sidebar. The sessions can be found in '${dir}'.`, 1);
+		} else if(tipID === 1) {
+			showTip(`You can customize the 'Tabs Aside!' behavior in the add-on options.`, 2);
+		} else if(tipID === 2) {
+			showTip(`If you ever choose to uninstall this addon your sessions will be kept in your bookmarks.`, 3);
 		}
 	});
 });
