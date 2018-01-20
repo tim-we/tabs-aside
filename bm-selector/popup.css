@@ -16,6 +16,7 @@ button {
 	height: 25px;
 	background-color: rgb(202, 202, 202);
 	font-size: 0px;
+	white-space: nowrap;
 }
 
 .breadcrumb {
@@ -75,6 +76,8 @@ button {
 	bottom: 0px;
 	right: 0px;
 	height: 100%;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 #newfolder {
@@ -94,6 +97,7 @@ button {
 	position: relative;
 	cursor: pointer;
 	margin-bottom: 8px;
+	white-space: nowrap;
 	user-select: none;
 	-moz-user-select: -moz-none;
 }

@@ -1,16 +1,52 @@
+// DOM references
 var folderView;
 var breadcrumbsView;
+var selectButton;
+var newFolderButton;
+
+// url search params
+var params = parseQueryString();
+
+// state vars
 var selectedFolderID = "";
 var selectedFolder = null;
 var oldSelectedFolderID = "";
 
-Promise.all([init(), new Promise(resolve => {
-	window.addEventListener("load", () => {
-		folderView = document.getElementById("content-view");
-		breadcrumbsView = document.getElementById("breadcrumbs");
-		resolve();
-	});
-})]).then(updateView);
+// is there a selected folder?
+var initPromise;
+if (params["selected"]) {
+	console.log(`ID ${params["selected"]} selected`);
+	oldSelectedFolderID = params["selected"].trim();
+	initPromise = init(oldSelectedFolderID);
+} else {
+	initPromise = init();
+}
+
+// updateView after window has loaded and bookmark data is ready (init)
+Promise.all([
+	initPromise,
+	new Promise(resolve => {
+		window.addEventListener("load", () => {
+			// get DOM references
+			folderView = document.getElementById("content-view");
+			breadcrumbsView = document.getElementById("breadcrumbs");
+			selectButton = document.getElementById("select");
+			newFolderButton = document.getElementById("newfolder");
+
+			// set up event listeners
+			selectButton.addEventListener("click", () => {
+				if (selectedFolderID) {
+					alert("selected folder id: " + selectedFolderID);
+					window.close();
+				} else {
+					alert("You need to select a folder.");
+				}
+			});
+
+			resolve();
+		});
+	})
+]).then(updateView);
 
 function resetSelection() {
 	selectedFolderID = "";
@@ -29,6 +65,7 @@ function updateView() {
 		folderDIV.classList.add("folder");
 
 		folderDIV.innerText = folder.title;
+		folderDIV.title = folder.title + ` (id: ${folder.id})`;
 
 		if (folder.id === selectedFolderID) {
 			folderDIV.classList.add("selected");
@@ -49,9 +86,11 @@ function updateView() {
 		folderDIV.addEventListener("dblclick", e => {
 			e.stopPropagation();
 
-			navOpenFolder(i);
 			resetSelection();
-			updateView();
+
+			navOpenFolder(i).then(() => {
+				updateView();
+			});
 
 			return false;
 		});
@@ -71,9 +110,11 @@ function updateView() {
 
 		if (i < bcrumbs.length - 1) {
 			bcDIV.addEventListener("click", () => {
-				navBreadcrumb(i);
 				resetSelection();
-				updateView();
+
+				navBreadcrumb(i).then(() => {
+					updateView();
+				});
 			});
 		}
 

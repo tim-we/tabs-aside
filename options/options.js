@@ -57,12 +57,12 @@ let bmRootFolder = document.getElementById("bm-root-folder");
 
 bmRootFolder.addEventListener("click", () => {
 	browser.windows.create({
-		allowScriptsToClose: true,
+		allowScriptsToClose: true, // does not work!
 		//focused: true,
 		width: 500,
 		height: 300,
 		titlePreface: "Tabs Aside! ",
 		type: "popup",
-		url: "../bm-selector/popup.html"
+		url: "../bm-selector/popup.html" //?selected="
 	});
 });
