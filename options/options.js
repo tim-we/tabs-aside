@@ -52,3 +52,17 @@ function setUpCheckbox(domID, defaultValue, sKey=domID) {
 
 setUpCheckbox("ignore-pinned", true);
 setUpCheckbox("expand-menu", false);
+
+let bmRootFolder = document.getElementById("bm-root-folder");
+
+bmRootFolder.addEventListener("click", () => {
+	browser.windows.create({
+		allowScriptsToClose: true,
+		//focused: true,
+		width: 500,
+		height: 300,
+		titlePreface: "Tabs Aside! ",
+		type: "popup",
+		url: "../bm-selector/popup.html"
+	});
+});
