@@ -104,3 +104,17 @@ function navBreadcrumb(bcIndex) {
 		}
 	});
 }
+
+function refreshChildren() {
+	return new Promise(async (resolve, reject) => {
+		if (bcrumbs.length == 0) { reject("Invalid state"); }
+
+		let f = bcrumbs[bcrumbs.length - 1];
+
+		f.children = undefined;
+
+		folders = await getSubFolders(f);
+
+		resolve();
+	});
+}

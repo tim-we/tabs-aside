@@ -11,6 +11,7 @@ var params = parseQueryString();
 var selectedFolderID = "";
 var selectedFolder = null;
 var oldSelectedFolderID = "";
+var newFolderNamePreset = (params["fpreset"]) ? params["fpreset"].trim() : "";
 
 // is there a selected folder?
 var initPromise;
@@ -41,10 +42,62 @@ Promise.all([
 						command: "updateRoot",
 						bmID: selectedFolderID
 					});
+
+					// the creator of this window is now expected to close it
 				} else {
 					alert("You need to select a folder.");
 				}
 			});
+
+			newFolderButton.addEventListener("click", () => {
+				// does not work on mobile browsers
+				let folderName = window.prompt("Enter a name for the new folder", newFolderNamePreset);
+
+				resetSelection();
+
+				browser.bookmarks.create({
+					title: folderName,
+					type: "folder",
+					url: null,
+					parentId: bcrumbs[bcrumbs.length - 1].id
+				}).then(bmFolder => {
+					console.log(bmFolder);
+
+					// auto-select new folder
+					selectedFolderID = bmFolder.id;
+					selectedFolder = null; // should be overwritten by updateView()
+
+					return refreshChildren();
+				}).then(() => {
+					return updateView();
+				});
+			});
+
+			document.addEventListener('keydown', function(event) {
+				if (event.keyCode == 46) {
+					// delete key was pressed
+					if (selectedFolderID && selectedFolder) {
+						if (selectedFolder.unmodifiable) {
+							alert("This folder can not be deleted.");
+							return false;
+						}
+
+						if (confirm("Delete this folder with all its contents?")) {
+							let fID = selectedFolderID;
+							resetSelection();
+	
+							browser.bookmarks.removeTree(fID).then(() => {
+								return refreshChildren().then(() => {
+									return updateView();
+								});
+							}).catch(err => {
+								console.error(err);
+								alert("Failed to delete folder:\n" + err);
+							});
+						}
+					}
+				}
+			}, true);
 
 			resolve();
 		});
