@@ -3,6 +3,24 @@ function onRejected(error) {
 	console.log(`An error: ${error}`);
 }
 
+// adds a single tab to a session, returns a promise
+function addTabToSession(sessionFolderID, tab, closeTab) {
+	// bookmark title (may include some state info)
+	let title = tab.title.trim();
+	if(tab.pinned) {
+		title = '[pinned] ' + title;
+	}
+
+	return browser.bookmarks.create({
+		parentId: sessionFolderID,
+		title: title,
+		url: tab.url
+	}).then(() => {
+		// close tab or skip (return resolved promise)
+		return closeTab ? browser.tabs.remove(tab.id) : Promise.resolve();
+	});
+}
+
 // sets the tabs aside (returns a promise)
 function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 	// this sessions bookmark folder id
@@ -13,21 +31,7 @@ function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 		// get the first tab & remove it fram tab array
 		let tab = tabs.shift();
 
-		// bookmark title (may include some state info)
-		let title = tab.title.trim();
-		if(tab.pinned) {
-			title = '[pinned] ' + title;
-		}
-
-		// create bookmark (& return this promise chain)
-		return browser.bookmarks.create({
-			parentId: pID,
-			title: title,
-			url: tab.url
-	}).then(() => {
-			// close tab or skip (return resolved promise)
-			return closeTabs ? browser.tabs.remove(tab.id) : Promise.resolve();
-		}).then(() => {
+		return addTabToSession(pID, tab, closeTabs).then(() => {
 			return tabs.length > 0 ? asideOne() : Promise.resolve();
 		});
 	}
@@ -42,11 +46,11 @@ function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 
 			// move tabs aside one by one
 			return asideOne(tabs, bm.id, closeTabs);
-		}).then(refresh)
+		}).then(sendRefresh)
 		  .catch(onRejected);
 	
 	} else {
-		return refresh();
+		return sendRefresh();
 	}
 }
 
@@ -79,6 +83,6 @@ function hasAboutNewTab(tabs) {
 	return tabs.some(tab => tab.url === "about:newtab");
 }
 
-function refresh() {
+function sendRefresh() {
 	return browser.runtime.sendMessage({ command: "refresh" });
 }

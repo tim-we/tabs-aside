@@ -4,11 +4,6 @@ const BMPREFIX = "Session #";
 var session = -1;
 var bookmarkFolder = null;
 
-// tmp bookmark API fix
-function isBMFolder(bm) {
-	return bm.type === "folder" || !bm.url;
-}
-
 // load session index
 browser.storage.local.get("session").then(data => {
 	if (data.session) {
@@ -50,7 +45,7 @@ browser.bookmarks.getTree().then(data => {
 
 			bookmarkFolder = bm;
 
-			setTimeout(refresh, 42);
+			setTimeout(sendRefresh, 42);
 		}, onRejected);
 	}
 }, onRejected);
@@ -107,5 +102,23 @@ browser.runtime.onMessage.addListener(message => {
 				title
 			);
 		}
+	} else if (message.command === "tab-to-session") {
+		addTabToSession(message.sessionFID, message.tab, true);
+	}
+});
+
+// tab context menu
+browser.menus.create({
+	id: "tabs-aside-tab-context",
+	title:"Tabs Aside",
+	contexts: ["tab"],
+	documentUrlPatterns: ["http://*/*","https://*/*"] // array of strings
+});
+
+browser.menus.create({
+	parentId: "tabs-aside-tab-context",
+	title: "set aside & add to existing session",
+	onclick: function (info, tab) {
+		console.log(tab);
 	}
 });

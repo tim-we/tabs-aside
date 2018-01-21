@@ -16,11 +16,6 @@ function onRejected(error) {
 	console.log(`An error: ${error}`);
 }
 
-// tmp bookmark API fix
-function isBMFolder(bm) {
-	return bm.type === "folder" || !bm.url;
-}
-
 function loadBMRoot() {
 	return new Promise((resolve, reject) => {
 		// load root bookmark folder (Tabs Aside folder)
@@ -43,27 +38,19 @@ function loadBMRoot() {
 	});
 }
 
-function getSessions() {
-	return new Promise((resolve, reject) => {
-		// local
-		let sessions = [];
-
-		for (bm of bookmarkFolder.children) {
-			/*if (isBMFolder(bm) && bm.title.indexOf(BMPREFIX) === 0) {
-				sessions.push(new TabSession(bm));
-			}*/
-			if (isBMFolder(bm)) {
-				sessions.push(new TabSession(bm));
-			}
-		}
+function getTabSessions() {
+	return new Promise(resolve => {
+		let sessions = bookmarkFolder.children
+			.filter(isBMFolder)
+			.map(bm => new TabSession(bm))
+			.reverse();
 
 		resolve(sessions);
 	});
 }
 
 function refresh(close = false) {
-	loadBMRoot().then(getSessions).then(data => {
-		data.reverse();
+	loadBMRoot().then(getTabSessions).then(data => {
 		sessions = data;
 
 		list.innerHTML = "";
