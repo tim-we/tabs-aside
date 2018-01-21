@@ -107,9 +107,5 @@ browser.runtime.onMessage.addListener(message => {
 				title
 			);
 		}
-	} else if (message.command === "refresh") {
-		// don't do anything...
-	} else {
-		console.error("Unknown message: " + JSON.stringify(message));
 	}
 });

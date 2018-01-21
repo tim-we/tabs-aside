@@ -36,8 +36,11 @@ Promise.all([
 			// set up event listeners
 			selectButton.addEventListener("click", () => {
 				if (selectedFolderID) {
-					alert("selected folder id: " + selectedFolderID);
-					window.close();
+					//window.close(); // does not work !!!
+					browser.runtime.sendMessage({
+						command: "updateRoot",
+						bmID: selectedFolderID
+					});
 				} else {
 					alert("You need to select a folder.");
 				}

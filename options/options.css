@@ -71,9 +71,9 @@ pre.keyboard-shortcut {
 	background-repeat: no-repeat;
 	color: black;
 	padding: 2px;
-	padding-left: 22px;
+	padding-left: 23px;
 	padding-right: 5px;
-	min-width: 130px;
+	min-width: 135px;
 	opacity: 0.65;
 	cursor: pointer;
 }
