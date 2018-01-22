@@ -15,21 +15,13 @@ function onRejected(error) {
 
 function loadBMRoot() {
 	return getSessionRootFolder().then(folder => {
-		if (folder === null) {
-			return Promise.reject("Tabs Aside root bookmark folder not found");
-		} else {
-			return browser.bookmarks.getSubTree(folder.id).then(data => {
-				bookmarkFolder = data[0];
-				return data[0];
-			});
-		}
+		return (bookmarkFolder = folder);
 	});
 }
 
 function getTabSessions() {
 	return new Promise(resolve => {
-		let sessions = bookmarkFolder.children
-			.filter(isBMFolder)
+		let sessions = getSessions(bookmarkFolder)
 			.map(bm => new TabSession(bm))
 			.reverse();
 
@@ -37,7 +29,7 @@ function getTabSessions() {
 	});
 }
 
-function refresh(close = false) {
+function update(close = false) {
 	loadBMRoot().then(getTabSessions).then(data => {
 		sessions = data;
 
@@ -60,15 +52,11 @@ function refresh(close = false) {
 }
 
 window.addEventListener("load", () => {
-	refresh();
+	update();
 });
 
 browser.runtime.onMessage.addListener(message => {
 	if (message.command === "refresh") {
-		refresh(true);
+		update(true);
 	}
-});
-
-browser.bookmarks.onChanged.addListener(() => {
-	refresh(true);
 });

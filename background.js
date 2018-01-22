@@ -54,12 +54,13 @@ browser.storage.local.get("version").then(data => {
 	// load sessions root folder (Tabs Aside folder)
 	return getSessionRootFolder().then(folder => {
 		bookmarkFolder = folder;
-
-		if (bookmarkFolder === null) {
-			console.log("Bookmark folder not found, creating a new one...");
-			return createTabsAsideFolder();
-		}
+	}, e => {
+		console.log(e);
+		console.log("Creating a new bookmark folder...");
+		return createTabsAsideFolder();
 	});
+}).then(() => {
+	updateTabMenus();
 }).catch(onRejected);
 
 function createTabsAsideFolder() {
@@ -72,8 +73,45 @@ function createTabsAsideFolder() {
 	}).catch(onRejected);
 }
 
+function asideMessageHandler(message) {
+	if (message.tabs) {
+		let closeTabs = message.command !== "save";
+
+		// newtab property is optional (defaults to false)
+		if (message.newtab) {
+			// open a new empty tab (async)
+			browser.tabs.create({});
+		}
+
+		if (message.sessionID) {
+			// add to existing session
+			// this is all async so tabs could be out of order
+			Promise.all(
+				message.tabs.map(
+					tab => addTabToSession(message.sessionID, tab, closeTabs)
+				)
+			).then(sendRefresh);
+		} else {
+			// creating a new session
+
+			// custom title?
+			let title = (message.title) ? message.title : generateSessionName();
+
+			// tabs aside!
+			aside(
+				message.tabs,
+				closeTabs,
+				bookmarkFolder.id,
+				title
+			).then(() => {
+				updateTabMenus();
+			});
+		}
+	}
+}
+
 // message listener
-browser.runtime.onMessage.addListener(message => {
+browser.runtime.onMessage.addListener(async message => {
 	if (message.command === "asideAll") {
 		// DEPRECATED
 		var closeTabs = !message.save;
@@ -94,48 +132,20 @@ browser.runtime.onMessage.addListener(message => {
 		}).catch(onRejected);
 	
 	} else if (message.command === "aside" || message.command === "save") {
-		if (message.tabs) {
-			let closeTabs = message.command !== "save";
-
-			if (message.newtab) {
-				// open a new empty tab (async)
-				browser.tabs.create({});
-			}
-
-			// custom title?
-			let title = (message.title) ? message.title : generateSessionName();
-
-			// tabs aside!
-			aside(
-				message.tabs,
-				closeTabs,
-				bookmarkFolder.id,
-				title
-			);
-		}
-	} else if (message.command === "tab-to-session") {
-		addTabToSession(message.sessionFID, message.tab, true).then(sendRefresh);
+		asideMessageHandler(message);
 	} else if (message.command === "updateRoot") {
 		browser.bookmarks.get(message.bmID).then(data => {
 			if (data.length > 0) {
 				setSessionFolder(data[0]);
 			}
-		}).then(sendRefresh);
+		}).then(refresh);
+	} else if (message.command === "refresh") {
+		updateTabMenus();
 	}
 });
 
-// tab context menu
-browser.menus.create({
-	id: "tabs-aside-tab-context",
-	title:"Tabs Aside",
-	contexts: ["tab"],
-	documentUrlPatterns: ["http://*/*","https://*/*"] // array of strings
-});
+function refresh() {
+	updateTabMenus();
 
-browser.menus.create({
-	parentId: "tabs-aside-tab-context",
-	title: "set aside & add to existing session",
-	onclick: function (info, tab) {
-		console.log(tab);
-	}
-});
+	return sendRefresh();
+}

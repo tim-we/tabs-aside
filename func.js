@@ -98,11 +98,17 @@ function getSessionRootFolder() {
 		if (data.bookmarkFolderID) {
 			let bmID = data.bookmarkFolderID;
 
-			return browser.bookmarks.get(bmID).then(data => {
-				return (data.length > 0 && isBMFolder(data[0])) ? data[0] : null;
+			return browser.bookmarks.getSubTree(bmID).then(data => {
+				return isBMFolder(data[0]) ?
+					Promise.resolve(data[0]) :
+					Promise.reject(`folder with id ${bmID} not found!`);
 			});
 		} else {
-			return Promise.resolve(null);
+			return Promise.reject("no bm folder id");
 		}
 	});
+}
+
+function getSessions(sessionsRootFolder) {
+	return sessionsRootFolder.children.filter(isBMFolder);
 }

@@ -39,6 +39,7 @@
     "scripts": [
       "func.js",
       "util/isBMFolder.js",
+      "tab-menu.js",
       "background.js"
     ]
   },
