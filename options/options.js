@@ -75,10 +75,10 @@ bmRootFolder.addEventListener("click", () => {
 		browser.windows.remove(selectorwindowID);
 	}
 
-	let url = "../bm-selector/popup.html";
+	let url = "../bm-selector/popup.html?fpreset=" + encodeURIComponent("Tabs Aside");
 
 	if (bmFolder) {
-		url += "?selected=" + bmFolder.id;
+		url += "&selected=" + bmFolder.id;
 	}
 
 	browser.windows.create({
@@ -110,10 +110,6 @@ browser.runtime.onMessage.addListener(message => {
 			bmFolder = data[0];
 
 			bmRootFolder.innerText = bmFolder.title;
-		});
-
-		browser.storage.local.set({
-			bookmarkFolderID: bmID
 		});
 	}
 });

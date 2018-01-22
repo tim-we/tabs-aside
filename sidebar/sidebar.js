@@ -1,6 +1,3 @@
-const FOLDERNAME = "Tabs Aside";
-const BMPREFIX = "Session #";
-
 let bookmarkFolder = null;
 let list = document.getElementById("list");
 let emptyMsg = document.getElementById("empty-msg")
@@ -17,24 +14,15 @@ function onRejected(error) {
 }
 
 function loadBMRoot() {
-	return new Promise((resolve, reject) => {
-		// load root bookmark folder (Tabs Aside folder)
-		browser.bookmarks.getTree().then(data => {
-			let root = data[0];
-		
-			for (rbm of root.children) {
-				for (bm of rbm.children) {
-					if (bm.title === FOLDERNAME && isBMFolder(bm)) {
-						bookmarkFolder = bm;
-
-						resolve(bm);
-						return;
-					}
-				}
-			}
-			
-			reject("Tabs Aside root bookmark folder not found");
-		}, reject);
+	return getSessionRootFolder().then(folder => {
+		if (folder === null) {
+			return Promise.reject("Tabs Aside root bookmark folder not found");
+		} else {
+			return browser.bookmarks.getSubTree(folder.id).then(data => {
+				bookmarkFolder = data[0];
+				return data[0];
+			});
+		}
 	});
 }
 

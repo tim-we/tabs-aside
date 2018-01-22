@@ -1,64 +1,75 @@
-const FOLDERNAME = "Tabs Aside";
-const BMPREFIX = "Session #";
-
-var session = -1;
+// bookmark folder that contains the session folders
 var bookmarkFolder = null;
 
-// load session index
-browser.storage.local.get("session").then(data => {
-	if (data.session) {
-		session = data.session;
-	} else {
-		session = 0;
-
-		browser.storage.local.set({
-			session: session
-		});
+function setSessionFolder(bmFolder) {
+	if (!isBMFolder(bmFolder)) {
+		return Promise.reject(new Error("thats not a folder"));
 	}
-}, onRejected);
+	bookmarkFolder = bmFolder;
 
-// load root bookmark folder (Tabs Aside folder)
-browser.bookmarks.getTree().then(data => {
-	let root = data[0];
+	console.log("BM folder ID set to " + bookmarkFolder.id);
 
-	console.log("searching for Tabs Aside folder");
+	setTimeout(sendRefresh, 100);
 
-	// search for root folder
-	if (!root.children.some(rbm => {
-		return rbm.children.some(bm => {
-			if (bm.title === FOLDERNAME && isBMFolder(bm)) {
-				bookmarkFolder = bm;
+	return browser.storage.local.set({
+		bookmarkFolderID: bmFolder.id
+	});
+}
 
-				// folder found
-				return true;
+browser.storage.local.get("version").then(data => {
+	if (data.version) {
+		console.assert(data.version === 1, "Invalid data version!");
+	} else {
+		browser.storage.local.set({
+			version: 1
+		});
+
+		// check if this is a clean install or if the extension was just updated
+		return browser.storage.local.get("session").then(data => {
+			if (data.session) {
+				console.log("old data format detected!\nmigrating data...");
+				browser.storage.local.remove("session");
+
+				// let's find the old Tabs Aside folder
+				console.log("searching for the Tabs Aside folder");
+				return browser.bookmarks.search("Tabs Aside").then(data => {
+					let folders = data.filter(bm => isBMFolder(bm));
+					
+					if (folders.length > 0) {
+						// data migration
+						return setSessionFolder(folders[0]).then(() => {
+							console.log("data migration successful");
+							return Promise.resolve();
+						});
+					}
+				});
+			} else {
+				// seems to be a new installation
+				// nothing to do here
+				return Promise.resolve();
 			}
 		});
-	})) {
-		// root folder not found
-
-		console.log("Folder not found, lets create it!");
-		
-		browser.bookmarks.create({
-			title: FOLDERNAME
-		}).then(bm => {
-			console.log("Folder successfully created");
-
-			bookmarkFolder = bm;
-
-			setTimeout(sendRefresh, 42);
-		}, onRejected);
 	}
-}, onRejected);
+}).then(() => {
+	// load sessions root folder (Tabs Aside folder)
+	return getSessionRootFolder().then(folder => {
+		bookmarkFolder = folder;
 
-function titleGenerator() {
-	session++;
-
-	// update storage
-	browser.storage.local.set({
-		session: session
+		if (bookmarkFolder === null) {
+			console.log("Bookmark folder not found, creating a new one...");
+			return createTabsAsideFolder();
+		}
 	});
+}).catch(onRejected);
 
-	return BMPREFIX + session;
+function createTabsAsideFolder() {
+	return browser.bookmarks.create({
+		title: "Tabs Aside"
+	}).then(bm => {
+		console.log("Folder successfully created");
+
+		return setSessionFolder(bm);
+	}).catch(onRejected);
 }
 
 // message listener
@@ -78,7 +89,7 @@ browser.runtime.onMessage.addListener(message => {
 				tabs.filter(tabFilter),
 				closeTabs,
 				bookmarkFolder.id,
-				titleGenerator()
+				generateSessionName()
 			);
 		}).catch(onRejected);
 	
@@ -92,7 +103,7 @@ browser.runtime.onMessage.addListener(message => {
 			}
 
 			// custom title?
-			let title = (message.title) ? message.title : titleGenerator();
+			let title = (message.title) ? message.title : generateSessionName();
 
 			// tabs aside!
 			aside(
@@ -103,7 +114,13 @@ browser.runtime.onMessage.addListener(message => {
 			);
 		}
 	} else if (message.command === "tab-to-session") {
-		addTabToSession(message.sessionFID, message.tab, true);
+		addTabToSession(message.sessionFID, message.tab, true).then(sendRefresh);
+	} else if (message.command === "updateRoot") {
+		browser.bookmarks.get(message.bmID).then(data => {
+			if (data.length > 0) {
+				setSessionFolder(data[0]);
+			}
+		}).then(sendRefresh);
 	}
 });
 

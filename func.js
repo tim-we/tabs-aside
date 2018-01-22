@@ -86,3 +86,23 @@ function hasAboutNewTab(tabs) {
 function sendRefresh() {
 	return browser.runtime.sendMessage({ command: "refresh" });
 }
+
+function generateSessionName(prefix = "Session") {
+	let now = new Date();
+
+	return prefix + ` ${now.getMonth()+1}/${now.getDate()}`
+}
+
+function getSessionRootFolder() {
+	return browser.storage.local.get("bookmarkFolderID").then(data => {
+		if (data.bookmarkFolderID) {
+			let bmID = data.bookmarkFolderID;
+
+			return browser.bookmarks.get(bmID).then(data => {
+				return (data.length > 0 && isBMFolder(data[0])) ? data[0] : null;
+			});
+		} else {
+			return Promise.resolve(null);
+		}
+	});
+}

@@ -11,7 +11,7 @@ var params = parseQueryString();
 var selectedFolderID = "";
 var selectedFolder = null;
 var oldSelectedFolderID = "";
-var newFolderNamePreset = (params["fpreset"]) ? params["fpreset"].trim() : "";
+var newFolderNamePreset = (params["fpreset"]) ? decodeURIComponent(params["fpreset"]).trim() : "";
 
 // is there a selected folder?
 var initPromise;
@@ -53,6 +53,9 @@ Promise.all([
 				// does not work on mobile browsers
 				let folderName = window.prompt("Enter a name for the new folder", newFolderNamePreset);
 
+				// check if prompt was aborted
+				if (folderName === null) { return; }
+
 				resetSelection();
 
 				browser.bookmarks.create({
@@ -61,11 +64,9 @@ Promise.all([
 					url: null,
 					parentId: bcrumbs[bcrumbs.length - 1].id
 				}).then(bmFolder => {
-					console.log(bmFolder);
-
 					// auto-select new folder
 					selectedFolderID = bmFolder.id;
-					selectedFolder = null; // should be overwritten by updateView()
+					selectedFolder = null; // should be overridden by updateView()
 
 					return refreshChildren();
 				}).then(() => {
