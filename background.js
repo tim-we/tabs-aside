@@ -108,36 +108,17 @@ function asideMessageHandler(message) {
 
 // message listener
 browser.runtime.onMessage.addListener(async message => {
-	if (message.command === "asideAll") {
-		// DEPRECATED
-		var closeTabs = !message.save;
-
-		getTabs().then((tabs) => {
-			if (closeTabs && !hasAboutNewTab(tabs)) {
-				// open a new empty tab (async)
-				browser.tabs.create({});
-			}
-
-			// tabs aside!
-			return aside(
-				tabs.filter(tabFilter),
-				closeTabs,
-				bookmarkFolder.id,
-				generateSessionName()
-			);
-		}).catch(error => console.log("Error: " + error));
-	
-	} else if (message.command === "aside" || message.command === "save") {
+	if (message.command === "aside" || message.command === "save") {
 		asideMessageHandler(message);
 	} else if (message.command === "updateRoot") {
 		setSessionFolder(message.bmID).then(refresh);
 	} else if (message.command === "refresh") {
-		updateTabMenus();
+		getSessionRootFolder().then(folder => {
+			bookmarkFolder = folder;
+		}).then(updateTabMenus);
 	}
 });
 
 function refresh() {
-	updateTabMenus();
-
-	return sendRefresh();
+	return Promise.all([updateTabMenus(), sendRefresh()]);
 }

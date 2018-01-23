@@ -1,40 +1,51 @@
 let btnLock = false;
 
 // get button elements
-let aside   = document.getElementById("aside-btn");
-let session = document.getElementById("session-btn");
-let save = document.getElementById("save-btn");
-let select = document.getElementById("select-btn");
-let more = document.getElementById("more-btn");
+let asideBtn	= document.getElementById("aside-btn");
+let sessionBtn	= document.getElementById("session-btn");
+let saveBtn		= document.getElementById("save-btn");
+let selectBtn	= document.getElementById("select-btn");
+let moreBtn		= document.getElementById("more-btn");
 
-function lockButton() {
+function lockButtons() {
 	btnLock = true;
-	aside.classList.add("disabled");
-	save.classList.add("disabled");
+	asideBtn.classList.add("disabled");
+	saveBtn.classList.add("disabled");
 }
 
-function unlockButton() {
+function unlockButtons() {
 	btnLock = false;
-	aside.classList.remove("disabled");
-	save.classList.remove("disabled");
+	asideBtn.classList.remove("disabled");
+	saveBtn.classList.remove("disabled");
+}
+
+function actionHandler(closeTabs) {
+	return getTabs().then(tabs => {
+		// tabs aside!
+		return browser.runtime.sendMessage({
+			command: closeTabs ? "aside" : "save",
+			newtab: closeTabs && !hasAboutNewTab(tabs),
+			tabs: tabs.filter(tabFilter)
+		}).catch(error => console.log("Error: " + error));
+	});
 }
 
 // attach click listeners
-aside.addEventListener("click", () => {
+asideBtn.addEventListener("click", () => {
 	if (!btnLock) {
-		lockButton();
-		browser.runtime.sendMessage({ command: "asideAll" });
+		lockButtons();
+		actionHandler(true);
 		
 		browser.sidebarAction.open();
 	}
 });
 
-session.addEventListener("click", () => { browser.sidebarAction.open(); });
+sessionBtn.addEventListener("click", () => { browser.sidebarAction.open(); });
 
-save.addEventListener("click", () => {
+saveBtn.addEventListener("click", () => {
 	if(!btnLock) {
-		lockButton();
-		browser.runtime.sendMessage({ command: "asideAll", save:true });
+		lockButtons();
+		actionHandler(false);
 
 		browser.sidebarAction.open();
 	}
@@ -49,7 +60,7 @@ if (location.hash.replace("#", "").trim() === "expand") {
 		if(expand) {
 			showMore();
 		} else {
-			more.addEventListener("click", showMore);
+			moreBtn.addEventListener("click", showMore);
 		}
 	});
 }
@@ -57,15 +68,15 @@ if (location.hash.replace("#", "").trim() === "expand") {
 browser.runtime.onMessage.addListener(message => {
 	if (message.command === "refresh") {
 		// setting tabs aside done
-		unlockButton();
+		unlockButtons();
 	}
 });
 
 function showMore() {
-	save.classList.remove("hidden");
-	select.classList.remove("hidden");
+	saveBtn.classList.remove("hidden");
+	selectBtn.classList.remove("hidden");
 
 	location.hash = "expand";
 
-	more.remove();
+	moreBtn.remove();
 }

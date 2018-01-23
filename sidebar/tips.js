@@ -30,17 +30,24 @@ window.addEventListener("load", () => {
 			tipID = Math.max(0, data.tipData.id);
 		}
 
-		// show tips
-		if (tipID === -1) {
-			showTip("To keep the session after restoring press CTRL while clicking on <Restore tabs>", 0);
-		} else if (tipID === 0) {
-			let dir = "Other Bookmarks > Tabs Aside";
-			showTip(`To make further changes to your session switch to the bookmark sidebar. The sessions can be found in '${dir}'.`, 1);
-		} else if(tipID === 1) {
-			showTip(`You can customize the 'Tabs Aside!' behavior in the add-on options.`, 2);
-		} else if(tipID === 2) {
-			showTip(`If you ever choose to uninstall this addon your sessions will be kept in your bookmarks.`, 3);
-		}
+		wait(500).then(() => {
+			if (tipID === -1 && sessions !== undefined && sessions.length === 0) {
+				// do not show any tips
+				return;
+			}
+	
+			// show tips
+			if (tipID === -1) {
+				showTip("To keep the session after restoring press CTRL while clicking on <Restore tabs>", 0);
+			} else if (tipID === 0) {
+				let dir = "Other Bookmarks > Tabs Aside";
+				showTip(`To make further changes to your session switch to the bookmark sidebar. The sessions can be found in '${dir}'.`, 1);
+			} else if(tipID === 1) {
+				showTip(`You can customize the 'Tabs Aside!' behavior in the add-on options.`, 2);
+			} else if(tipID === 2) {
+				showTip(`If you ever choose to uninstall this addon your sessions will be kept in your bookmarks.`, 3);
+			}
+		});
 	});
 });
 

@@ -18,6 +18,8 @@ function addTabToSession(sessionFolderID, tab, closeTab) {
 
 // sets the tabs aside (returns a promise)
 function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
+	if (tabs.length === 0) { return Promise.resolve(); }
+
 	// this sessions bookmark folder id
 	var pID = null;
 
@@ -44,8 +46,6 @@ function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 		}).then(sendRefresh)
 		  .catch(error => console.log("Error: " + error));
 	
-	} else {
-		return sendRefresh();
 	}
 }
 

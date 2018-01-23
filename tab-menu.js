@@ -25,8 +25,9 @@ function updateTabMenus() {
 
 	// remove all menus and then recreate them
 	return browser.menus.removeAll().then(() => {
-		// this does not return a promise
-		browser.menus.create({
+		let sessions = getSessions(bookmarkFolder).reverse();
+
+		let options = {
 			id: "ta-tab-menu",
 			title:"Tabs Aside",
 			contexts: ["tab"],
@@ -34,21 +35,26 @@ function updateTabMenus() {
 				"16": "icons/aside2.png"
 			},
 			documentUrlPatterns: ["http://*/*","https://*/*"] // array of strings
-		});
+		};
 
-		let sessions = getSessions(bookmarkFolder).reverse();
+		if (sessions.length === 0) { options.onclick = () => { browser.browserAction.openPopup(); }}
 
-		let sm1 = browser.menus.create({
-			parentId: "ta-tab-menu",
-			title: "add to existing session"
-		});
+		// this does not return a promise
+		browser.menus.create(options);
 
-		let sm2 = browser.menus.create({
-			parentId: "ta-tab-menu",
-			title: "set aside & add to existing session"
-		});
-
-		createSessionsMenuEntries(sessions, sm1, false); // save
-		createSessionsMenuEntries(sessions, sm2, true); // aside
+		if (sessions.length > 0) {
+			let sm1 = browser.menus.create({
+				parentId: "ta-tab-menu",
+				title: "add to existing session"
+			});
+	
+			let sm2 = browser.menus.create({
+				parentId: "ta-tab-menu",
+				title: "set aside & add to existing session"
+			});
+	
+			createSessionsMenuEntries(sessions, sm1, false); // save
+			createSessionsMenuEntries(sessions, sm2, true); // aside
+		}
 	});
 }
