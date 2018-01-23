@@ -8,14 +8,13 @@ var targetWindowID = null;
 
 let params = (new URL(location.href)).searchParams;
 
-// basic error handler
-function onRejected(error) {
-	console.log(`An error: ${error}`);
-}
-
 function loadBMRoot() {
 	return getSessionRootFolder().then(folder => {
 		return (bookmarkFolder = folder);
+	}, e => {
+		// wait 0.2s and try again
+		console.log(e);
+		return wait(200).then(loadBMRoot);
 	});
 }
 
@@ -48,7 +47,7 @@ function update(close = false) {
 		if (sessions.length === 0) {
 			emptyMsg.classList.add("show");
 		}
-	}).catch(onRejected);
+	}).catch(error => console.log("Error: " + error));
 }
 
 window.addEventListener("load", () => {

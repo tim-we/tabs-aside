@@ -1,18 +1,19 @@
 // bookmark folder that contains the session folders
 var bookmarkFolder = null;
 
-function setSessionFolder(bmFolder) {
-	if (!isBMFolder(bmFolder)) {
-		return Promise.reject(new Error("thats not a folder"));
-	}
-	bookmarkFolder = bmFolder;
+function setSessionFolder(bmFolderID) {
+	return browser.bookmarks.getSubTree(bmFolderID).then(data => {
+		return isBMFolder(data[0]) ?
+			Promise.resolve(data[0]) :
+			Promise.reject(new Error("thats not a folder"));
+	}).then(folder => {
+		bookmarkFolder = folder;
 
-	console.log("BM folder ID set to " + bookmarkFolder.id);
+		console.log("BM folder ID set to " + bookmarkFolder.id);
 
-	setTimeout(sendRefresh, 100);
-
-	return browser.storage.local.set({
-		bookmarkFolderID: bmFolder.id
+		return browser.storage.local.set({
+			bookmarkFolderID: folder.id
+		});
 	});
 }
 
@@ -24,29 +25,9 @@ browser.storage.local.get("version").then(data => {
 			version: 1
 		});
 
-		// check if this is a clean install or if the extension was just updated
 		return browser.storage.local.get("session").then(data => {
 			if (data.session) {
-				console.log("old data format detected!\nmigrating data...");
 				browser.storage.local.remove("session");
-
-				// let's find the old Tabs Aside folder
-				console.log("searching for the Tabs Aside folder");
-				return browser.bookmarks.search("Tabs Aside").then(data => {
-					let folders = data.filter(bm => isBMFolder(bm));
-					
-					if (folders.length > 0) {
-						// data migration
-						return setSessionFolder(folders[0]).then(() => {
-							console.log("data migration successful");
-							return Promise.resolve();
-						});
-					}
-				});
-			} else {
-				// seems to be a new installation
-				// nothing to do here
-				return Promise.resolve();
 			}
 		});
 	}
@@ -56,12 +37,27 @@ browser.storage.local.get("version").then(data => {
 		bookmarkFolder = folder;
 	}, e => {
 		console.log(e);
-		console.log("Creating a new bookmark folder...");
-		return createTabsAsideFolder();
+
+		// checking if there already is a tabs aside folder
+		console.log("searching for a 'Tabs Aside' folder");
+		return browser.bookmarks.search("Tabs Aside").then(data => {
+			let folders = data.filter(bm => isBMFolder(bm));
+			
+			if (folders.length > 0) {
+				// Tabs Aside folder found
+				console.log(`'Tabs Aside' folder (${folders[0].id}) found.`);
+
+				return setSessionFolder(folders[0].id).then(refresh);
+			} else {
+				// Tabs Aside folder not found
+				console.log("Creating a new bookmark folder...");
+				return createTabsAsideFolder();
+			}
+		});
 	});
 }).then(() => {
 	updateTabMenus();
-}).catch(onRejected);
+}).catch(error => console.log("Error: " + error));
 
 function createTabsAsideFolder() {
 	return browser.bookmarks.create({
@@ -69,8 +65,8 @@ function createTabsAsideFolder() {
 	}).then(bm => {
 		console.log("Folder successfully created");
 
-		return setSessionFolder(bm);
-	}).catch(onRejected);
+		return setSessionFolder(bm.id).then(refresh);
+	}).catch(error => console.log("Error: " + error));
 }
 
 function asideMessageHandler(message) {
@@ -129,16 +125,12 @@ browser.runtime.onMessage.addListener(async message => {
 				bookmarkFolder.id,
 				generateSessionName()
 			);
-		}).catch(onRejected);
+		}).catch(error => console.log("Error: " + error));
 	
 	} else if (message.command === "aside" || message.command === "save") {
 		asideMessageHandler(message);
 	} else if (message.command === "updateRoot") {
-		browser.bookmarks.get(message.bmID).then(data => {
-			if (data.length > 0) {
-				setSessionFolder(data[0]);
-			}
-		}).then(refresh);
+		setSessionFolder(message.bmID).then(refresh);
 	} else if (message.command === "refresh") {
 		updateTabMenus();
 	}

@@ -1,8 +1,3 @@
-// basic error handler
-function onRejected(error) {
-	console.log(`An error: ${error}`);
-}
-
 // adds a single tab to a session, returns a promise
 function addTabToSession(sessionFolderID, tab, closeTab) {
 	// bookmark title (may include some state info)
@@ -47,7 +42,7 @@ function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 			// move tabs aside one by one
 			return asideOne(tabs, bm.id, closeTabs);
 		}).then(sendRefresh)
-		  .catch(onRejected);
+		  .catch(error => console.log("Error: " + error));
 	
 	} else {
 		return sendRefresh();
@@ -84,7 +79,9 @@ function hasAboutNewTab(tabs) {
 }
 
 function sendRefresh() {
-	return browser.runtime.sendMessage({ command: "refresh" });
+	return browser.runtime.sendMessage({ command: "refresh" }).catch(error => {
+		console.log("No receiver");
+	});
 }
 
 function generateSessionName(prefix = "Session") {
@@ -104,11 +101,11 @@ function getSessionRootFolder() {
 					Promise.reject(`folder with id ${bmID} not found!`);
 			});
 		} else {
-			return Promise.reject("no bm folder id");
+			return Promise.reject("bookmarkFolderID was not set");
 		}
 	});
 }
 
 function getSessions(sessionsRootFolder) {
-	return sessionsRootFolder.children.filter(isBMFolder);
+	return sessionsRootFolder ? sessionsRootFolder.children.filter(isBMFolder) : [];
 }

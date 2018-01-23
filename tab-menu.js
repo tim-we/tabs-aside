@@ -30,6 +30,9 @@ function updateTabMenus() {
 			id: "ta-tab-menu",
 			title:"Tabs Aside",
 			contexts: ["tab"],
+			icons: {
+				"16": "icons/aside2.png"
+			},
 			documentUrlPatterns: ["http://*/*","https://*/*"] // array of strings
 		});
 
