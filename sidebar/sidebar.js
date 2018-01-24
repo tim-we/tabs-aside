@@ -29,24 +29,39 @@ function getTabSessions() {
 }
 
 function update(close = false) {
-	loadBMRoot().then(getTabSessions).then(data => {
-		sessions = data;
+	let setExpandState = function (session, index) {
+		// auto expand last session
+		if (index === 0) {
+			session.expand();
+		}
+	};
 
-		list.innerHTML = "";
-		emptyMsg.classList.remove("show");
-
-		sessions.forEach((session, index) => {
-			list.appendChild(session.html);
-
-			// auto expand last session
-			if (index === 0) {
-				session.expand();
+	return browser.storage.local.get("sbSessionDefaultState").then(data => {
+		if (data.sbSessionDefaultState) {
+			if (data.sbSessionDefaultState === "expand-all") {
+				setExpandState = function (session) { session.expand(); };
+			} else if (data.sbSessionDefaultState === "collapse-all") {
+				// default state, therefore nothing to do
+				setExpandState = function (session) { /*no-op*/ };
+			}
+		}
+	}).then(() => {
+		return loadBMRoot().then(getTabSessions).then(data => {
+			sessions = data;
+	
+			list.innerHTML = "";
+			emptyMsg.classList.remove("show");
+	
+			sessions.forEach((session, index) => {
+				list.appendChild(session.html);
+	
+				setExpandState(session, index);
+			});
+	
+			if (sessions.length === 0) {
+				emptyMsg.classList.add("show");
 			}
 		});
-
-		if (sessions.length === 0) {
-			emptyMsg.classList.add("show");
-		}
 	}).catch(error => console.log("Error: " + error));
 }
 

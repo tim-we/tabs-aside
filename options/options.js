@@ -1,30 +1,31 @@
-let restoreBehavior = document.getElementById("restore-behavior");
+function setUpSelect(optionID, defaultValue, setStorage) {
+	let domRef = document.getElementById(optionID);
 
-browser.storage.local.get("restoreBehavior").then(data => {
-	if (data.restoreBehavior) {
-		let v = data.restoreBehavior;
-		let r = restoreBehavior;
-
-		for (let i = 0, opt; opt = r.options[i]; i++) {
-			if (opt.value === v) {
-				r.selectedIndex = i;
-				break;
+	browser.storage.local.get(optionID).then(data => {
+		if (data[optionID]) {
+			let v = data[optionID];
+	
+			for (let i = 0, opt; opt = domRef.options[i]; i++) {
+				if (opt.value === v) {
+					domRef.selectedIndex = i;
+					break;
+				}
 			}
+		} else if(setStorage) {
+			let o = {};
+			o[optionID] = defaultValue;
+
+			browser.storage.local.set(o);
 		}
-	} else {
-		browser.storage.local.set({
-			restoreBehavior: "auto-remove"
-		});
-	}
-});
-
-restoreBehavior.addEventListener("change", e => {
-	let r = restoreBehavior;
-
-	browser.storage.local.set({
-		restoreBehavior: r.options[r.selectedIndex].value
 	});
-});
+
+	domRef.addEventListener("change", e => {
+		let o = {};
+		o[optionID] = domRef.options[domRef.selectedIndex].value;
+
+		browser.storage.local.set(o);
+	});
+}
 
 function setUpCheckbox(domID, defaultValue, sKey=domID) {
 	let checkbox = document.getElementById(domID);
@@ -50,8 +51,10 @@ function setUpCheckbox(domID, defaultValue, sKey=domID) {
 	});
 }
 
+setUpSelect("restoreBehavior", "auto-remove", true);
 setUpCheckbox("ignore-pinned", true);
 setUpCheckbox("expand-menu", false);
+setUpSelect("sbSessionDefaultState", "expand-top", false);
 
 let bmRootFolder = document.getElementById("bm-root-folder");
 let selectorwindowID = null;

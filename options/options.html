@@ -10,7 +10,7 @@
 
 	<div class="row">
 		<label><u title="Sidebar -> Session -> Restore tabs">Restore tabs</u> default bahavior: </label>
-		<select id="restore-behavior">
+		<select id="restoreBehavior">
 			<option value="auto-remove">restore &amp; remove from sessions</option>
 			<option value="keep">just restore (keep in sessions)</option>
 		</select>
@@ -28,6 +28,15 @@
 	<div class="row">
 		<label for="expand-menu" title="always expand the browser action menu">Always show all options in menu</label>
 		<input id="expand-menu" type="checkbox">
+	</div>
+
+	<div class="row">
+		<label for="sbSessionDefaultState">sidebar sessions default state</label>
+		<select id="sbSessionDefaultState">
+			<option value="expand-top">expand top session</option>
+			<option value="expand-all">expand all</option>
+			<option value="collapse-all">collapse all</option>
+		</select>
 	</div>
 
 	<div class="row">
