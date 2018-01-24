@@ -40,7 +40,7 @@ browser.storage.local.get("version").then(data => {
 
 		// checking if there already is a tabs aside folder
 		console.log("searching for a 'Tabs Aside' folder");
-		return browser.bookmarks.search("Tabs Aside").then(data => {
+		return browser.bookmarks.search({title:"Tabs Aside"}).then(data => {
 			let folders = data.filter(bm => isBMFolder(bm));
 			
 			if (folders.length > 0) {
