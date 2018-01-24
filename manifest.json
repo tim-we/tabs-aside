@@ -37,9 +37,10 @@
 
   "background": {
     "scripts": [
-      "func.js",
+      "util/tabUtils.js",
       "util/isBMFolder.js",
       "util/wait.js",
+      "func.js",
       "tab-menu.js",
       "background.js"
     ]

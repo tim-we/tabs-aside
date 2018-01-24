@@ -1,5 +1,5 @@
 // bookmark folder that contains the session folders
-var bookmarkFolder = null;
+var bookmarkFolderID = null;
 
 function setSessionFolder(bmFolderID) {
 	return browser.bookmarks.getSubTree(bmFolderID).then(data => {
@@ -7,9 +7,9 @@ function setSessionFolder(bmFolderID) {
 			Promise.resolve(data[0]) :
 			Promise.reject(new Error("thats not a folder"));
 	}).then(folder => {
-		bookmarkFolder = folder;
+		bookmarkFolderID = folder.id;
 
-		console.log("BM folder ID set to " + bookmarkFolder.id);
+		console.log("BM folder ID set to " + bookmarkFolderID);
 
 		return browser.storage.local.set({
 			bookmarkFolderID: folder.id
@@ -33,8 +33,9 @@ browser.storage.local.get("version").then(data => {
 	}
 }).then(() => {
 	// load sessions root folder (Tabs Aside folder)
+	// (verify there actually is a folder with that ID)
 	return getSessionRootFolder().then(folder => {
-		bookmarkFolder = folder;
+		bookmarkFolderID = folder.id;
 	}, e => {
 		console.log(e);
 
@@ -70,6 +71,8 @@ function createTabsAsideFolder() {
 }
 
 function asideMessageHandler(message) {
+	let promise = Promise.resolve();
+
 	if (message.tabs) {
 		let closeTabs = message.command !== "save";
 
@@ -82,11 +85,11 @@ function asideMessageHandler(message) {
 		if (message.sessionID) {
 			// add to existing session
 			// this is all async so tabs could be out of order
-			Promise.all(
+			promise = Promise.all(
 				message.tabs.map(
 					tab => addTabToSession(message.sessionID, tab, closeTabs)
 				)
-			).then(sendRefresh);
+			);
 		} else {
 			// creating a new session
 
@@ -94,16 +97,18 @@ function asideMessageHandler(message) {
 			let title = (message.title) ? message.title : generateSessionName();
 
 			// tabs aside!
-			aside(
+			promise = aside(
 				message.tabs,
 				closeTabs,
-				bookmarkFolder.id,
+				bookmarkFolderID,
 				title
-			).then(() => {
-				updateTabMenus();
-			});
+			);
 		}
+
+		promise.then(refresh);
 	}
+
+	return promise;
 }
 
 // message listener
@@ -113,9 +118,7 @@ browser.runtime.onMessage.addListener(async message => {
 	} else if (message.command === "updateRoot") {
 		setSessionFolder(message.bmID).then(refresh);
 	} else if (message.command === "refresh") {
-		getSessionRootFolder().then(folder => {
-			bookmarkFolder = folder;
-		}).then(updateTabMenus);
+		updateTabMenus();
 	}
 });
 

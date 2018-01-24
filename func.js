@@ -41,41 +41,13 @@ function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 		}).then(bm => {
 			pID = bm.id;
 
-			// move tabs aside one by one
-			return asideOne(tabs, bm.id, closeTabs);
-		}).then(sendRefresh)
-		  .catch(error => console.log("Error: " + error));
-	
+			// move tabs aside one by one (recursive)
+			return asideOne();
+		}).catch(error => console.log("Error: " + error));
+	} else {
+		console.warn("No tabs to set aside!");
+		return Promise.resolve();
 	}
-}
-
-// returns a promise
-function getTabs() {
-	return browser.storage.local.get("ignore-pinned").then(data => {
-		let options = {
-			currentWindow: true
-		};
-
-		let ignorePinned = (data["ignore-pinned"] === undefined) ? true : data["ignore-pinned"];
-
-		if(ignorePinned) {
-			options.pinned = false;
-		}
-
-		return options;
-	}).then(filter => browser.tabs.query(filter));
-}
-
-// tab filter function
-function tabFilter(tab) {
-	let url = tab.url;
-
-	// only http(s), file and view-source
-	return url.indexOf("http") === 0 || url.indexOf("view-source:") === 0;
-}
-
-function hasAboutNewTab(tabs) {
-	return tabs.some(tab => tab.url === "about:newtab");
 }
 
 function sendRefresh() {

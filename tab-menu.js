@@ -1,7 +1,4 @@
 function updateTabMenus() {
-	if (!bookmarkFolder) {
-		return Promise.reject("no bm folder!");
-	}
 
 	function createSessionsMenuEntries(sessions, pID, closeTab) {
 		let cmd = closeTab ? "aside" : "save";
@@ -23,38 +20,42 @@ function updateTabMenus() {
 		});
 	}
 
-	// remove all menus and then recreate them
-	return browser.menus.removeAll().then(() => {
-		let sessions = getSessions(bookmarkFolder).reverse();
+	return getSessionRootFolder().then(bookmarkFolder => {
+		// remove all menus and then recreate them
+		return browser.menus.removeAll().then(() => {
+			let sessions = getSessions(bookmarkFolder).reverse();
 
-		let options = {
-			id: "ta-tab-menu",
-			title:"Tabs Aside",
-			contexts: ["tab"],
-			icons: {
-				"16": "icons/aside2.png"
-			},
-			documentUrlPatterns: ["http://*/*","https://*/*"] // array of strings
-		};
+			let options = {
+				id: "ta-tab-menu",
+				title: "Tabs Aside",
+				contexts: ["tab"],
+				icons: {
+					"16": "icons/aside2.png"
+				},
+				documentUrlPatterns: ["http://*/*", "https://*/*"] // array of strings
+			};
 
-		if (sessions.length === 0) { options.onclick = () => { browser.browserAction.openPopup(); }}
+			if (sessions.length === 0) { options.onclick = () => { browser.browserAction.openPopup(); } }
 
-		// this does not return a promise
-		browser.menus.create(options);
+			// this does not return a promise
+			browser.menus.create(options);
 
-		if (sessions.length > 0) {
-			let sm1 = browser.menus.create({
-				parentId: "ta-tab-menu",
-				title: "add to existing session"
-			});
-	
-			let sm2 = browser.menus.create({
-				parentId: "ta-tab-menu",
-				title: "set aside & add to existing session"
-			});
-	
-			createSessionsMenuEntries(sessions, sm1, false); // save
-			createSessionsMenuEntries(sessions, sm2, true); // aside
-		}
+			if (sessions.length > 0) {
+				let sm1 = browser.menus.create({
+					parentId: "ta-tab-menu",
+					title: "add to existing session"
+				});
+		
+				let sm2 = browser.menus.create({
+					parentId: "ta-tab-menu",
+					title: "set aside & add to existing session"
+				});
+		
+				createSessionsMenuEntries(sessions, sm1, false); // save
+				createSessionsMenuEntries(sessions, sm2, true); // aside
+			}
+		});
+	}).catch(e => {
+		console.error("Tabs Aside Menu Update Error\n" + e);
 	});
 }
