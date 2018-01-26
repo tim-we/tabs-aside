@@ -49,6 +49,15 @@
   "options_ui": {
     "page": "options/options.html",
     "browser_style": true
+  },
+
+  "commands": {
+    "tabs-aside": {
+      "suggested_key": {
+        "default": "Alt+A"
+      },
+      "description": "Set the current set of tabs aside"
+    }
   }
 
 }

@@ -125,3 +125,22 @@ browser.runtime.onMessage.addListener(async message => {
 function refresh() {
 	return Promise.all([updateTabMenus(), sendRefresh()]);
 }
+
+browser.commands.onCommand.addListener(command => {
+	if (command === "tabs-aside") {
+		getTabs().then(tabs => {
+			return asideMessageHandler({
+				command: "aside",
+				newtab: !hasAboutNewTab(tabs),
+				tabs: tabs.filter(tabFilter)
+			});
+		}).catch(e => {
+			console.error("TA command error: " + e);
+		});
+		
+		// does not currently work in Firefox:
+		//browser.sidebarAction.open();
+	} else {
+		console.log(command);
+	}
+});
