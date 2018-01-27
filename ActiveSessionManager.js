@@ -10,7 +10,8 @@ const ActiveSessionManager = (function () {
 	let tabSessionAssoc = new Map();
 
 	let config = {
-		tabCloseAction = "update-session"
+		tabCloseAction = "update-session",
+		newWindow = false
 	};
 
 	function _tabLoaderURL(url, title) {
@@ -164,7 +165,7 @@ const ActiveSessionManager = (function () {
 		}
 	}
 
-	function restoreSession(sessionID, newWindow) {
+	function restoreSession(sessionID, newWindow = config.newWindow) {
 		let p = Promise.resolve();
 		let windowID;
 
@@ -204,8 +205,10 @@ const ActiveSessionManager = (function () {
 		});
 	}
 
-	function getActiveSession(tabID) {
-		return tabSessionAssoc.has(tabID) ? tabSessionAssoc.get(tabID) : null;
+	function getActiveSessionID(tabID) {
+		let bm = tabSessionAssoc.get(tabID);
+
+		return bm ? bm.id : null;
 	}
 
 	// exposed properties & methods
@@ -213,6 +216,6 @@ const ActiveSessionManager = (function () {
 		init: init,
 		setBookmarkFolder: setBookmarkFolder,
 		restoreSession: restoreSession,
-		getActiveSession: getActiveSession
+		getActiveSessionID: getActiveSessionID
 	};
 }());

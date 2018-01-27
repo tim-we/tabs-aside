@@ -22,10 +22,6 @@ body {
 	background-position-y: center;
 }
 
-.button.svg {
-	background-position: 12px;
-}
-
 .button:hover {
 	background-color: #F0F0F0;
 }

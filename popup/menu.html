@@ -10,25 +10,21 @@
 			#aside-btn { background-image: url('../icons/aside1.png'); }
 			#session-btn { background-image: url('../icons/sessions.png'); }
 			#save-btn { background-image: url('../icons/save.png'); }
-			#more-btn { background-image: url('../icons/more-16.svg'); }
+			#more-btn { background-image: url('../icons/more-16.svg'); background-position: 12px; }
 
-			#aside-btn.disabled::after, #save-btn.disabled::after {
+			button.disabled::after {
 				content: "...";
 			}
 
-			.button.hidden { display: none; }
+			body .button.extended { display: none; }
+			body.extended .button.extended { display: block; }
 		</style>
 
 		<script src="../util/tabUtils.js"></script>
+		<script src="../util/externalASMRequest.js"></script>
 	</head>
 
 	<body>
-		<a class="button" id="aside-btn" title="close all tabs &amp; store them in your bookmarks">tabs aside</a>
-		<a class="button hidden" id="save-btn" title="save all tabs (does not close tabs)">save tabs</a>
-		<a class="button hidden" id="select-btn" title="select tabs to set aside" href="selector.html">select tabs</a>
-		<a class="button svg" id="more-btn" title="expand menu &amp; show more options">more options</a>
-		<a class="button" id="session-btn" title="show previous sessions">show sessions</a>
-
 		<script src="menu.js"></script>
 	</body>
 </html>

@@ -119,6 +119,8 @@ browser.runtime.onMessage.addListener(async message => {
 		setSessionFolder(message.bmID).then(refresh);
 	} else if (message.command === "refresh") {
 		updateTabMenus();
+	} else if (message.command === "ASM") {
+		browser.runtime.sendMessage({sessionID:null});
 	}
 });
 
