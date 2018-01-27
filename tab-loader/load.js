@@ -1,10 +1,8 @@
-let a = document.getElementById("load-manually");
+(function () {
+	let params = new URLSearchParams(document.location.search.substring(1));
+	document.title = params.get("title") || document.title;
+	let url = params.get("url");
 
-let params = new URLSearchParams(document.location.search.substring(1));
-document.title = params.get("title") || document.title;
-let url = params.get("url");
-a.href = url;
-
-document.addEventListener("visibilitychange", () => {
-	document.location.replace(a.href);
-}, false);
+	document.getElementById("load-manually").href = url;
+	document.getElementById("url").innerText = url;
+})();

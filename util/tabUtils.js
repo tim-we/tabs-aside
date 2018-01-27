@@ -20,9 +20,13 @@ function tabFilter(tab) {
 	let url = tab.url;
 
 	// only http(s), file and view-source
-	return url.indexOf("http") === 0 || url.indexOf("view-source:") === 0;
+	return url.startsWith("http") || url.startsWith("view-source:");
 }
 
 function hasAboutNewTab(tabs) {
 	return tabs.some(tab => tab.url === "about:newtab");
+}
+
+function makeTitle(title, pinned) {
+	return pinned ? "[pinned] " + title : title;
 }
