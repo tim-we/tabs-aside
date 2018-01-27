@@ -1,3 +1,4 @@
+const LOADER_PREFIX = "../page-loader/load.html?"
 const COOLDOWN = 300;
 let lastClick = 0;
 
@@ -13,7 +14,7 @@ function allowClick() {
 function createProperties(tab) {
 	let o = {
 		active: false,
-		url: tab.url
+		url: LOADER_PREFIX + `title=${tab.title}&url=` + encodeURIComponent(tab.url)
 	};
 
 	if (targetWindowID !== null) {
