@@ -12,8 +12,8 @@ const ActiveSessionManager = (function () {
 	let tabBMAssoc = new Map(); // maps tab ids to bookmark ids
 
 	let config = {
-		tabCloseAction = "update-session",
-		newWindow = false
+		tabCloseAction: "update-session",
+		newWindow: false
 	};
 
 	function _tabLoaderURL(url, title) {

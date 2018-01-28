@@ -1,0 +1,65 @@
+body.active-sessions {
+	padding-top: 0px;
+}
+
+.button {
+	display: block;
+	height: 25px;
+	line-height: 25px;
+	color: black;
+	padding-left: 36px;
+	padding-right: 12px;
+	text-decoration: none;
+	white-space: nowrap;
+
+	background-color: white;
+	background-repeat: no-repeat;
+	background-position-x: 0px;
+	background-position-y: center;
+}
+
+.button:hover {
+	background-color: #F0F0F0;
+}
+
+.button:active {
+	background-color: #E8E8E8;
+}
+
+.button.disabled {
+	background-color: transparent;
+	opacity: 0.5;
+	cursor: default;
+}
+
+.session-container {
+	margin: 0px;
+	padding: 0px;
+}
+
+.session-container > .title {
+	color: white;
+	background-color: rgb(50,50,52);
+	white-space: nowrap;
+	font-size: 12px;
+	height: 14px;
+	line-height: 13px;
+	padding-left: 5px;
+	overflow: hidden;
+}
+
+.session-container:first-of-type > .title {
+	border-top: 1px solid rgb(71,71,73);
+}
+
+.button.aside { background-image: url('../icons/aside1.png'); }
+.button.session-btn { background-image: url('../icons/sessions.png'); }
+.button.save-btn { background-image: url('../icons/save.png'); }
+.button.more-btn { background-image: url('../icons/more-16.svg'); background-position: 12px; }
+
+.button.disabled::after {
+	content: "...";
+}
+
+.button.extended { display: none; }
+body.extended .button.extended { display: block; }

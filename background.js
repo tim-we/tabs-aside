@@ -120,7 +120,13 @@ browser.runtime.onMessage.addListener(async message => {
 	} else if (message.command === "refresh") {
 		updateTabMenus();
 	} else if (message.command === "ASM") {
-		browser.runtime.sendMessage({sessionID:null});
+		let result = ActiveSessionManager[message.asmcmd](message.arg);
+
+		if (result instanceof Promise) {
+			result.then(r => browser.runtime.sendMessage({result:r}));
+		} else {
+			browser.runtime.sendMessage({result:result});
+		}
 	}
 });
 

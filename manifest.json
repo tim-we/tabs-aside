@@ -43,6 +43,7 @@
       "util/wait.js",
       "func.js",
       "tab-menu.js",
+      "ActiveSessionManager.js",
       "background.js"
     ]
   },
