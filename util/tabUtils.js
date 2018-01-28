@@ -27,6 +27,6 @@ function hasAboutNewTab(tabs) {
 	return tabs.some(tab => tab.url === "about:newtab");
 }
 
-function makeTitle(title, pinned) {
+function makeTitle(title, pinned=false) {
 	return pinned ? "[pinned] " + title : title;
 }

@@ -19,7 +19,8 @@
     "bookmarks",
     "tabs",
     "storage",
-    "menus"
+    "menus",
+    "sessions"
   ],
 
   "browser_action": {
