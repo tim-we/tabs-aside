@@ -7,12 +7,13 @@ const ActiveSessionManager = (function () {
 	// private variables
 	let unloadedTabs = new Map(); // map tab ids of all unloaded tabs to their actual urls
 	let activeSessions = new Map(); // maps session id to sets of tab ids
-	//this is needed to properly handle closed tabs
+	//this is needed to properly handle closed tabs:
 	let tabBMAssoc = new Map(); // maps tab ids to bookmark ids
 
 	let config = {
 		tabCloseAction: "update-session",
-		newWindow: false
+		newWindow: false,
+		showBadge: true
 	};
 
 	function _tabLoaderURL(url, title) {
@@ -31,15 +32,19 @@ const ActiveSessionManager = (function () {
 		let title = bm.actualTitle = results[3];
 		let pinned = bm.pinned = (results[2] === "pinned");
 
-		let o = {
+		return {
 			pinned: pinned,
 			url: _tabLoaderURL(bm.url, title),
-			active: false
+			active: false,
+			windowId: windowID
 		};
+	}
 
-		if (windowID !== undefined) { o.windowId = windowID; }
+	function updateBadge() {
+		let n = activeSessions.size;
+		let text = (config.showBadge && n>0) ? ""+n : "";
 
-		return o;
+		browser.browserAction.setBadgeText({text:text});
 	}
 
 	function findSession(tabID) {
@@ -52,14 +57,21 @@ const ActiveSessionManager = (function () {
 		return null;
 	}
 
+	// returns array of session ids
+	function getActiveSessionIDs() {
+		return Array.from(activeSessions.keys());
+	}
+
 	function restoreSession(sessionID, newWindow = config.newWindow) {
+		// sanity-check
 		if (activeSessions.has(sessionID)) {
 			return Promise.reject("session already active");
 		}
 
 		let p = Promise.resolve();
-		let windowID;
+		let windowID = browser.windows.WINDOW_ID_CURRENT;
 
+		// do we need a new window?
 		if (newWindow) {
 			p = browser.windows.create({
 				type: "normal"
@@ -68,12 +80,11 @@ const ActiveSessionManager = (function () {
 			});
 		}
 
+		// let's restore some tabs...
 		return p.then(() => {
 			return browser.bookmarks.getChildren(sessionID).then(bmData => {
 				// just bookmarks that have a URL (no folders)
 				let bms = bmData.filter(bm => bm.url);
-
-				let unloadedTabsBuffer = [];
 
 				let tabIDs = new Set();
 				activeSessions.set(sessionID, tabIDs);
@@ -81,15 +92,19 @@ const ActiveSessionManager = (function () {
 				// create tabs (the promise resolves when every tab has been successfully created)
 				return Promise.all(
 					bms.map(
-						bm => browser.tabs.create(_createProperties(bm)).then(tab => {
-							unloadedTabsBuffer.push({ id: tab.id, url: bm.url });
+						bm => browser.tabs.create(_createProperties(bm, windowID)).then(tab => {
+							unloadedTabs.set(tab.id, bm.url);
 							tabIDs.add(tab.id);
 							tabBMAssoc.set(tab.id, bm.id);
+
+							return Promise.all(
+								browser.sessions.setTabValue(tab.id, "sessionID", sessionID),
+								browser.sessions.setTabValue(tab.id, "bookmarkID", bm.id),
+								browser.sessions.setTabValue(tab.id, "loadURL", bm.url)
+							);
 						})
 					)
-				).then(() => {
-					unloadedTabsBuffer.forEach(t => unloadedTabs.set(t.id, t.url));
-				});
+				).then(updateBadge,updateBadge);
 			}, e => {
 				console.error("[TA] Error restoring session " + sessionID);
 				console.error("[TA] " + e);
@@ -106,9 +121,21 @@ const ActiveSessionManager = (function () {
 		if (session) {
 			return Promise.all(
 				Array.from(session.values()).map(
-					tabID => browser.tabs.remove(tabID)
+					tabID => {
+						// tab-bookmark association has to be removed first
+						// otherwise the tabs.onRemoved listener would delete it
+						tabBMAssoc.delete(tabID);
+						unloadedTabs.delete(tabID);
+						session.delete(tabID);
+
+						// now it should be safe to remove the tab
+						browser.tabs.remove(tabID);
+					}
 				)
-			);
+			).then(() => {
+				activeSessions.delete(sessionID);
+				updateBadge();
+			});
 		} else {
 			console.warn("[TA] no such session: " + sessionID);
 			return Promise.resolve();
@@ -124,7 +151,10 @@ const ActiveSessionManager = (function () {
 					tab => browser.sessions.getTabValue(tab.id, "sessionID").then(
 						sessionID => {
 							if (sessionID) {
-								return browser.sessions.getTabValue(tab.id, "bookmarkID").then(
+								return browser.sessions.getTabValue(
+									tab.id,
+									"bookmarkID"
+								).then(
 									bmID => {
 										let session = activeSessions.get(sessionID);
 										if (!session) {
@@ -135,14 +165,14 @@ const ActiveSessionManager = (function () {
 										session.add(tab.id);
 										tabBMAssoc.set(tab.id, bmID);
 									}
-								)
+									)
 							}
 						}
 					)
 				)
 			).catch(e => {
 				console.error("[TA] Error loading tabs: " + e);
-			});
+			}).then(updateBadge);
 		});
 
 		// handle tab events
@@ -157,7 +187,7 @@ const ActiveSessionManager = (function () {
 				browser.tabs.update(tabID, {
 					url: url
 				}).then(() => {
-					// remove 
+					// remove
 					unloadedTabs.delete(tabID);
 				});
 			}
@@ -169,21 +199,25 @@ const ActiveSessionManager = (function () {
 
 			if (bmID) {
 				// tab was in an active session
-
 				sessionID = findSession(tabID);
 
 				let session = activeSessions.get(sessionID);
 				session.delete(tabID);
-				unloadedTabs.remove(tabID);
+				unloadedTabs.delete(tabID);
+				tabBMAssoc.delete(tabID);
 				
 				if (config.tabCloseAction === "update-session") {
 					// remove from bookmarks
 					browser.bookmarks.remove(bmID).then(() => {
 						// if session is empty, remove folder from bookmarks
 						if (session.size === 0) {
+							activeSessions.delete(sessionID);
+
 							browser.bookmarks.remove(sessionID).catch(e => {
 								console.error("[TA] Error removing session: " + e);
 							});
+
+							updateBadge();
 						}
 					}, e => {
 						console.error("[TA] Error removing bookmark: " + e);
@@ -209,6 +243,8 @@ const ActiveSessionManager = (function () {
 							let session = activeSessions.get(parent.id);
 							session.add(tab.id);
 							tabBMAssoc.set(tab.id, bm.id);
+
+							return browser.sessions.setTabValue(tab.id, "bookmarkID", bm.id);
 						});
 					}
 				});
@@ -216,11 +252,11 @@ const ActiveSessionManager = (function () {
 		});
 
 		browser.tabs.onUpdated.addListener((tabID, changeInfo, tab) => {
-			let bmID;
+			let bmID = tabBMAssoc.get(tabID);
 
 			// Map.get returns undefined if the key can't be found
-			if (changeInfo.url !== undefined && (bmID = tabBMAssoc.get(tabID))) {
-				if (unloadedTabs.has(tabID) || !urlFilter(changeInfo.url)) {
+			if (bmID) {
+				if (changeInfo.url && !urlFilter(changeInfo.url)) {
 					return;
 				}
 
@@ -250,15 +286,11 @@ const ActiveSessionManager = (function () {
 		});
 	})();
 
-	// returns array of session ids
-	function getActiveSessionIDs() {
-		return Array.from(activeSessions.keys());
-	}
-
 	// exposed properties & methods
 	return {
-		restoreSession: restoreSession,
+		findSession: findSession,
 		getActiveSessionIDs: getActiveSessionIDs,
+		restoreSession: restoreSession,
 		setSessionAside: setSessionAside
 	};
 }());

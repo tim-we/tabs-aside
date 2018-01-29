@@ -123,7 +123,10 @@ browser.runtime.onMessage.addListener(async message => {
 		let result = ActiveSessionManager[message.asmcmd].apply(null, message.args || []);
 
 		if (result instanceof Promise) {
-			result.then(r => browser.runtime.sendMessage({result:r}));
+			result.then(
+				r => browser.runtime.sendMessage({ result: r }),
+				e => browser.runtime.sendMessage({ error: e })
+			);
 		} else {
 			browser.runtime.sendMessage({result:result});
 		}

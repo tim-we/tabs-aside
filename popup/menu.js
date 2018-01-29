@@ -6,9 +6,11 @@
 	class Session {
 		constructor(id,title) {
 			this.id = id;
-			this.title = title;
 
 			this.container = document.createElement("div");
+			this.container.classList.add("session-container");
+
+			this.container.appendChild(createTitle(title));
 
 			this.container.appendChild(createButton(
 				"set aside",
@@ -17,6 +19,7 @@
 				e => {
 					externalASMRequest("setSessionAside", [id]);
 					browser.sidebarAction.open();
+					window.close();
 				}
 			));
 		}
@@ -38,6 +41,13 @@
 		return btn;
 	}
 
+	function createTitle(title) {
+		let elem = document.createElement("div");
+		elem.innerText = title;
+		elem.classList.add("title");
+		return elem;
+	}
+
 	function loadConfig() {
 		return new Promise(resolve => {
 			if (location.hash.replace("#", "").trim() === "expand") {
@@ -53,7 +63,7 @@
 	}
 
 	function getActiveSessions() {
-		return externalASMRequest("getActiveSessionIDs").then(sessionIDs => {
+		return externalASMRequest("getActiveSessionIDs",[],5000).then(sessionIDs => {
 			if (sessionIDs instanceof Array) {
 				return Promise.all(
 					sessionIDs.map(sID => {
@@ -67,6 +77,8 @@
 			} else {
 				return Promise.reject("unexpected response");
 			}
+		}).catch(e => {
+			console.error("[TA] ASM.getActiveSessions: " + e);
 		});
 	}
 
@@ -95,7 +107,7 @@
 			if (sessions.length > 0) {
 				document.body.classList.add("active-sessions");
 
-				sessions.forEach(s => document.body.appendChild(r.container));
+				sessions.forEach(s => document.body.appendChild(s.container));
 			}
 
 			if (/*there are remaining tabs*/true) {
@@ -104,10 +116,7 @@
 				document.body.appendChild(rc);
 				
 				if (sessions.length > 0) {
-					let title = document.createElement("div");
-					title.innerText = "Remaining tabs";
-					title.classList.add("title");
-					rc.appendChild(title);
+					rc.appendChild(createTitle("Remaining tabs"));
 				}
 
 				rc.appendChild(createButton("tabs aside", "close all tabs &amp; store them in your bookmarks", ["aside"], e => {

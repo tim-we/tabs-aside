@@ -1,7 +1,7 @@
 class TabSession {
 	
 	constructor(bm) {
-		this.title = bm.title;
+		this.title = bm.title + " " + bm.id;
 		
 		this.sessionID = bm.id; // bookmark node ID
 
