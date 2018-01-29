@@ -5,7 +5,6 @@ const ActiveSessionManager = (function () {
 	const TAB_LOADER_PREFIX = browser.extension.getURL("tab-loader/load.html") + "?";
 
 	// private variables
-	let sessionRootFolder = null;
 	let unloadedTabs = new Map(); // map tab ids of all unloaded tabs to their actual urls
 	let activeSessions = new Map(); // maps session id to sets of tab ids
 	//this is needed to properly handle closed tabs
@@ -34,7 +33,7 @@ const ActiveSessionManager = (function () {
 
 		let o = {
 			pinned: pinned,
-			url: _tabLoaderURL(tab.url, title),
+			url: _tabLoaderURL(bm.url, title),
 			active: false
 		};
 
@@ -53,13 +52,11 @@ const ActiveSessionManager = (function () {
 		return null;
 	}
 
-	function setBookmarkFolder(bmFolder) {
-		if (bmFolder) {
-			sessionRootFolder = bmFolder;
-		}
-	}
-
 	function restoreSession(sessionID, newWindow = config.newWindow) {
+		if (activeSessions.has(sessionID)) {
+			return Promise.reject("session already active");
+		}
+
 		let p = Promise.resolve();
 		let windowID;
 
@@ -82,10 +79,10 @@ const ActiveSessionManager = (function () {
 				activeSessions.set(sessionID, tabIDs);
 	
 				// create tabs (the promise resolves when every tab has been successfully created)
-				return new Promise.all(
+				return Promise.all(
 					bms.map(
 						bm => browser.tabs.create(_createProperties(bm)).then(tab => {
-							unloadedTabsBuffer.push({ id: tab.id, url: url });
+							unloadedTabsBuffer.push({ id: tab.id, url: bm.url });
 							tabIDs.add(tab.id);
 							tabBMAssoc.set(tab.id, bm.id);
 						})
@@ -118,13 +115,8 @@ const ActiveSessionManager = (function () {
 		}
 	}
 
-	function init(bmFolder) {
-		if (sessionRootFolder !== null) {
-			throw new Error("[TA] Already initialized!");
-		}
-
-		setBookmarkFolder(bmFolder);
-
+	// initialization
+	(function () {
 		// check all tabs
 		browser.tabs.query({}).then(tabs => {
 			Promise.all(
@@ -228,7 +220,7 @@ const ActiveSessionManager = (function () {
 
 			// Map.get returns undefined if the key can't be found
 			if (changeInfo.url !== undefined && (bmID = tabBMAssoc.get(tabID))) {
-				if (unloadedTabs.has(tabID) || !tabFilter(changeInfo.url)) {
+				if (unloadedTabs.has(tabID) || !urlFilter(changeInfo.url)) {
 					return;
 				}
 
@@ -256,7 +248,7 @@ const ActiveSessionManager = (function () {
 				});
 			}
 		});
-	}
+	})();
 
 	// returns array of session ids
 	function getActiveSessionIDs() {
@@ -265,8 +257,6 @@ const ActiveSessionManager = (function () {
 
 	// exposed properties & methods
 	return {
-		init: init,
-		setBookmarkFolder: setBookmarkFolder,
 		restoreSession: restoreSession,
 		getActiveSessionIDs: getActiveSessionIDs,
 		setSessionAside: setSessionAside

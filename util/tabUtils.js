@@ -23,6 +23,11 @@ function tabFilter(tab) {
 	return url.startsWith("http") || url.startsWith("view-source:");
 }
 
+function urlFilter(url) {
+	// only http(s), file and view-source
+	return url.startsWith("http") || url.startsWith("view-source:");
+}
+
 function hasAboutNewTab(tabs) {
 	return tabs.some(tab => tab.url === "about:newtab");
 }

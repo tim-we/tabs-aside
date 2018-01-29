@@ -15,7 +15,7 @@
 				"set the session aside (closes all it's tabs)",
 				["aside"],
 				e => {
-					externalASMRequest("setSessionAside", id);
+					externalASMRequest("setSessionAside", [id]);
 					browser.sidebarAction.open();
 				}
 			));
@@ -70,6 +70,17 @@
 		});
 	}
 
+	function tabsAside(cmd) {
+		return getTabs().then(tabs => {
+			// tabs aside!
+			return browser.runtime.sendMessage({
+				command: cmd,
+				newtab: cmd==="aside" && !hasAboutNewTab(tabs),
+				tabs: tabs.filter(tabFilter)
+			}).catch(error => console.log("Error: " + error));
+		});
+	}
+
 	// init routine
 	(function () {
 		Promise.all([
@@ -87,36 +98,40 @@
 				sessions.forEach(s => document.body.appendChild(r.container));
 			}
 
-			let rc = document.createElement("div");
-			rc.classList.add("session-container");
-			document.body.appendChild(rc);
-			
-			if (sessions.length > 0) {
-				let title = document.createElement("div");
-				title.innerText = "Remaining tabs";
-				title.classList.add("title");
-				rc.appendChild(title);
-			}
-
-			rc.appendChild(createButton("tabs aside", "close all tabs &amp; store them in your bookmarks", ["aside"], e => {
+			if (/*there are remaining tabs*/true) {
+				let rc = document.createElement("div");
+				rc.classList.add("session-container");
+				document.body.appendChild(rc);
 				
-			}));
+				if (sessions.length > 0) {
+					let title = document.createElement("div");
+					title.innerText = "Remaining tabs";
+					title.classList.add("title");
+					rc.appendChild(title);
+				}
 
-			rc.appendChild(createButton("save tabs", "save all tabs (does not close tabs)", ["extended", "save-btn"], e => {
-				
-			}));
+				rc.appendChild(createButton("tabs aside", "close all tabs &amp; store them in your bookmarks", ["aside"], e => {
+					tabsAside("aside");
+					browser.sidebarAction.open();
+				}));
 
-			let selectBtn = createButton("select tabs", "select tabs to set aside", ["extended", "select-btn"]);
-			selectBtn.href = "selector.html";
-			rc.appendChild(selectBtn);
+				rc.appendChild(createButton("save tabs", "save all tabs (does not close tabs)", ["extended", "save-btn"], e => {
+					tabsAside("save");
+					browser.sidebarAction.open();
+				}));
 
-			if (!expand) {
-				let moreBtn = createButton("more options", "expand menu &amp; show more options", ["more-btn"], e => {
-					moreBtn.remove();
-					document.body.classList.add("extended");
-				});
+				let selectBtn = createButton("select tabs", "select tabs to set aside", ["extended", "select-btn"]);
+				selectBtn.href = "selector.html";
+				rc.appendChild(selectBtn);
 
-				document.body.appendChild(moreBtn);
+				if (!expand) {
+					let moreBtn = createButton("more options", "expand menu &amp; show more options", ["more-btn"], e => {
+						moreBtn.remove();
+						document.body.classList.add("extended");
+					});
+
+					document.body.appendChild(moreBtn);
+				}
 			}
 
 			document.body.appendChild(createButton("show sessions", "opens the sidebar", ["session-btn"], e => {

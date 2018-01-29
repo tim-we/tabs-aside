@@ -34,8 +34,8 @@ browser.storage.local.get("version").then(data => {
 }).then(() => {
 	// load sessions root folder (Tabs Aside folder)
 	// (verify there actually is a folder with that ID)
-	return getSessionRootFolder().then(folder => {
-		bookmarkFolderID = folder.id;
+	return getSessionRootFolderID().then(folderID => {
+		bookmarkFolderID = folderID;
 	}, e => {
 		console.log(e);
 
@@ -120,7 +120,7 @@ browser.runtime.onMessage.addListener(async message => {
 	} else if (message.command === "refresh") {
 		updateTabMenus();
 	} else if (message.command === "ASM") {
-		let result = ActiveSessionManager[message.asmcmd](message.arg);
+		let result = ActiveSessionManager[message.asmcmd].apply(null, message.args || []);
 
 		if (result instanceof Promise) {
 			result.then(r => browser.runtime.sendMessage({result:r}));

@@ -1,62 +1,15 @@
-const LOADER_PREFIX = "../page-loader/load.html?"
-const COOLDOWN = 300;
-let lastClick = 0;
-
-function allowClick() {
-	if (Date.now() - lastClick > COOLDOWN) {
-		lastClick = Date.now();
-		return true;
-	}
-
-	return false;
-}
-
-function createProperties(tab) {
-	let o = {
-		active: false,
-		url: LOADER_PREFIX + `title=${tab.title}&url=` + encodeURIComponent(tab.url)
-	};
-
-	if (targetWindowID !== null) {
-		o.windowId = targetWindowID;
-	}
-
-	if(tab.pinned) {
-		o.pinned = true;
-	}
-
-	return o;
-}
-
-function createHTMLElement(tagName, attrs, classes, content) {
-	let element = document.createElement(tagName);
-
-	// add attributes
-	Object.getOwnPropertyNames(attrs).forEach(k => {
-		element.setAttribute(k, attrs[k]);
-	});
-
-	// add classes
-	classes.forEach(c => { element.classList.add(c); });
-
-	if (content) {
-		element.innerHTML = content;
-	}
-
-	return element;
-}
-
 class TabSession {
 	
 	constructor(bm) {
 		this.title = bm.title;
 		
-		this.bmID = bm.id; // bookmark node ID
+		this.sessionID = bm.id; // bookmark node ID
 
 		//this.tabs = bm.children.filter(x => x.type === 'bookmark');
 		this.tabs = bm.children.filter(x => !!x.url);
 
 		this.expanded = false;
+		this.state = "closed";
 
 		// create html structure
 		this.html = document.createElement("div");
@@ -90,19 +43,9 @@ class TabSession {
 			e.stopPropagation();
 			e.preventDefault();
 
-			if (allowClick()) {
+			if (this.state !== "closed") { return; }
 
-				let _this = this;
-
-				getRestoreTabsBehavior().then(behavior => {
-					let keep = (behavior === "keep");
-
-					// CTRL "inverts" behavior
-					if (e.ctrlKey) { keep = !keep; }
-
-					_this.restore(keep);
-				});
-			}
+			this.restore();
 		});
 		controls.appendChild(a);
 		
@@ -191,47 +134,20 @@ class TabSession {
 		}
 	}
 
-	restore(keep = false) {
+	restore() {
 		console.log("restoring tabs from " + this.title);
-
-		if (this.tabs.length > 50) {
-			let msg = "Warning:\nOpening this many tabs at once might cause problems on some systems.";
-			
-			if (!keep) {
-				msg += "\n" + "Therefore you will have to manually remove the session after the tabs have been restored.";
-			}
-			
-			alert(msg);
-
-			keep = true;
-		}
-
-		let p = Promise.all(
-			this.tabs.map(
-				tab => browser.tabs.create(createProperties(tab))
-			)
-		).catch(e => {
-			console.error("Error: " + e);
-			if (!keep) {
-				console.log("This session will be kept (just to be safe).");
-				keep = true;
-			}
+		this.state = "restoring";
+		externalASMRequest("restoreSession", [this.sessionID]).then(() => {
+			this.state = "active";
 		});
-
-		if (!keep) {
-			this.collapse();
-			
-			p = p.then(() => { this.remove(); });
-		}
-
-		return p;
+		this.collapse();
 	}
 
 	remove() {
 		this.html.remove();
 		this.html = null;
 
-		browser.bookmarks.removeTree(this.bmID).then(() => {
+		browser.bookmarks.removeTree(this.sessionID).then(() => {
 			return sendRefresh();
 		});
 	}
@@ -240,7 +156,7 @@ class TabSession {
 		if (newTitle.length > 0) {
 			this.title = newTitle;
 
-			return browser.bookmarks.update(this.bmID, {
+			return browser.bookmarks.update(this.sessionID, {
 				title: newTitle
 			}).then(() => {
 				this.titleElement.innerText = newTitle;
@@ -254,10 +170,37 @@ class TabSession {
 	}
 }
 
-function getRestoreTabsBehavior() {
-	return browser.storage.local.get("restoreBehavior").then(data => {
-		return (data.restoreBehavior) ? data.restoreBehavior : "auto-remove";
-	}, () => {
-		return "auto-remove";
+function createProperties(tab) {
+	let o = {
+		active: false,
+		url: LOADER_PREFIX + `title=${tab.title}&url=` + encodeURIComponent(tab.url)
+	};
+
+	if (targetWindowID !== null) {
+		o.windowId = targetWindowID;
+	}
+
+	if(tab.pinned) {
+		o.pinned = true;
+	}
+
+	return o;
+}
+
+function createHTMLElement(tagName, attrs, classes, content) {
+	let element = document.createElement(tagName);
+
+	// add attributes
+	Object.getOwnPropertyNames(attrs).forEach(k => {
+		element.setAttribute(k, attrs[k]);
 	});
+
+	// add classes
+	classes.forEach(c => { element.classList.add(c); });
+
+	if (content) {
+		element.innerHTML = content;
+	}
+
+	return element;
 }

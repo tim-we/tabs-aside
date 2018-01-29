@@ -1,4 +1,4 @@
-function externalASMRequest(command, argument = null) {
+function externalASMRequest(command, args = []) {
 	return new Promise((resolve, reject) => {
 		let listener = function (response) {
 			// expecting just 1 response:
@@ -20,10 +20,12 @@ function externalASMRequest(command, argument = null) {
 			}
 		}, 500);
 
+		console.log("ASM request " + command + " args: " + args.join(","));
+
 		browser.runtime.sendMessage({
 			command: "ASM",
 			asmcmd: command,
-			arg: argument
+			args: args
 		}).catch(e => reject(e));
 	});
 }
