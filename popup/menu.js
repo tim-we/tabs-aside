@@ -63,7 +63,7 @@
 	}
 
 	function getActiveSessions() {
-		return externalASMRequest("getActiveSessionIDs",[],5000).then(sessionIDs => {
+		return externalASMRequest("getActiveSessionIDs",[],0).then(sessionIDs => {
 			if (sessionIDs instanceof Array) {
 				return Promise.all(
 					sessionIDs.map(sID => {
@@ -122,11 +122,13 @@
 				rc.appendChild(createButton("tabs aside", "close all tabs &amp; store them in your bookmarks", ["aside"], e => {
 					tabsAside("aside");
 					browser.sidebarAction.open();
+					window.close();
 				}));
 
 				rc.appendChild(createButton("save tabs", "save all tabs (does not close tabs)", ["extended", "save-btn"], e => {
 					tabsAside("save");
 					browser.sidebarAction.open();
+					window.close();
 				}));
 
 				let selectBtn = createButton("select tabs", "select tabs to set aside", ["extended", "select-btn"]);
@@ -146,6 +148,9 @@
 			document.body.appendChild(createButton("show sessions", "opens the sidebar", ["session-btn"], e => {
 				browser.sidebarAction.open();
 			}));
+		}).catch(e => {
+			alert("There was an unexpeted error.\nSee the console (Ctrl+Shift+J) for details.");
+			window.close();
 		});
 	})();
 })();
