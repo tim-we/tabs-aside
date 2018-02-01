@@ -1,4 +1,4 @@
-function externalASMRequest(command, args = [], timeout = 1000) {
+function externalASMRequest(command, args = [], timeout = 0) {
 	let start = Date.now();
 
 	return new Promise((resolve, reject) => {
@@ -6,8 +6,12 @@ function externalASMRequest(command, args = [], timeout = 1000) {
 			// expecting just 1 response:
 			browser.runtime.onMessage.removeListener(listener);
 
+			// compute response time
 			let end = Date.now();
-			console.log("ASM response time: " + (end - start) + "ms");
+			let rt = end - start;
+			if (rt > 250) {
+				console.log("ASM response time: " + rt + "ms");
+			}
 
 			if (response.error !== undefined) {
 				reject(response.error);
@@ -31,6 +35,14 @@ function externalASMRequest(command, args = [], timeout = 1000) {
 			command: "ASM",
 			asmcmd: command,
 			args: args
-		}).catch(e => reject("[ASM] " + e));
+		}).catch(e => {
+			let msg = "[ASM] " + e;
+
+			if (e.lineNumber) {
+				msg += " on line " + e.lineNumber;
+			}
+
+			reject(msg);
+		});
 	});
 }

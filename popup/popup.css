@@ -2,6 +2,4 @@ body {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	background-color: white;
-	min-width: 122px;
-	min-height: calc(3 * 25px);
 }

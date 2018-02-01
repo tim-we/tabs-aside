@@ -1,6 +1,7 @@
 (function () {
 	// private variables
 	let sessions = [];
+	let tabIDs = new Set();
 	let expand = false;
 
 	class Session {
@@ -62,11 +63,13 @@
 		});
 	}
 
-	function getActiveSessions() {
-		return externalASMRequest("getActiveSessionIDs",[],0).then(sessionIDs => {
-			if (sessionIDs instanceof Array) {
+	function getActiveSessionData() {
+		return externalASMRequest("getActiveSessionData", []).then(sessionData => {
+			if (sessionData) {
+				sessionData.tabs.forEach(tab => tabIDs.add(tab));
+
 				return Promise.all(
-					sessionIDs.map(sID => {
+					sessionData.sessions.map(sID => {
 						return browser.bookmarks.get(sID).then(bms => {
 							if (bms.length === 1) {
 								sessions.push(new Session(sID, bms[0].title));
@@ -82,23 +85,28 @@
 		});
 	}
 
-	function tabsAside(cmd) {
-		return getTabs().then(tabs => {
-			// tabs aside!
-			return browser.runtime.sendMessage({
-				command: cmd,
-				newtab: cmd==="aside" && !hasAboutNewTab(tabs),
-				tabs: tabs.filter(tabFilter)
-			}).catch(error => console.log("Error: " + error));
-		});
+	function tabsAside(cmd, tabs) {
+		// send the tabs aside command
+		return browser.runtime.sendMessage({
+			command: cmd,
+			newtab: cmd==="aside" && sessions.length === 0 && !hasAboutNewTab(tabs),
+			tabs: tabs
+		}).catch(error => console.log("Error: " + error));
 	}
 
 	// init routine
 	(function () {
 		Promise.all([
 			loadConfig(),
-			getActiveSessions()
+			getActiveSessionData(),
+			browser.tabs.query({
+				currentWindow: true
+			})
 		]).then(data => {
+			// tabs in current window that are not in a (active) session
+			let remainingTabs = data[2].filter(
+				tab => !tabIDs.has(tab.id) && tabFilter(tab)
+			);
 
 			if (expand) {
 				document.body.classList.add("expanded");
@@ -110,7 +118,8 @@
 				sessions.forEach(s => document.body.appendChild(s.container));
 			}
 
-			if (/*there are remaining tabs*/true) {
+			// are there remaining tabs?
+			if (remainingTabs.length > 0) {
 				let rc = document.createElement("div");
 				rc.classList.add("session-container");
 				document.body.appendChild(rc);
@@ -120,13 +129,13 @@
 				}
 
 				rc.appendChild(createButton("tabs aside", "close all tabs &amp; store them in your bookmarks", ["aside"], e => {
-					tabsAside("aside");
+					tabsAside("aside", remainingTabs);
 					browser.sidebarAction.open();
 					window.close();
 				}));
 
 				rc.appendChild(createButton("save tabs", "save all tabs (does not close tabs)", ["extended", "save-btn"], e => {
-					tabsAside("save");
+					tabsAside("save", remainingTabs);
 					browser.sidebarAction.open();
 					window.close();
 				}));
@@ -143,6 +152,10 @@
 
 					document.body.appendChild(moreBtn);
 				}
+			} else {
+				let d = document.createElement("div");
+				d.classList.add("menu-divider");
+				document.body.appendChild(d);
 			}
 
 			document.body.appendChild(createButton("show sessions", "opens the sidebar", ["session-btn"], e => {

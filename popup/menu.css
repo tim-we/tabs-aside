@@ -1,5 +1,11 @@
+body {
+	min-width: 122px;
+	min-height: calc(3 * 25px);
+}
+
 body.active-sessions {
 	padding-top: 0px;
+	min-height: calc(2 * 25px);
 }
 
 .button {
@@ -63,3 +69,10 @@ body.active-sessions {
 
 .button.extended { display: none; }
 body.extended .button.extended { display: block; }
+
+.menu-divider {
+	height:0px;
+	border-top: 1px solid #DEDEDE;
+	margin-top: 6px;
+	margin-bottom: 6px;
+}

@@ -125,7 +125,7 @@ browser.runtime.onMessage.addListener(async message => {
 		if (result instanceof Promise) {
 			result.then(
 				r => browser.runtime.sendMessage({ result: r }),
-				e => browser.runtime.sendMessage({ error: e })
+				e => browser.runtime.sendMessage({ error: e, line: e.lineNumber })
 			);
 		} else {
 			browser.runtime.sendMessage({result:result});

@@ -143,6 +143,27 @@ const ActiveSessionManager = (function () {
 		}
 	}
 
+	// input: array of (active) session ids
+	// returns array of tab ids (tabs in those sessions)
+	function getTabsInActiveSession(sessions = getActiveSessionIDs()) {
+		return sessions.reduce(
+			(tabs, sessionID) => tabs.concat(
+				Array.from(
+					activeSessions.get(sessionID).values()
+				)
+			)
+		, []);
+	}
+
+	function getASData() {
+		let sessionIDs = getActiveSessionIDs();
+
+		return {
+			sessions: sessionIDs,
+			tabs: getTabsInActiveSession(sessionIDs)
+		};
+	}
+
 	// initialization
 	(function () {
 		// check all tabs
@@ -302,6 +323,7 @@ const ActiveSessionManager = (function () {
 	// exposed properties & methods
 	return {
 		findSession: findSession,
+		getActiveSessionData: getASData,
 		getActiveSessionIDs: getActiveSessionIDs,
 		restoreSession: restoreSession,
 		setSessionAside: setSessionAside
