@@ -3,7 +3,7 @@ var bookmarkFolderID = null;
 
 function setSessionFolder(bmFolderID) {
 	return browser.bookmarks.getSubTree(bmFolderID).then(data => {
-		return isBMFolder(data[0]) ?
+		return utils.isBMFolder(data[0]) ?
 			Promise.resolve(data[0]) :
 			Promise.reject(new Error("thats not a folder"));
 	}).then(folder => {
@@ -42,7 +42,7 @@ browser.storage.local.get("version").then(data => {
 		// checking if there already is a tabs aside folder
 		console.log("searching for a 'Tabs Aside' folder");
 		return browser.bookmarks.search({title:"Tabs Aside"}).then(data => {
-			let folders = data.filter(bm => isBMFolder(bm));
+			let folders = data.filter(bm => utils.isBMFolder(bm));
 			
 			if (folders.length > 0) {
 				// Tabs Aside folder found
@@ -139,11 +139,11 @@ function refresh() {
 
 browser.commands.onCommand.addListener(command => {
 	if (command === "tabs-aside") {
-		getTabs().then(tabs => {
+		utils.getTabs().then(tabs => {
 			return asideMessageHandler({
 				command: "aside",
-				newtab: !hasAboutNewTab(tabs),
-				tabs: tabs.filter(tabFilter)
+				newtab: !utils.containsEmptyTab(tabs),
+				tabs: tabs.filter(tab => utils.urlFilter(tab.url))
 			});
 		}).catch(e => {
 			console.error("TA command error: " + e);

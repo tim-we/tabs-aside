@@ -14,14 +14,14 @@ function loadBMRoot() {
 	}, e => {
 		// wait 0.2s and try again
 		console.log(e);
-		return wait(200).then(loadBMRoot);
+		return utils.wait(200).then(loadBMRoot);
 	});
 }
 
 function getTabSessions() {
 	return new Promise(resolve => {
 		let sessions = getSessions(bookmarkFolder)
-			.map(bm => new TabSession(bm))
+			.map(bm => new SidebarSession(bm.id))
 			.reverse();
 
 		resolve(sessions);
@@ -73,4 +73,24 @@ browser.runtime.onMessage.addListener(message => {
 	if (message.command === "refresh") {
 		update(true);
 	}
+});
+
+document.addEventListener('keydown', (event) => {
+	if (event.repeat) { return; }
+	const keyName = event.key;
+
+	let keys = [];
+
+	if (event.ctrlKey) {
+		keys.push("Ctrl");
+	}
+
+	if (event.altKey) {
+		keys.push("Alt");
+	}
+
+	keys.push(event.key);
+
+	console.log(keys.join(",") + " pressed");
+	
 });

@@ -30,7 +30,7 @@ window.addEventListener("load", () => {
 			tipID = Math.max(0, data.tipData.id);
 		}
 
-		wait(500).then(() => {
+		utils.wait(500).then(() => {
 			if (tipID === -1 && sessions !== undefined && sessions.length === 0) {
 				// do not show any tips
 				return;

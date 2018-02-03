@@ -89,7 +89,7 @@
 		// send the tabs aside command
 		return browser.runtime.sendMessage({
 			command: cmd,
-			newtab: cmd==="aside" && sessions.length === 0 && !hasAboutNewTab(tabs),
+			newtab: cmd==="aside" && sessions.length === 0 && !utils.containsEmptyTab(tabs),
 			tabs: tabs
 		}).catch(error => console.log("Error: " + error));
 	}
@@ -105,7 +105,7 @@
 		]).then(data => {
 			// tabs in current window that are not in a (active) session
 			let remainingTabs = data[2].filter(
-				tab => !tabIDs.has(tab.id) && tabFilter(tab)
+				tab => !tabIDs.has(tab.id) && utils.urlFilter(tab.url)
 			);
 
 			if (expand) {
@@ -147,7 +147,7 @@
 				if (!expand) {
 					let moreBtn = createButton("more options", "expand menu &amp; show more options", ["more-btn"], e => {
 						moreBtn.remove();
-						document.body.classList.add("extended");
+						document.body.classList.add("expanded");
 					});
 
 					document.body.appendChild(moreBtn);

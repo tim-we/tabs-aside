@@ -1,28 +1,25 @@
-class TabSession {
+const TAB_LOADER_PREFIX = browser.extension.getURL("tab-loader/load.html") + "?";
+
+class SidebarSession {
 	
-	constructor(bm) {
-		this.title = bm.title + " " + bm.id;
-		
-		this.sessionID = bm.id; // bookmark node ID
+	constructor(bmID, expand=false) {
+		this.title = bmID;
+		this.sessionID = bmID; // bookmark node ID
 
-		//this.tabs = bm.children.filter(x => x.type === 'bookmark');
-		this.tabs = bm.children.filter(x => !!x.url);
-
-		this.expanded = false;
+		this.expanded = expand;
 		this.state = "closed";
 
 		// create html structure
 		this.html = document.createElement("div");
-		this.html.classList.add("session");
-		this.html.classList.add('collapsed');
+		this.html.classList.add("session", "collapsed");
 
 		// titlebar
 		let titlebar = createHTMLElement("div", {
 			"title": "click to reveal tabs"
 		}, ["titlebar"]);
 		this.titleElement = createHTMLElement("div", {}, ["title"], this.title);
-		let counterElement = createHTMLElement("div", {}, ["counter"], `${this.tabs.length} tabs`);
-		[this.titleElement, counterElement].forEach(i => titlebar.appendChild(i));
+		this.counterElement = createHTMLElement("div", {}, ["counter"], `- tabs`);
+		[this.titleElement, this.counterElement].forEach(i => titlebar.appendChild(i));
 		
 		titlebar.addEventListener("click", () => {
 			this.toggle();
@@ -78,38 +75,68 @@ class TabSession {
 			}
 		});
 		
-		// tabs
-		let tabsOL = this.tabs.reduce((ol, tab) => {
-			let li = document.createElement("li");
+		// tab section
+		this.tabsection = document.createElement("div");
+		this.tabsection.classList.add("tabs");
+		this.html.appendChild(this.tabsection);
 
-			let a = document.createElement("a");
-			a.classList.add("tab");
-			a.href = tab.url;
+		this.update();
+	}
 
-			let title = tab.title;
+	_loadTabsFromBookmarks() {
+		return browser.bookmarks.getChildren(this.sessionID).then(
+			bms => bms.filter(x => !!x.url)
+		);
+	}
 
-			if(tab.title) {
-				if(tab.title.length > 9 && tab.title.substr(0, 9) === "[pinned] ") {
-					tab.pinned = true;
-					tab.title = title = tab.title.substr(9);
-					a.classList.add("pinned");
+	_generateTabHTML() {
+		this._loadTabsFromBookmarks().then(bms => {
+			let tabsOL = bms.reduce((ol, tab) => {
+				let li = document.createElement("li");
+
+				let a = document.createElement("a");
+				a.classList.add("tab");
+				a.href = tab.url;
+
+				let title = tab.title;
+
+				if(tab.title) {
+					if(tab.title.length > 9 && tab.title.substr(0, 9) === "[pinned] ") {
+						tab.pinned = true;
+						tab.title = title = tab.title.substr(9);
+						a.classList.add("pinned");
+					}
+				} else {
+					title = (new URL(tab.url)).hostname + " [no title]";
+					tab.pinned = false;
 				}
-			} else {
-				title = (new URL(tab.url)).hostname + " [no title]";
-				tab.pinned = false;
+
+				a.innerText = title;
+				
+				li.appendChild(a);
+				ol.appendChild(li);
+				return ol;
+			}, document.createElement("ol"));
+
+			this.tabsection.innerHTML = "";
+			this.tabsection.appendChild(tabsOL);
+		});
+	}
+
+	update() {
+		browser.bookmarks.get(this.sessionID).then(bm => {
+			this.title = bm.title;
+			this.titleElement.inenrText = bm.title;
+		});
+
+		this._loadTabsFromBookmarks().then(ts => {
+			this.counterElement.innerText = `${ts.length} tabs`;
+
+			if (this.expanded) {
+				// TODO: pass ts to generateTabHTML
+				this._generateTabHTML();
 			}
-
-			a.innerText = title;
-			
-			li.appendChild(a);
-			ol.appendChild(li);
-			return ol;
-		}, document.createElement("ol"));
-
-		let tabsection = document.createElement("div");
-		tabsection.classList.add("tabs");
-		tabsection.appendChild(tabsOL);
-		this.html.appendChild(tabsection);
+		});
 	}
 
 	expand() {
@@ -117,6 +144,8 @@ class TabSession {
 		this.html.classList.add("expanded");
 		this.html.classList.remove("collapsed");
 		this.titlebar.title = "click to hide tabs";
+
+		this._generateTabHTML();
 	}
 
 	collapse() {
@@ -124,6 +153,8 @@ class TabSession {
 		this.html.classList.add("collapsed");
 		this.html.classList.remove("expanded");
 		this.titlebar.title = "click to reveal tabs";
+
+		this.tabsection.innerHTML = "";
 	}
 
 	toggle() {
@@ -136,11 +167,11 @@ class TabSession {
 
 	restore() {
 		console.log("restoring tabs from " + this.title);
+		this.collapse();
 		this.state = "restoring";
 		externalASMRequest("restoreSession", [this.sessionID]).then(() => {
 			this.state = "active";
 		});
-		this.collapse();
 	}
 
 	remove() {
@@ -173,7 +204,7 @@ class TabSession {
 function createProperties(tab) {
 	let o = {
 		active: false,
-		url: LOADER_PREFIX + `title=${tab.title}&url=` + encodeURIComponent(tab.url)
+		url: TAB_LOADER_PREFIX + `title=${tab.title}&url=` + encodeURIComponent(tab.url)
 	};
 
 	if (targetWindowID !== null) {

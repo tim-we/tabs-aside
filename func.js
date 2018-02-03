@@ -73,7 +73,7 @@ function getSessionRootFolderID() {
 function getSessionRootFolder() {
 	return getSessionRootFolderID().then(bmID => {
 		return browser.bookmarks.getSubTree(bmID).then(data => {
-			return isBMFolder(data[0]) ?
+			return utils.isBMFolder(data[0]) ?
 				Promise.resolve(data[0]) :
 				Promise.reject(`folder with id ${bmID} not found!`);
 		});
@@ -81,5 +81,5 @@ function getSessionRootFolder() {
 }
 
 function getSessions(sessionsRootFolder) {
-	return sessionsRootFolder ? sessionsRootFolder.children.filter(isBMFolder) : [];
+	return sessionsRootFolder ? sessionsRootFolder.children.filter(utils.isBMFolder) : [];
 }

@@ -1,7 +1,4 @@
 const ActiveSessionManager = (function () {
-	// regular expression that parses tab options and title from bookmark title
-	const bmTitleParserRE = /^(\[(pinned)?\]\s)?(.*)$/;
-
 	const TAB_LOADER_PREFIX = browser.extension.getURL("tab-loader/load.html") + "?";
 
 	// private variables
@@ -27,7 +24,7 @@ const ActiveSessionManager = (function () {
 	// bm will be extended by the following properies: actualTitle, pinned
 	function _createProperties(bm, windowID) {
 		// parse title
-		let results = bm.title.match(bmTitleParserRE);
+		let results = bm.title.match(utils.bmTitleParserRE);
 
 		let title = bm.actualTitle = results[3];
 		let pinned = bm.pinned = (results[2] === "pinned");
@@ -168,11 +165,14 @@ const ActiveSessionManager = (function () {
 	(function () {
 		// check all tabs
 		browser.tabs.query({}).then(tabs => {
+			let n = 0; // count active sessions
+
 			Promise.all(
 				tabs.map(
 					tab => browser.sessions.getTabValue(tab.id, "sessionID").then(
 						sessionID => {
 							if (sessionID) {
+								// sessionID was set, let's get the other values as well
 								return Promise.all([
 									browser.sessions.getTabValue(tab.id, "bookmarkID"),
 									browser.sessions.getTabValue(tab.id, "loadURL")
@@ -182,8 +182,10 @@ const ActiveSessionManager = (function () {
 
 									let session = activeSessions.get(sessionID);
 									if (!session) {
+										// create new active session
 										session = new Set();
 										activeSessions.set(sessionID, session);
+										n++;
 									}
 
 									session.add(tab.id);
@@ -201,7 +203,10 @@ const ActiveSessionManager = (function () {
 				)
 			).catch(e => {
 				console.error("[TA] Error loading tabs: " + e);
-			}).then(updateBrowserAction);
+			}).then(() => {
+				console.log(`[TA] Found ${n} active sessions.`);
+				return updateBrowserAction();
+			});
 		});
 
 		// handle tab events
@@ -265,7 +270,7 @@ const ActiveSessionManager = (function () {
 
 						browser.bookmarks.create({
 							parentId: sessionID,
-							title: makeTitle(tab.title, tab.pinned),
+							title: utils.generateTabBMTitle(tab),
 							url: tab.url
 						}).then(bm => {
 							let session = activeSessions.get(sessionID);
@@ -284,7 +289,7 @@ const ActiveSessionManager = (function () {
 
 			// Map.get returns undefined if the key can't be found
 			if (bmID) {
-				if (changeInfo.url && !urlFilter(changeInfo.url)) {
+				if (changeInfo.url && !utils.urlFilter(changeInfo.url)) {
 					return;
 				}
 
@@ -295,7 +300,7 @@ const ActiveSessionManager = (function () {
 					// no title change!
 					changes.url = url;
 				} else {
-					changes.title = makeTitle(tab.title, tab.pinned);
+					changes.title = utils.generateTabBMTitle(tab);
 					changes.url = tab.url;
 				}
 

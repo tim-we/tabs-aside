@@ -38,9 +38,7 @@
 
   "background": {
     "scripts": [
-      "util/tabUtils.js",
-      "util/isBMFolder.js",
-      "util/wait.js",
+      "util/common.js",
       "func.js",
       "tab-menu.js",
       "ActiveSessionManager.js",

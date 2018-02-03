@@ -8,6 +8,10 @@ body.active-sessions {
 	min-height: calc(2 * 25px);
 }
 
+body.expanded:not(.active-sessions) {
+	min-height: calc(2 * 25px);
+}
+
 .button {
 	display: block;
 	height: 25px;
@@ -68,7 +72,7 @@ body.active-sessions {
 }
 
 .button.extended { display: none; }
-body.extended .button.extended { display: block; }
+body.expanded .button.extended { display: block; }
 
 .menu-divider {
 	height:0px;
