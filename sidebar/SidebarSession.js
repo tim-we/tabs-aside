@@ -14,11 +14,11 @@ class SidebarSession {
 		this.html.classList.add("session", "collapsed");
 
 		// titlebar
-		let titlebar = createHTMLElement("div", {
+		let titlebar = utils.createHTMLElement("div", {
 			"title": "click to reveal tabs"
 		}, ["titlebar"]);
-		this.titleElement = createHTMLElement("div", {}, ["title"], this.title);
-		this.counterElement = createHTMLElement("div", {}, ["counter"], `- tabs`);
+		this.titleElement = utils.createHTMLElement("span", {}, ["title"], this.title);
+		this.counterElement = utils.createHTMLElement("span", {}, ["counter"], `- tabs`);
 		[this.titleElement, this.counterElement].forEach(i => titlebar.appendChild(i));
 		
 		titlebar.addEventListener("click", () => {
@@ -28,12 +28,12 @@ class SidebarSession {
 		this.html.appendChild(titlebar);
 
 		// control
-		let controls = createHTMLElement("div", {}, ["controls"]);
-		this.html.appendChild(controls);
+		let controls = utils.createHTMLElement("div", {}, ["controls"]);
+		this.titlebar.appendChild(controls);
 
 		// restore
 		let a = document.createElement("a");
-		a.innerText = "Restore tabs";
+		a.textContent = "Restore tabs";
 		a.href = "#";
 		a.title = "Restore all tabs from this session";
 		a.addEventListener("click", e => {
@@ -111,7 +111,7 @@ class SidebarSession {
 					tab.pinned = false;
 				}
 
-				a.innerText = title;
+				a.textContent = title;
 				
 				li.appendChild(a);
 				ol.appendChild(li);
@@ -124,13 +124,14 @@ class SidebarSession {
 	}
 
 	update() {
-		browser.bookmarks.get(this.sessionID).then(bm => {
+		browser.bookmarks.get(this.sessionID).then(bms => {
+			let bm = bms[0];
 			this.title = bm.title;
-			this.titleElement.inenrText = bm.title;
+			this.titleElement.textContent = bm.title;
 		});
 
 		this._loadTabsFromBookmarks().then(ts => {
-			this.counterElement.innerText = `${ts.length} tabs`;
+			this.counterElement.textContent = `${ts.length} tabs`;
 
 			if (this.expanded) {
 				// TODO: pass ts to generateTabHTML
@@ -190,7 +191,7 @@ class SidebarSession {
 			return browser.bookmarks.update(this.sessionID, {
 				title: newTitle
 			}).then(() => {
-				this.titleElement.innerText = newTitle;
+				this.titleElement.textContent = newTitle;
 				return sendRefresh();
 			}, e => {
 				alert(`Title was not updated: ${e}`);
@@ -216,22 +217,4 @@ function createProperties(tab) {
 	}
 
 	return o;
-}
-
-function createHTMLElement(tagName, attrs, classes, content) {
-	let element = document.createElement(tagName);
-
-	// add attributes
-	Object.getOwnPropertyNames(attrs).forEach(k => {
-		element.setAttribute(k, attrs[k]);
-	});
-
-	// add classes
-	classes.forEach(c => { element.classList.add(c); });
-
-	if (content) {
-		element.innerHTML = content;
-	}
-
-	return element;
 }

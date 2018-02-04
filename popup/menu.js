@@ -32,7 +32,7 @@
 		btn.classList.add("button");
 		classes.forEach(c => btn.classList.add(c));
 
-		btn.innerText = text;
+		btn.textContent = text;
 		btn.title = tooltip;
 
 		if (callback) {
@@ -44,7 +44,7 @@
 
 	function createTitle(title) {
 		let elem = document.createElement("div");
-		elem.innerText = title;
+		elem.textContent = title;
 		elem.classList.add("title");
 		return elem;
 	}

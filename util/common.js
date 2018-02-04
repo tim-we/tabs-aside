@@ -38,5 +38,23 @@ const utils = {
 		return promise.then(() => browser.tabs.query(queryInfo));
 	},
 
-	getURLSearchParams: () => new URLSearchParams(document.location.search.substring(1))
+	getURLSearchParams: () => new URLSearchParams(document.location.search.substring(1)),
+
+	createHTMLElement: (tagName, attrs, classes, content) => {
+		let element = document.createElement(tagName);
+	
+		// add attributes
+		Object.getOwnPropertyNames(attrs).forEach(k => {
+			element.setAttribute(k, attrs[k]);
+		});
+	
+		// add classes
+		classes.forEach(c => { element.classList.add(c); });
+	
+		if (content) {
+			element.innerHTML = content;
+		}
+	
+		return element;
+	}
 }

@@ -4,5 +4,5 @@
 	let url = params.get("url");
 
 	document.getElementById("load-manually").href = url;
-	document.getElementById("url").innerText = url;
+	document.getElementById("url").textContent = url;
 })();

@@ -49,7 +49,7 @@ window.addEventListener("load", () => {
 });
 
 function showTip(tipText, id) {
-	tipMsg.innerText = tipText;
+	tipMsg.textContent = tipText;
 	tipElem.classList.add("show");
 	currenttipID = id;
 }

@@ -121,7 +121,7 @@ function updateView() {
 		let folderDIV = document.createElement("div");
 		folderDIV.classList.add("folder");
 
-		folderDIV.innerText = folder.title;
+		folderDIV.textContent = folder.title;
 		folderDIV.title = folder.title + ` (id: ${folder.id})`;
 
 		if (folder.id === selectedFolderID) {
@@ -163,7 +163,7 @@ function updateView() {
 		bcDIV.classList.add("breadcrumb");
 
 		let name = (i === 0) ? "root" : bc.title;
-		bcDIV.innerText = name;
+		bcDIV.textContent = name;
 
 		if (i < bcrumbs.length - 1) {
 			bcDIV.addEventListener("click", () => {

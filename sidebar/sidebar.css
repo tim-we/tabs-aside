@@ -6,37 +6,37 @@ body {
 a:visited { color: rgb(0, 0, 238); }
 
 .session {
+	position: relative;
 	margin-bottom: 6px;
 }
 
 .titlebar {
 	position: relative;
+	padding-left: 18px;
 	height: 32px;
 	line-height: 32px;
+
+	background-color: white;
 	background-repeat: no-repeat;
 	background-position-x: 2px;
 	background-position-y: center;
+
 	user-select: none;
+	word-spacing: -1px;
+	white-space: nowrap;
 }
 
 .session.collapsed > .titlebar { background-image: url('../icons/arrowhead-down-12.svg'); }
 .session.expanded > .titlebar { background-image: url('../icons/arrowhead-up-12.svg'); }
 
 .title {
-	position: absolute;
-	top: 0px;
-	left: 18px;
-	height: 32px;
-	line-height: 32px;
+	margin-right: 6px;
+	font-size: 1.25em;
+	white-space: nowrap;
 }
 
 .counter {
-	position: absolute;
-	top: 0px;
-	right: 6px;
-	text-align: right;
 	color: #6D6D6D;
-	font-size: 1em;
 }
 
 .button {
@@ -78,11 +78,27 @@ a:visited { color: rgb(0, 0, 238); }
 }
 
 .controls {
-	position: relative;
-	text-align: right;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding-left: 1px;
 	padding-right: 6px;
+	padding-top: 2px;
+	height: calc(100% - 2px);
+
+	background-color: inherit;
+
+	text-align: right;
 	white-space: nowrap;
 	user-select: none;
+}
+
+.controls > a {
+	text-decoration: none;
+}
+
+.controls > a:hover {
+	text-decoration: underline;
 }
 
 .tabs {
@@ -101,6 +117,7 @@ li {
 	margin: 0px;
 	margin-top: 2px;
 	white-space: nowrap;
+	word-spacing: -0.5px;
 }
 
 a.tab:not(:hover) {

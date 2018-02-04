@@ -94,7 +94,7 @@ function generateTabHTML(tab, index) {
 
 	let title = document.createElement("div");
 	title.classList.add("tab-title");
-	title.innerText = tab.title;
+	title.textContent = tab.title;
 
 	html.appendChild(title);
 
