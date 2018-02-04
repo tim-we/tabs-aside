@@ -1,0 +1,53 @@
+#scm-bg {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+}
+
+#scm {
+	position: absolute;
+	min-width: 150px;
+	max-width: 100vw;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	right: 5px;
+	background-color: rgb(50,50,52);
+	box-shadow: 0px 0px 0px 1px rgb(71,71,73);
+	color: white;
+	animation: .25s scm-in;
+}
+
+#scm > .scm-entry {
+	height: 25px;
+	line-height: 25px;
+	cursor: default;
+	padding-left: 36px;
+	padding-right: 12px;
+	white-space: nowrap;
+}
+
+#scm > .scm-entry:hover {
+	background-color: rgb(71,71,73);
+}
+
+@keyframes scm-in {
+	from {
+		transform: scale(0.9,0.25);
+		opacity: 0;
+	}
+
+	to {
+		transform: scale(1,1);
+		opacity: 1;
+	}
+}
+
+@media (max-width: 180px) {
+	#scm {
+		min-width: auto;
+		right: 0px !important;
+		left: 0px;
+	}
+}

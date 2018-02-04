@@ -52,7 +52,7 @@ const utils = {
 		classes.forEach(c => { element.classList.add(c); });
 	
 		if (content) {
-			element.innerHTML = content;
+			element.innerText = content;
 		}
 	
 		return element;

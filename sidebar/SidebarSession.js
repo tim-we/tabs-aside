@@ -10,8 +10,8 @@ class SidebarSession {
 		this.state = "closed";
 
 		// create html structure
-		this.html = document.createElement("div");
-		this.html.classList.add("session", "collapsed");
+		this.html = utils.createHTMLElement("div", {}, ["session", "collapsed"]);
+		this.html.addEventListener("click", e => e.stopPropagation());
 
 		// titlebar
 		let titlebar = utils.createHTMLElement("div", {
@@ -25,6 +25,17 @@ class SidebarSession {
 			this.toggle();
 		});
 		this.titlebar = titlebar;
+		this.titleElement.addEventListener("click", e => e.stopPropagation());
+		this.titleElement.addEventListener("dblclick", e => {
+			e.stopPropagation();
+
+			let title = prompt("Enter session title:", this.title);
+
+			if (title && title.trim()) {
+				this.changeTitle(title.trim());
+			}
+
+		});
 		this.html.appendChild(titlebar);
 
 		// control
@@ -45,27 +56,11 @@ class SidebarSession {
 			this.restore();
 		});
 		controls.appendChild(a);
-		
-		// edit
-		let edit = document.createElement("div");
-		edit.classList.add("edit", "button");
-		edit.title = "rename session";
-		controls.appendChild(edit);
-		edit.addEventListener("click", e => {
-			e.stopPropagation();
-
-			let title = prompt("Enter session title:", this.title).trim();
-
-			if (title) {
-				this.changeTitle(title);
-			}
-
-		});
 
 		// delete button
-		let del = document.createElement("div");
-		del.classList.add("delete", "button");
-		del.title = "Remove";
+		/*let del = utils.createHTMLElement("div", {
+			"title": "Remove"
+		}, ["delete", "button"]);
 		controls.appendChild(del);
 		del.addEventListener("click", e => {
 			e.stopPropagation();
@@ -73,7 +68,18 @@ class SidebarSession {
 			if (e.ctrlKey || confirm("Do you really want to delete this session from your bookmarks?")) {
 				this.remove();
 			}
-		});
+		});*/
+
+		// more button
+		let more = utils.createHTMLElement("div", {
+			"title": "more"
+		}, ["more-button"]);
+		controls.appendChild(more);
+		more.addEventListener("click", e => {
+			e.stopPropagation();
+
+			SCM.show(this, e.clientX, e.clientY);
+		}, true);
 		
 		// tab section
 		this.tabsection = document.createElement("div");
@@ -89,14 +95,19 @@ class SidebarSession {
 		);
 	}
 
-	_generateTabHTML() {
-		this._loadTabsFromBookmarks().then(bms => {
+	_generateTabHTML(bmData) {
+		let promise = (bmData instanceof Array) ?
+			Promise.resolve(bmData) :
+			this._loadTabsFromBookmarks();
+
+		return promise.then(bms => {
 			let tabsOL = bms.reduce((ol, tab) => {
 				let li = document.createElement("li");
 
 				let a = document.createElement("a");
 				a.classList.add("tab");
 				a.href = tab.url;
+				a.addEventListener("click", e => e.stopPropagation());
 
 				let title = tab.title;
 
@@ -134,8 +145,7 @@ class SidebarSession {
 			this.counterElement.textContent = `${ts.length} tabs`;
 
 			if (this.expanded) {
-				// TODO: pass ts to generateTabHTML
-				this._generateTabHTML();
+				this._generateTabHTML(ts);
 			}
 		});
 	}
@@ -200,21 +210,4 @@ class SidebarSession {
 			return Promise.reject("invalid title");
 		}
 	}
-}
-
-function createProperties(tab) {
-	let o = {
-		active: false,
-		url: TAB_LOADER_PREFIX + `title=${tab.title}&url=` + encodeURIComponent(tab.url)
-	};
-
-	if (targetWindowID !== null) {
-		o.windowId = targetWindowID;
-	}
-
-	if(tab.pinned) {
-		o.pinned = true;
-	}
-
-	return o;
 }

@@ -33,24 +33,70 @@ a:visited { color: rgb(0, 0, 238); }
 	margin-right: 6px;
 	font-size: 1.25em;
 	white-space: nowrap;
+	cursor: text;
+}
+
+.title:hover {
+	background-color: rgba(32,32,32,0.075);
 }
 
 .counter {
 	color: #6D6D6D;
 }
 
-.button {
+.session:hover > .titlebar {
+	background-color: #F0F0F0;
+}
+
+.titlebar:active {
+	background-color: #E8E8E8;
+}
+
+.controls {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding-left: 1px;
+	padding-right: 2px;
+	padding-top: 2px;
+	height: calc(100% - 2px);
+
+	background-color: inherit;
+
+	text-align: right;
+	white-space: nowrap;
+	user-select: none;
+}
+
+.controls > a {
+	text-decoration: none;
+	margin-right: 1px;
+}
+
+.controls > a:hover {
+	text-decoration: underline;
+}
+
+.more-button {
 	display: inline-block;
 	position: relative;
-	top: 4px;
-	width: 16px;
-	height: 16px;
+	top: 5px;
+	width: 20px;
+	height: 20px;
+	margin-left: 2px;
+
+	background-image: url('../icons/more-16.svg');
 	background-repeat: no-repeat;
 	background-position: center;
-	border-radius: 2px;
+	background-position-y: 3px;
 	cursor: pointer;
 }
 
+.more-button:hover {
+	background-color: rgba(12,12,12,0.15);
+}
+
+/*
 .edit {
 	background-image: url('../icons/edit-small.png');
 	margin-left: 6px;
@@ -68,41 +114,10 @@ a:visited { color: rgb(0, 0, 238); }
 
 .delete:hover { background-color: lightcoral; }
 .delete:active { background-color: red; }
-
-.session:hover > .titlebar {
-	background-color: #F0F0F0;
-}
-
-.titlebar:active {
-	background-color: #E8E8E8;
-}
-
-.controls {
-	position: absolute;
-	right: 0px;
-	top: 0px;
-	padding-left: 1px;
-	padding-right: 6px;
-	padding-top: 2px;
-	height: calc(100% - 2px);
-
-	background-color: inherit;
-
-	text-align: right;
-	white-space: nowrap;
-	user-select: none;
-}
-
-.controls > a {
-	text-decoration: none;
-}
-
-.controls > a:hover {
-	text-decoration: underline;
-}
+*/
 
 .tabs {
-	margin-top: -6px;
+	margin-top: -8px;
 }
 
 .session.collapsed > .tabs, .session.collapsed > .controls {
