@@ -12,10 +12,16 @@ var SCM = (function () {
 		
 		// context menu entries:
 
-		// change title
-		menu.appendChild(createSCMEntry("change title", null, e => {
-			e.stopPropagation();
+		if (session.isActive()) {
+			// set aside
+			menu.appendChild(createSCMEntry("set aside", "scm-entry-aside", () => {
+				session.setAside();
+				hide();
+			}));
+		}
 
+		// change title
+		menu.appendChild(createSCMEntry("change title", "scm-entry-rename", e => {
 			let title = prompt("Enter session title:", session.title);
 
 			if (title && title.trim()) {
@@ -26,8 +32,10 @@ var SCM = (function () {
 		}));
 
 		// remove
-		menu.appendChild(createSCMEntry("remove session", null, () => {
-			//session.remove();
+		menu.appendChild(createSCMEntry("remove session", "scm-entry-remove", () => {
+			if (confirm("Do you really want to delete this session from your bookmarks?")) {
+				session.remove();
+			}
 			hide();
 		}));
 
@@ -43,11 +51,11 @@ var SCM = (function () {
 		window.addEventListener("blur", blurEventListener);
 	}
 
-	function createSCMEntry(text, tooltip, func) {
+	function createSCMEntry(text, id, func, tooltip=null) {
 		let entry = utils.createHTMLElement("div", {}, ["scm-entry"], text);
 
+		if (id) { entry.id = id; }
 		if (tooltip) { entry.title = tooltip; }
-
 		if (func) { entry.addEventListener("click", func); }
 
 		return entry;

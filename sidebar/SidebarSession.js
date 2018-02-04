@@ -2,7 +2,7 @@ const TAB_LOADER_PREFIX = browser.extension.getURL("tab-loader/load.html") + "?"
 
 class SidebarSession {
 	
-	constructor(bmID, expand=false) {
+	constructor(bmID, expand=false, active=false) {
 		this.title = bmID;
 		this.sessionID = bmID; // bookmark node ID
 
@@ -56,19 +56,6 @@ class SidebarSession {
 			this.restore();
 		});
 		controls.appendChild(a);
-
-		// delete button
-		/*let del = utils.createHTMLElement("div", {
-			"title": "Remove"
-		}, ["delete", "button"]);
-		controls.appendChild(del);
-		del.addEventListener("click", e => {
-			e.stopPropagation();
-
-			if (e.ctrlKey || confirm("Do you really want to delete this session from your bookmarks?")) {
-				this.remove();
-			}
-		});*/
 
 		// more button
 		let more = utils.createHTMLElement("div", {
@@ -208,6 +195,21 @@ class SidebarSession {
 			});
 		} else {
 			return Promise.reject("invalid title");
+		}
+	}
+
+	isActive() {
+		return this.state === "active";
+	}
+
+	setAside() {
+		if (this.isActive()) {
+			this.state = "closing";
+
+			externalASMRequest("setSessionAside", [this.sessionID]).then(() => {
+				this.state = "closed";
+				this.expand();
+			});
 		}
 	}
 }
