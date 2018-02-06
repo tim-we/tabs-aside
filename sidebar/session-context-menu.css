@@ -41,6 +41,10 @@
 	background-image: url('../icons/arrowhead-left-light-16.svg');
 }
 
+#scm-entry-newwindow {
+	background-image: url('../icons/open-in-new-16.svg');
+}
+
 #scm-entry-remove {
 	background-image: url('../icons/delete-light-16.svg');
 }

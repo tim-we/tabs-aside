@@ -54,9 +54,15 @@
   "commands": {
     "tabs-aside": {
       "suggested_key": {
-        "default": "Alt+A"
+        "default": "Alt+Shift+Q"
       },
       "description": "Set the current set of tabs aside"
+    },
+
+    "_execute_sidebar_action": {
+      "suggested_key": {
+        "default": "Alt+Q"
+      }
     }
   }
 

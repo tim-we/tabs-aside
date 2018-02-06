@@ -49,6 +49,12 @@
 		return elem;
 	}
 
+	function addSeparator() {
+		let d = document.createElement("div");
+		d.classList.add("menu-divider");
+		document.body.appendChild(d);
+	}
+
 	function loadConfig() {
 		return new Promise(resolve => {
 			if (location.hash.replace("#", "").trim() === "expand") {
@@ -152,10 +158,8 @@
 
 					document.body.appendChild(moreBtn);
 				}
-			} else {
-				let d = document.createElement("div");
-				d.classList.add("menu-divider");
-				document.body.appendChild(d);
+			} else if (sessions.length > 0) {
+				addSeparator();
 			}
 
 			document.body.appendChild(createButton("show sessions", "opens the sidebar", ["session-btn"], e => {

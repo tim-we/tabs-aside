@@ -13,7 +13,7 @@ const utils = {
 
 	containsEmptyTab: tabs => tabs.some(tab => tab.url === "about:newtab"),
 
-	getTabs: options => {
+	getTabs: (options = {}) => {
 		let queryInfo = {};
 
 		if (options.currentWindow !== undefined) {

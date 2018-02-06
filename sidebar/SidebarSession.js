@@ -163,11 +163,11 @@ class SidebarSession {
 		}
 	}
 
-	restore() {
+	restore(newWindow = false) {
 		console.log("restoring tabs from " + this.title);
 		this.collapse();
 		this.state = "restoring";
-		externalASMRequest("restoreSession", [this.sessionID]).then(() => {
+		externalASMRequest("restoreSession", [this.sessionID, newWindow]).then(() => {
 			this.state = "active";
 		});
 	}

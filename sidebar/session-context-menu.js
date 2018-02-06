@@ -7,8 +7,12 @@ var SCM = (function () {
 		// create menu:
 		let menu = utils.createHTMLElement("div", { id: "scm" }, []);
 		menu.addEventListener("click", e => e.stopPropagation());
-		menu.style.top = clickY + "px";
-		menu.style.right = (window.innerWidth - clickX) + "px";
+
+		let x = Math.max(0, window.innerWidth - Math.max(150, clickX) - 1);
+		let y = clickY - 1;
+
+		menu.style.right = x + "px";
+		menu.style.top   = y + "px";
 		
 		// context menu entries:
 
@@ -16,6 +20,12 @@ var SCM = (function () {
 			// set aside
 			menu.appendChild(createSCMEntry("set aside", "scm-entry-aside", () => {
 				session.setAside();
+				hide();
+			}));
+		} else {
+			// open in new window
+			menu.appendChild(createSCMEntry("open in new window", "scm-entry-newwindow", () => {
+				session.restore(true);
 				hide();
 			}));
 		}
