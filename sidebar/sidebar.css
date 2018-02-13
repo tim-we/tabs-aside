@@ -96,26 +96,6 @@ a:visited { color: rgb(0, 0, 238); }
 	background-color: rgba(12,12,12,0.15);
 }
 
-/*
-.edit {
-	background-image: url('../icons/edit-small.png');
-	margin-left: 6px;
-	top: 3px;
-}
-
-.edit:hover { background-color: lightcyan; }
-.edit:active { background-color: dodgerblue; }
-
-.delete {
-	margin-left: 2px;
-	margin-right: -3px;
-	background-image: url('../icons/delete-16.svg');
-}
-
-.delete:hover { background-color: lightcoral; }
-.delete:active { background-color: red; }
-*/
-
 .tabs {
 	margin-top: -8px;
 }
@@ -158,4 +138,18 @@ a.tab.pinned::before {
 
 #empty-msg:not(.show) {
 	display: none;
+}
+
+/* session context menu */
+
+#scm-entry-aside {
+	background-image: url('../icons/arrowhead-left-light-16.svg');
+}
+
+#scm-entry-newwindow {
+	background-image: url('../icons/open-in-new-16.svg');
+}
+
+#scm-entry-remove {
+	background-image: url('../icons/delete-light-16.svg');
 }

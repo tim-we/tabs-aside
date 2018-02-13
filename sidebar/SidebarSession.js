@@ -65,7 +65,7 @@ class SidebarSession {
 		more.addEventListener("click", e => {
 			e.stopPropagation();
 
-			SCM.show(this, e.clientX, e.clientY);
+			new SessionOptionsMenu(this, e.clientX, e.clientY);
 		}, true);
 		
 		// tab section
