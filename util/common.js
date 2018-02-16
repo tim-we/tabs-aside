@@ -56,5 +56,24 @@ const utils = {
 		}
 	
 		return element;
+	},
+
+	/* returns a promise that gets resolved if
+	 * one of the given promises is resolved
+	 * @param promises - array of promises
+	 */
+	promiseOne(promises) {
+		let resolved = false;
+
+		return new Promise((resolve, reject) => {
+			promises.forEach(p => {
+				p.then(() => {
+					if (!resolved) {
+						resolved = true;
+						resolve();
+					}
+				}, reject);
+			})
+		});
 	}
 }

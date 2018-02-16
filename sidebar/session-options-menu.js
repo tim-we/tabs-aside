@@ -18,11 +18,7 @@ class SessionOptionsMenu extends ContextMenu {
 
 		// change title
 		this.addEntry("change title", "scm-entry-rename", e => {
-			let title = prompt("Enter session title:", session.title);
-
-			if (title && title.trim()) {
-				session.changeTitle(title.trim());
-			}
+			session.rename();
 		});
 
 		// remove

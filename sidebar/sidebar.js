@@ -75,7 +75,7 @@ browser.runtime.onMessage.addListener(message => {
 	}
 });
 
-document.addEventListener('keydown', (event) => {
+/*document.addEventListener('keydown', (event) => {
 	if (event.repeat) { return; }
 	const keyName = event.key;
 
@@ -93,4 +93,4 @@ document.addEventListener('keydown', (event) => {
 
 	console.log(keys.join(",") + " pressed");
 	
-});
+});*/

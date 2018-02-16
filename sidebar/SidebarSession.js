@@ -14,33 +14,26 @@ class SidebarSession {
 		this.html.addEventListener("click", e => e.stopPropagation());
 
 		// titlebar
-		let titlebar = utils.createHTMLElement("div", {
+		let titlebar = this.titlebar = utils.createHTMLElement("div", {
 			"title": "click to reveal tabs"
 		}, ["titlebar"]);
 		this.titleElement = utils.createHTMLElement("span", {}, ["title"], this.title);
 		this.counterElement = utils.createHTMLElement("span", {}, ["counter"], `- tabs`);
 		[this.titleElement, this.counterElement].forEach(i => titlebar.appendChild(i));
 		
-		titlebar.addEventListener("click", () => {
-			this.toggle();
-		});
-		this.titlebar = titlebar;
+		titlebar.addEventListener("click", () => { this.toggle(); });
 		this.titleElement.addEventListener("click", e => e.stopPropagation());
 		this.titleElement.addEventListener("dblclick", e => {
 			e.stopPropagation();
 
-			let title = prompt("Enter session title:", this.title);
-
-			if (title && title.trim()) {
-				this.changeTitle(title.trim());
-			}
+			this.rename();
 
 		});
 		this.html.appendChild(titlebar);
 
 		// control
 		let controls = utils.createHTMLElement("div", {}, ["controls"]);
-		this.titlebar.appendChild(controls);
+		titlebar.appendChild(controls);
 
 		// restore
 		let a = document.createElement("a");
@@ -181,7 +174,7 @@ class SidebarSession {
 		});
 	}
 
-	changeTitle(newTitle) {
+	updateTitle(newTitle) {
 		if (newTitle.length > 0) {
 			this.title = newTitle;
 
@@ -196,6 +189,47 @@ class SidebarSession {
 		} else {
 			return Promise.reject("invalid title");
 		}
+	}
+
+	rename() {
+		let input = document.createElement("input");
+			input.type = "text";
+			input.placeholder = "enter title";
+			input.classList.add("title");
+			input.value = this.title;
+			input.style.width = (this.titleElement.offsetWidth+4) + "px";
+		
+		let titleElement;
+		let session = this;
+		
+		let p = new Promise((resolve, reject) => {
+			function blurListener(e) {
+				e.stopPropagation();
+				resolve();
+			}
+	
+			function keyListener(e) {
+				e.stopPropagation();
+				if (e.keyCode === 13) {
+					resolve();
+				}
+			}
+
+			titleElement = this.titlebar.replaceChild(input, this.titleElement);
+			input.focus();
+			input.addEventListener("blur", blurListener);
+			input.addEventListener("keydown", keyListener);
+			input.select();
+		}).then(() => {
+			let newTitle = input.value.trim();
+
+			this.titlebar.replaceChild(titleElement, input);
+
+			if (newTitle) {
+				session.updateTitle(newTitle);
+			}
+		});
+
 	}
 
 	isActive() {

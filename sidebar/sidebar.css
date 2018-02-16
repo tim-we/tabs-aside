@@ -36,8 +36,20 @@ a:visited { color: rgb(0, 0, 238); }
 	cursor: text;
 }
 
+input.title {
+	background-color: white;
+	border:none;
+	min-width: 80px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
 .title:hover {
 	background-color: rgba(32,32,32,0.075);
+}
+
+input.title:hover {
+	background-color: white;
 }
 
 .counter {
