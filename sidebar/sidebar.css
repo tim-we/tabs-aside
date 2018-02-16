@@ -40,6 +40,7 @@ input.title {
 	background-color: white;
 	border:none;
 	min-width: 80px;
+	max-width: calc(100vh - 100px);
 	padding-left: 2px;
 	padding-right: 2px;
 }

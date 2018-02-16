@@ -9,6 +9,8 @@ class SidebarSession {
 		this.expanded = expand;
 		this.state = "closed";
 
+		this.editCancelCallback = null;
+
 		// create html structure
 		this.html = utils.createHTMLElement("div", {}, ["session", "collapsed"]);
 		this.html.addEventListener("click", e => e.stopPropagation());
@@ -17,7 +19,7 @@ class SidebarSession {
 		let titlebar = this.titlebar = utils.createHTMLElement("div", {
 			"title": "click to reveal tabs"
 		}, ["titlebar"]);
-		this.titleElement = utils.createHTMLElement("span", {}, ["title"], this.title);
+		this.titleElement = utils.createHTMLElement("span", {title:this.title}, ["title"], this.title);
 		this.counterElement = utils.createHTMLElement("span", {}, ["counter"], `- tabs`);
 		[this.titleElement, this.counterElement].forEach(i => titlebar.appendChild(i));
 		
@@ -115,11 +117,14 @@ class SidebarSession {
 	}
 
 	update() {
-		browser.bookmarks.get(this.sessionID).then(bms => {
-			let bm = bms[0];
-			this.title = bm.title;
-			this.titleElement.textContent = bm.title;
-		});
+		this.cancelEdits()
+			.then(() => browser.bookmarks.get(this.sessionID))
+			.then(bms => {
+				let bm = bms[0];
+				this.title = bm.title;
+				this.titleElement.title = bm.title;
+				this.titleElement.textContent = bm.title;
+			});
 
 		this._loadTabsFromBookmarks().then(ts => {
 			this.counterElement.textContent = `${ts.length} tabs`;
@@ -177,6 +182,7 @@ class SidebarSession {
 	updateTitle(newTitle) {
 		if (newTitle.length > 0) {
 			this.title = newTitle;
+			this.titleElement.title = newTitle;
 
 			return browser.bookmarks.update(this.sessionID, {
 				title: newTitle
@@ -196,6 +202,7 @@ class SidebarSession {
 			input.type = "text";
 			input.placeholder = "enter title";
 			input.classList.add("title");
+			input.title = "";
 			input.value = this.title;
 			input.style.width = (this.titleElement.offsetWidth+4) + "px";
 		
@@ -215,6 +222,11 @@ class SidebarSession {
 				}
 			}
 
+			session.editCancelCallback = function () {
+				resolve();
+				return p;
+			}
+
 			titleElement = this.titlebar.replaceChild(input, this.titleElement);
 			input.focus();
 			input.addEventListener("blur", blurListener);
@@ -224,12 +236,18 @@ class SidebarSession {
 			let newTitle = input.value.trim();
 
 			this.titlebar.replaceChild(titleElement, input);
+			session.editCancelCallback = null;
 
-			if (newTitle) {
+			if (newTitle && newTitle !== session.title) {
 				session.updateTitle(newTitle);
 			}
 		});
 
+		return p;
+	}
+
+	cancelEdits() {
+		return this.editCancelCallback ? this.editCancelCallback() : Promise.resolve();
 	}
 
 	isActive() {
