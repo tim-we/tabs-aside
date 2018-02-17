@@ -17,6 +17,10 @@ function setSessionFolder(bmFolderID) {
 	});
 }
 
+browser.browserAction.setBadgeBackgroundColor({
+	color: "#0A84FF"
+});
+
 browser.storage.local.get("version").then(data => {
 	if (data.version) {
 		console.assert(data.version === 1, "Invalid data version!");

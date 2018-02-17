@@ -1,15 +1,11 @@
 body {
-	min-width: 122px;
-	min-height: calc(3 * 25px);
+	min-width: 150px;
+	max-width: 268px;
+	min-height: 25px;
 }
 
 body.active-sessions {
 	padding-top: 0px;
-	min-height: calc(2 * 25px);
-}
-
-body.expanded:not(.active-sessions) {
-	min-height: calc(2 * 25px);
 }
 
 .button {
