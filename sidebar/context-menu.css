@@ -20,6 +20,12 @@
 	transform-origin: top right;
 }
 
+#cm.align-left {
+	right: auto;
+	left: 5px;
+	transform-origin: top left;
+}
+
 #cm > .cm-entry {
 	height: 25px;
 	line-height: 25px;

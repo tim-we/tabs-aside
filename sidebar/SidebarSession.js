@@ -81,6 +81,8 @@ class SidebarSession {
 		let promise = (bmData instanceof Array) ?
 			Promise.resolve(bmData) :
 			this._loadTabsFromBookmarks();
+		
+		let session = this;
 
 		return promise.then(bms => {
 			let tabsOL = bms.reduce((ol, tab) => {
@@ -89,7 +91,18 @@ class SidebarSession {
 				let a = document.createElement("a");
 				a.classList.add("tab");
 				a.href = tab.url;
-				a.addEventListener("click", e => e.stopPropagation());
+				a.addEventListener("click", e => {
+					e.stopPropagation();
+					e.preventDefault();
+
+					// TODO: open session (partially)
+				});
+				a.addEventListener("contextmenu", e => {
+					e.stopImmediatePropagation();
+					e.preventDefault();
+
+					new SessionLinkContextMenu(session, tab, e.clientX, e.clientY);
+				});
 
 				let title = tab.title;
 
@@ -208,21 +221,27 @@ class SidebarSession {
 		
 		let titleElement;
 		let session = this;
+		let abort = false;
 		
 		let p = new Promise((resolve, reject) => {
 			function blurListener(e) {
 				e.stopPropagation();
+				abort = true;
 				resolve();
 			}
 	
 			function keyListener(e) {
 				e.stopPropagation();
-				if (e.keyCode === 13) {
+				if (e.keyCode === 13) { // ENTER
+					resolve();
+				} else if (e.keyCode === 27) { // ESC
+					abort = true;
 					resolve();
 				}
 			}
 
 			session.editCancelCallback = function () {
+				abort = true;
 				resolve();
 				return p;
 			}
@@ -238,7 +257,7 @@ class SidebarSession {
 			this.titlebar.replaceChild(titleElement, input);
 			session.editCancelCallback = null;
 
-			if (newTitle && newTitle !== session.title) {
+			if (!abort && newTitle && newTitle !== session.title) {
 				session.updateTitle(newTitle);
 			}
 		});

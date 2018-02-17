@@ -164,6 +164,7 @@
 
 			document.body.appendChild(createButton("show sessions", "opens the sidebar", ["session-btn"], e => {
 				browser.sidebarAction.open();
+				window.close();
 			}));
 		}).catch(e => {
 			alert("There was an unexpeted error.\nSee the console (Ctrl+Shift+J) for details.");

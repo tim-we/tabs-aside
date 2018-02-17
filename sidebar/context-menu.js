@@ -16,11 +16,24 @@ class ContextMenu {
 		// set position (css properties right & top)
 		menu.style.right = x + "px";
 		menu.style.top = y + "px";
+
+		if (posX < 160 && posX < x) {
+			menu.classList.add("align-left");
+			x = Math.max(0, posX - 1);
+			menu.style.right = "auto";
+			menu.style.left = x + "px";
+		}
 		
 		// create background element (click catcher)
 		let bg = ContextMenu.bg = utils.createHTMLElement("div", { id: "cm-bg" }, []);
 		bg.addEventListener("click", e => {
 			e.stopPropagation();
+			ContextMenu.close();
+		});
+
+		bg.addEventListener("contextmenu", e => {
+			e.stopPropagation();
+			e.preventDefault();
 			ContextMenu.close();
 		});
 

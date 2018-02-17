@@ -34,6 +34,7 @@ a:visited { color: rgb(0, 0, 238); }
 	font-size: 1.25em;
 	white-space: nowrap;
 	cursor: text;
+	user-select: text;
 }
 
 input.title {
@@ -46,6 +47,7 @@ input.title {
 }
 
 .title:hover {
+	transition: background-color 0.25s 0.1s;
 	background-color: rgba(32,32,32,0.075);
 }
 
@@ -164,5 +166,19 @@ a.tab.pinned::before {
 }
 
 #scm-entry-remove {
+	background-image: url('../icons/delete-light-16.svg');
+}
+
+/* session link context menu */
+
+#slcm-entry-open-copy {
+	background-image: url('../icons/new-16.svg');
+}
+
+#slcm-entry-copy-url {
+	background-image: url('../icons/copy-16.svg');
+}
+
+#slcm-entry-remove {
 	background-image: url('../icons/delete-light-16.svg');
 }
