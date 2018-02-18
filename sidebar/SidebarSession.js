@@ -6,14 +6,15 @@ class SidebarSession {
 		this.title = bmID;
 		this.sessionID = bmID; // bookmark node ID
 
-		this.expanded = expand;
-		this.state = "closed";
-
 		this.editCancelCallback = null;
 
 		// create html structure
 		this.html = utils.createHTMLElement("div", {}, ["session", "collapsed"]);
 		this.html.addEventListener("click", e => e.stopPropagation());
+
+		// state
+		this.expanded = expand;
+		this._changeState("closed");
 
 		// titlebar
 		let titlebar = this.titlebar = utils.createHTMLElement("div", {
@@ -37,20 +38,31 @@ class SidebarSession {
 		let controls = utils.createHTMLElement("div", {}, ["controls"]);
 		titlebar.appendChild(controls);
 
-		// restore
-		let a = document.createElement("a");
-		a.textContent = "Restore tabs";
-		a.href = "#";
-		a.title = "Restore all tabs from this session";
-		a.addEventListener("click", e => {
+		// restore button
+		let rb = utils.createHTMLElement("a", {
+			//href: "#",
+			title: "Restore all tabs from this session"
+		}, ["session-restore-button"],
+			"Restore tabs"
+		);
+		rb.addEventListener("click", e => {
 			e.stopPropagation();
-			e.preventDefault();
-
-			if (this.state !== "closed") { return; }
-
 			this.restore();
 		});
-		controls.appendChild(a);
+		controls.appendChild(rb);
+
+		// set aside button
+		let sab = utils.createHTMLElement("a", {
+			//href: "#",
+			title: "close tabs from this session"
+		}, ["session-aside-button"],
+			"Set aside"
+		);
+		sab.addEventListener("click", e => {
+			e.stopPropagation();
+			this.setAside();
+		});
+		controls.appendChild(sab);
 
 		// more button
 		let more = utils.createHTMLElement("div", {
@@ -69,6 +81,12 @@ class SidebarSession {
 		this.html.appendChild(this.tabsection);
 
 		this.update();
+	}
+
+	_changeState(newState) {
+		if (this.state) { this.html.classList.remove(this.state); }
+		this.state = newState;
+		this.html.classList.add(newState);
 	}
 
 	_loadTabsFromBookmarks() {
@@ -175,20 +193,27 @@ class SidebarSession {
 	}
 
 	restore(newWindow = false) {
-		console.log("restoring tabs from " + this.title);
+		if (this.state !== "closed") { return Promise.reject(); }
+
+		console.log(`restoring tabs from "${this.title}"`);
 		this.collapse();
-		this.state = "restoring";
-		externalASMRequest("restoreSession", [this.sessionID, newWindow]).then(() => {
-			this.state = "active";
+		this._changeState("restoring");
+		
+		return externalASMRequest("restoreSession", [this.sessionID, newWindow]).then(() => {
+			this._changeState("active");
 		});
 	}
 
 	remove() {
-		this.html.remove();
-		this.html = null;
+		let p = this.isActive() ? this.setAside() : Promise.resolve();
 
-		browser.bookmarks.removeTree(this.sessionID).then(() => {
-			return sendRefresh();
+		return p.then(() => {
+			this.html.remove();
+			this.html = null;
+
+			browser.bookmarks.removeTree(this.sessionID).then(() => {
+				return sendRefresh();
+			});
 		});
 	}
 
@@ -211,25 +236,31 @@ class SidebarSession {
 	}
 
 	rename() {
+		// create input element
 		let input = document.createElement("input");
 			input.type = "text";
 			input.placeholder = "enter title";
 			input.classList.add("title");
 			input.title = "";
 			input.value = this.title;
-			input.style.width = (this.titleElement.offsetWidth+4) + "px";
+			input.style.width = (this.titleElement.offsetWidth + 4) + "px";
+		
+		// catch clicks (prevents collapsing/expanding of session)
+		input.addEventListener("click", e => e.stopPropagation());
 		
 		let titleElement;
 		let session = this;
 		let abort = false;
 		
+		// Promise resolves when user input is "completed"
 		let p = new Promise((resolve, reject) => {
+			// handle focus loss
 			function blurListener(e) {
 				e.stopPropagation();
-				abort = true;
 				resolve();
 			}
-	
+			
+			// ENTER -> submit changes, ESC -> abort
 			function keyListener(e) {
 				e.stopPropagation();
 				if (e.keyCode === 13) { // ENTER
@@ -240,12 +271,14 @@ class SidebarSession {
 				}
 			}
 
+			// cancel edits API
 			session.editCancelCallback = function () {
 				abort = true;
 				resolve();
 				return p;
 			}
 
+			// replace title with input element
 			titleElement = this.titlebar.replaceChild(input, this.titleElement);
 			input.focus();
 			input.addEventListener("blur", blurListener);
@@ -275,12 +308,14 @@ class SidebarSession {
 
 	setAside() {
 		if (this.isActive()) {
-			this.state = "closing";
+			this._changeState("closing");
 
-			externalASMRequest("setSessionAside", [this.sessionID]).then(() => {
-				this.state = "closed";
+			return externalASMRequest("setSessionAside", [this.sessionID]).then(() => {
+				this._changeState("closed");
 				this.expand();
 			});
+		} else {
+			return Promise.reject();
 		}
 	}
 }

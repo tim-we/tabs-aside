@@ -3,7 +3,7 @@ body {
 	overflow-x: hidden;
 }
 
-a:visited { color: rgb(0, 0, 238); }
+a, a:visited { cursor: pointer; color: rgb(0, 0, 238); }
 
 .session {
 	position: relative;
@@ -24,6 +24,18 @@ a:visited { color: rgb(0, 0, 238); }
 	user-select: none;
 	word-spacing: -1px;
 	white-space: nowrap;
+}
+
+.session.active .titlebar::before {
+	content: " ";
+	font-size: 0px;
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background-color: green;
+	margin-left: -2px;
+	margin-right: 4px;
 }
 
 .session.collapsed > .titlebar { background-image: url('../icons/arrowhead-down-12.svg'); }
@@ -90,6 +102,14 @@ input.title:hover {
 
 .controls > a:hover {
 	text-decoration: underline;
+}
+
+.session.active .controls > .session-restore-button {
+	display: none;
+}
+
+.session:not(.active) .controls > .session-aside-button {
+	display: none;
 }
 
 .more-button {

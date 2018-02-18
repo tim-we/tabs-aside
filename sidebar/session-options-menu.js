@@ -23,7 +23,13 @@ class SessionOptionsMenu extends ContextMenu {
 
 		// remove
 		this.addEntry("remove session", "scm-entry-remove", () => {
-			if (confirm("Do you really want to delete this session from your bookmarks?")) {
+			let msg = "Do you really want to delete this session?\n";
+
+			if (session.isActive()) {
+				msg += "All tabs from this session will be closed.";
+			}
+
+			if (confirm(msg)) {
 				session.remove();
 			}
 		});
