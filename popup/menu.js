@@ -129,13 +129,11 @@
 				document.body.classList.add("expanded");
 			}
 
-			if (sessions.length > 0) {
-				document.body.classList.add("active-sessions");
-
-				sessions.forEach(s => document.body.appendChild(s.createMenuEntry()));
+			sessions.forEach(s => {
+				document.body.appendChild(s.createMenuEntry());
 
 				addSeparator();
-			}
+			});
 
 			// are there remaining tabs?
 			if (remainingTabs.length > 0) {
