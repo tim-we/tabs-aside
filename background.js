@@ -9,7 +9,7 @@ function setSessionFolder(bmFolderID) {
 	}).then(folder => {
 		bookmarkFolderID = folder.id;
 
-		console.log("BM folder ID set to " + bookmarkFolderID);
+		console.log("[TA] BM folder ID set to " + bookmarkFolderID);
 
 		return browser.storage.local.set({
 			bookmarkFolderID: folder.id
@@ -23,7 +23,7 @@ browser.browserAction.setBadgeBackgroundColor({
 
 browser.storage.local.get("version").then(data => {
 	if (data.version) {
-		console.assert(data.version === 1, "Invalid data version!");
+		console.assert(data.version === 1, "[TA] Invalid data version!");
 	} else {
 		browser.storage.local.set({
 			version: 1
@@ -44,31 +44,31 @@ browser.storage.local.get("version").then(data => {
 		console.log(e);
 
 		// checking if there already is a tabs aside folder
-		console.log("searching for a 'Tabs Aside' folder");
+		console.log("[TA] searching for a 'Tabs Aside' folder");
 		return browser.bookmarks.search({title:"Tabs Aside"}).then(data => {
 			let folders = data.filter(bm => utils.isBMFolder(bm));
 			
 			if (folders.length > 0) {
 				// Tabs Aside folder found
-				console.log(`'Tabs Aside' folder (${folders[0].id}) found.`);
+				console.log(`[TA] 'Tabs Aside' folder (${folders[0].id}) found.`);
 
 				return setSessionFolder(folders[0].id).then(refresh);
 			} else {
 				// Tabs Aside folder not found
-				console.log("Creating a new bookmark folder...");
+				console.log("[TA] Creating a new bookmark folder...");
 				return createTabsAsideFolder();
 			}
 		});
 	});
 }).then(() => {
 	updateTabMenus();
-}).catch(error => console.log("Error: " + error));
+}).catch(error => console.log("[TA] Error: " + error));
 
 function createTabsAsideFolder() {
 	return browser.bookmarks.create({
 		title: "Tabs Aside"
 	}).then(bm => {
-		console.log("Folder successfully created");
+		console.log("[TA] Folder successfully created");
 
 		return setSessionFolder(bm.id).then(refresh);
 	}).catch(error => console.log("Error: " + error));
@@ -143,14 +143,30 @@ function refresh() {
 
 browser.commands.onCommand.addListener(command => {
 	if (command === "tabs-aside") {
-		utils.getTabs().then(tabs => {
-			return asideMessageHandler({
-				command: "aside",
-				newtab: !utils.containsEmptyTab(tabs),
-				tabs: tabs.filter(tab => utils.urlFilter(tab.url))
-			});
+
+		Promise.all([
+			utils.getTabs(),
+			utils.getActiveTab()
+		]).then(data => {
+			let tabs = data[0];
+			let activeTab = data[1];
+			let session = ActiveSessionManager.findSession(activeTab.id);
+			let newtab = !utils.containsEmptyTab(tabs);
+
+			if(session) {
+				return ActiveSessionManager.setSessionAside(session);
+			} else {
+				return asideMessageHandler({
+					command: "aside",
+					newtab: newtab,
+					tabs: tabs.filter(tab => 
+						utils.urlFilter(tab.url) 
+						&& !ActiveSessionManager.isTabInActiveSession(tab.id)
+					)
+				});
+			}
 		}).catch(e => {
-			console.error("TA command error: " + e);
+			console.error("[TA] command error: " + e);
 		});
 		
 		// does not currently work in Firefox:

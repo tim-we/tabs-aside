@@ -75,5 +75,12 @@ const utils = {
 				}, reject);
 			})
 		});
+	},
+
+	getActiveTab() {
+		return browser.tabs.query({
+			active: true,
+			currentWindow: true
+		}).then(tabs => tabs[0]);
 	}
 }

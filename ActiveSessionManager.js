@@ -20,8 +20,8 @@ const ActiveSessionManager = (function () {
 		].join("&");
 	}
 
-	// has sideeffects:
-	// bm will be extended by the following properies: actualTitle, pinned
+	// has side-effects:
+	// bm will be extended by the following properties: actualTitle, pinned
 	function _createProperties(bm, windowID) {
 		// parse title
 		let results = bm.title.match(utils.bmTitleParserRE);
@@ -53,6 +53,10 @@ const ActiveSessionManager = (function () {
 		}
 
 		return null;
+	}
+
+	function isTabInActiveSession(tabID) {
+		return tabBMAssoc.has(tabID);
 	}
 
 	// returns array of session ids
@@ -330,6 +334,7 @@ const ActiveSessionManager = (function () {
 		findSession: findSession,
 		getActiveSessionData: getASData,
 		getActiveSessionIDs: getActiveSessionIDs,
+		isTabInActiveSession: isTabInActiveSession,
 		restoreSession: restoreSession,
 		setSessionAside: setSessionAside
 	};
