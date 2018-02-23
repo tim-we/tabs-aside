@@ -37,12 +37,27 @@ const ActiveSessionManager = (function () {
 		};
 	}
 
-	function updateBrowserAction() {
+	function _sendSessionUpdateMsg(type, sessionID) {
+		return browser.runtime.sendMessage({
+			command: "session-update",
+			type: type,
+			sessionID: sessionID
+		}).catch(e => {
+			// catch "no receiver" error
+			// do nothing...
+		});
+	}
+
+	function _updateBrowserAction() {
 		let n = activeSessions.size;
 		let text = (config.showBadge && n>0) ? ""+n : "";
 		let title = n > 0 ? `${n} active sessions` : "Tabs Aside!";
-		browser.browserAction.setBadgeText({ text: text });
+
+		// update browser action (button tooltip)
 		browser.browserAction.setTitle({ title: title });
+
+		// update badge
+		browser.browserAction.setBadgeText({ text: text });
 	}
 
 	function findSession(tabID) {
@@ -100,13 +115,19 @@ const ActiveSessionManager = (function () {
 							tabBMAssoc.set(tab.id, bm.id);
 
 							return Promise.all([
+								// use the browsers sessions API
+								// (these values will be kept even if the addon gets disabled or the browser is restarted)
 								browser.sessions.setTabValue(tab.id, "sessionID", sessionID),
 								browser.sessions.setTabValue(tab.id, "bookmarkID", bm.id),
 								browser.sessions.setTabValue(tab.id, "loadURL", bm.url)
 							]);
 						})
 					)
-				).then(updateBrowserAction, updateBrowserAction);
+				).catch(e => console.error("[TA] " + e))
+				.then(() => {
+					_updateBrowserAction();
+					_sendSessionUpdateMsg("session-restored", sessionID);
+				});
 			}, e => {
 				console.error("[TA] Error restoring session " + sessionID);
 				console.error("[TA] " + e);
@@ -136,7 +157,8 @@ const ActiveSessionManager = (function () {
 				)
 			).then(() => {
 				activeSessions.delete(sessionID);
-				updateBrowserAction();
+				_updateBrowserAction();
+				_sendSessionUpdateMsg("session-closed", sessionID);
 			});
 		} else {
 			console.warn("[TA] no such session: " + sessionID);
@@ -209,7 +231,7 @@ const ActiveSessionManager = (function () {
 				console.error("[TA] Error loading tabs: " + e);
 			}).then(() => {
 				console.log(`[TA] Found ${n} active sessions.`);
-				return updateBrowserAction();
+				return _updateBrowserAction();
 			});
 		});
 
@@ -254,7 +276,10 @@ const ActiveSessionManager = (function () {
 								console.error("[TA] Error removing session: " + e);
 							});
 
-							updateBrowserAction();
+							_updateBrowserAction();
+							_sendSessionUpdateMsg("session-removed", sessionID);
+						} else {
+							_sendSessionUpdateMsg("session-updated", sessionID);
 						}
 					}, e => {
 						console.error("[TA] Error removing bookmark: " + e);
@@ -272,6 +297,7 @@ const ActiveSessionManager = (function () {
 
 						browser.sessions.setTabValue(tab.id, "sessionID", sessionID);
 
+						// create a bookmark for this tab
 						browser.bookmarks.create({
 							parentId: sessionID,
 							title: utils.generateTabBMTitle(tab),
@@ -283,6 +309,9 @@ const ActiveSessionManager = (function () {
 
 							return browser.sessions.setTabValue(tab.id, "bookmarkID", bm.id);
 						});
+
+						// update sidebar & menus
+						_sendSessionUpdateMsg("session-updated", findSession(tabID));
 					}
 				});
 			}
@@ -325,6 +354,9 @@ const ActiveSessionManager = (function () {
 						console.error("[TA] " + e);
 					});
 				});
+
+				// update sidebar & menus
+				_sendSessionUpdateMsg("session-updated", findSession(tabID));
 			}
 		});
 	})();

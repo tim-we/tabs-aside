@@ -208,13 +208,17 @@ class SidebarSession {
 		let p = this.isActive() ? this.setAside() : Promise.resolve();
 
 		return p.then(() => {
-			this.html.remove();
-			this.html = null;
+			this.removeHTML();
 
 			browser.bookmarks.removeTree(this.sessionID).then(() => {
 				return sendRefresh();
 			});
 		});
+	}
+
+	removeHTML() {
+		this.html.remove();
+		this.html = null;
 	}
 
 	updateTitle(newTitle) {
@@ -317,5 +321,9 @@ class SidebarSession {
 		} else {
 			return Promise.reject();
 		}
+	}
+
+	setState(newState) {
+		this._changeState(newState);
 	}
 }

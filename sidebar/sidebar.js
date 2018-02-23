@@ -1,7 +1,7 @@
 let bookmarkFolder = null;
 let list = document.getElementById("list");
 let emptyMsg = document.getElementById("empty-msg")
-let sessions = [];
+let sessions = new Map(); // maps session IDs to SidebarSession objects
 
 // parse url
 var targetWindowID = null;
@@ -28,7 +28,7 @@ function getTabSessions() {
 	});
 }
 
-function update(close = false) {
+function init() {
 	let setExpandState = function (session, index) {
 		// auto expand last session
 		if (index === 0) {
@@ -47,7 +47,8 @@ function update(close = false) {
 		}
 	}).then(() => {
 		return loadBMRoot().then(getTabSessions).then(data => {
-			sessions = data;
+			// add to sessions map
+			data.forEach(s => sessions.set(s.sessionID, s));
 	
 			list.innerHTML = "";
 			emptyMsg.classList.remove("show");
@@ -65,32 +66,22 @@ function update(close = false) {
 	}).catch(error => console.log("Error: " + error));
 }
 
-window.addEventListener("load", () => {
-	update();
-});
+window.addEventListener("load", init);
 
 browser.runtime.onMessage.addListener(message => {
-	if (message.command === "refresh") {
-		update(true);
+	if(message.command === "session-update") {
+		let t = message.type;
+		let sessionID = message.sessionID;
+
+		if(t === "session-updated") {
+			sessions.get(sessionID).update();
+		} else if(t === "session-closed") {
+			sessions.get(sessionID).setState("closed");
+		} else if(t === "session-created") {
+			session.set(sessionID, new SidebarSession(sessionID, true, false));
+		} else if(t === "session-removed") {
+			sessions.get(sessionID).removeHTML();
+			sessions.delete(sessionID);
+		}
 	}
 });
-
-/*document.addEventListener('keydown', (event) => {
-	if (event.repeat) { return; }
-	const keyName = event.key;
-
-	let keys = [];
-
-	if (event.ctrlKey) {
-		keys.push("Ctrl");
-	}
-
-	if (event.altKey) {
-		keys.push("Alt");
-	}
-
-	keys.push(event.key);
-
-	console.log(keys.join(",") + " pressed");
-	
-});*/
