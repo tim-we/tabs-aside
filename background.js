@@ -107,9 +107,19 @@ function asideMessageHandler(message) {
 				bookmarkFolderID,
 				title
 			);
+
+			// update sidebar
+			promise.then(sessionID => {
+				return browser.runtime.sendMessage({
+					command: "session-update",
+					type: "session-created",
+					sessionID: sessionID
+				});
+			});
 		}
 
-		promise.then(refresh);
+		// update menu
+		promise.then(updateTabMenus);
 	}
 
 	return promise;
@@ -134,13 +144,12 @@ browser.runtime.onMessage.addListener(async message => {
 		} else {
 			browser.runtime.sendMessage({result:result});
 		}
+	} else if(message.command === "session-update") {
+		updateTabMenus();
 	}
 });
 
-function refresh() {
-	return Promise.all([updateTabMenus(), sendRefresh()]);
-}
-
+// handle keyboard commands
 browser.commands.onCommand.addListener(command => {
 	if (command === "tabs-aside") {
 
@@ -154,8 +163,10 @@ browser.commands.onCommand.addListener(command => {
 			let newtab = !utils.containsEmptyTab(tabs);
 
 			if(session) {
+				console.log(`[TA] Setting session ${session} aside. (Shift+Alt+Q)`);
 				return ActiveSessionManager.setSessionAside(session);
 			} else {
+				console.log(`[TA] Setting remaining tabs aside. (Shift+Alt+Q)`);
 				return asideMessageHandler({
 					command: "aside",
 					newtab: newtab,

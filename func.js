@@ -43,7 +43,12 @@ function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 
 			// move tabs aside one by one (recursive)
 			return asideOne();
-		}).catch(error => console.log("Error: " + error));
+		}).catch(
+			error => console.log("Error: " + error)
+		).then(() => {
+			// "return"/resolve sessionID
+			return Promise.resolve(pID);
+		});
 	} else {
 		console.warn("No tabs to set aside!");
 		return Promise.resolve();

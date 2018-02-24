@@ -2,7 +2,7 @@ const TAB_LOADER_PREFIX = browser.extension.getURL("tab-loader/load.html") + "?"
 
 class SidebarSession {
 	
-	constructor(bmID, expand=false, active=false) {
+	constructor(bmID, active=false, expand=false,) {
 		this.title = bmID;
 		this.sessionID = bmID; // bookmark node ID
 
@@ -81,6 +81,10 @@ class SidebarSession {
 		this.html.appendChild(this.tabsection);
 
 		this.update();
+
+		if(active) {
+			this._changeState("active");
+		}
 	}
 
 	_changeState(newState) {

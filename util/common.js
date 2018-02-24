@@ -82,5 +82,11 @@ const utils = {
 			active: true,
 			currentWindow: true
 		}).then(tabs => tabs[0]);
+	},
+
+	waitUntilPageIsLoaded() {
+		return new Promise(resolve => {
+			window.addEventListener("load", resolve);
+		});
 	}
 }
