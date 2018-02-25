@@ -2,7 +2,7 @@ const TAB_LOADER_PREFIX = browser.extension.getURL("tab-loader/load.html") + "?"
 
 class SidebarSession {
 	
-	constructor(bmID, active=false, expand=false,) {
+	constructor(bmID, active=false, expand=false, rename=false) {
 		this.title = bmID;
 		this.sessionID = bmID; // bookmark node ID
 
@@ -40,7 +40,6 @@ class SidebarSession {
 
 		// restore button
 		let rb = utils.createHTMLElement("a", {
-			//href: "#",
 			title: "Restore all tabs from this session"
 		}, ["session-restore-button"],
 			"Restore tabs"
@@ -53,7 +52,6 @@ class SidebarSession {
 
 		// set aside button
 		let sab = utils.createHTMLElement("a", {
-			//href: "#",
 			title: "close tabs from this session"
 		}, ["session-aside-button"],
 			"Set aside"
@@ -80,7 +78,12 @@ class SidebarSession {
 		this.tabsection.classList.add("tabs");
 		this.html.appendChild(this.tabsection);
 
-		this.update();
+		let promise = this.update();
+
+		if(document.hasFocus() && rename) {
+			let session = this;
+			promise.then(() => session.rename());
+		}
 
 		if(active) {
 			this._changeState("active");
@@ -152,22 +155,24 @@ class SidebarSession {
 	}
 
 	update() {
-		this.cancelEdits()
+		return Promise.all([
+			this.cancelEdits()
 			.then(() => browser.bookmarks.get(this.sessionID))
 			.then(bms => {
 				let bm = bms[0];
 				this.title = bm.title;
 				this.titleElement.title = bm.title;
 				this.titleElement.textContent = bm.title;
-			});
+			}),
 
-		this._loadTabsFromBookmarks().then(ts => {
-			this.counterElement.textContent = `${ts.length} tabs`;
+			this._loadTabsFromBookmarks().then(ts => {
+				this.counterElement.textContent = `${ts.length} tabs`;
 
-			if (this.expanded) {
-				this._generateTabHTML(ts);
-			}
-		});
+				if (this.expanded) {
+					return this._generateTabHTML(ts);
+				}
+			})
+		]);
 	}
 
 	expand() {

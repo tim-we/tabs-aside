@@ -62,20 +62,20 @@ function getTabSessions(activeSessions) {
 	]).then(initData => {
 		let activeSessionData = initData[3];
 
-		getTabSessions(activeSessionData.sessions).then(data => {
+		return getTabSessions(activeSessionData.sessions).then(data => {
 			// add to sessions map
 			data.forEach(s => sessions.set(s.sessionID, s));
 	
 			list.innerHTML = "";
 			emptyMsg.classList.remove("show");
 	
-			sessions.forEach((session, index) => {
+			data.forEach((session, index) => {
 				list.appendChild(session.html);
 	
 				setExpandState(session, index);
 			});
 	
-			if (sessions.length === 0) {
+			if (sessions.size === 0) {
 				emptyMsg.classList.add("show");
 			}
 		});
@@ -92,10 +92,17 @@ browser.runtime.onMessage.addListener(message => {
 		} else if(t === "session-closed") {
 			sessions.get(sessionID).setState("closed");
 		} else if(t === "session-created") {
-			session.set(sessionID, new SidebarSession(sessionID, false, true));
+			let s = new SidebarSession(sessionID, false, true, true);
+			sessions.set(sessionID, s);
+			list.appendChild(s.html);
+			emptyMsg.classList.remove("show");
 		} else if(t === "session-removed") {
 			sessions.get(sessionID).removeHTML();
 			sessions.delete(sessionID);
+
+			if (sessions.size === 0) {
+				emptyMsg.classList.add("show");
+			}
 		}
 	}
 });
