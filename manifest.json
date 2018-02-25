@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Tabs Aside!",
-  "version": "1.17",
+  "version": "2.0a",
   "description": "Set your tabs aside and store them in your bookmarks.",
   "author": "Tim Weissenfels",
 
@@ -19,7 +19,8 @@
     "bookmarks",
     "tabs",
     "storage",
-    "menus"
+    "menus",
+    "sessions"
   ],
 
 "browser_action": {
@@ -40,11 +41,10 @@
 
   "background": {
     "scripts": [
-      "util/tabUtils.js",
-      "util/isBMFolder.js",
-      "util/wait.js",
+      "util/common.js",
       "func.js",
       "tab-menu.js",
+      "ActiveSessionManager.js",
       "background.js"
     ]
   },
@@ -57,9 +57,15 @@
   "commands": {
     "tabs-aside": {
       "suggested_key": {
-        "default": "Alt+A"
+        "default": "Alt+Shift+Q"
       },
       "description": "Set the current set of tabs aside"
+    },
+
+    "_execute_sidebar_action": {
+      "suggested_key": {
+        "default": "Alt+Q"
+      }
     }
   }
 

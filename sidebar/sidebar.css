@@ -3,71 +3,73 @@ body {
 	overflow-x: hidden;
 }
 
-a:visited { color: rgb(0, 0, 238); }
+a, a:visited { cursor: pointer; color: rgb(0, 0, 238); }
 
 .session {
+	position: relative;
 	margin-bottom: 6px;
 }
 
 .titlebar {
 	position: relative;
+	padding-left: 18px;
 	height: 32px;
 	line-height: 32px;
+
+	background-color: white;
 	background-repeat: no-repeat;
 	background-position-x: 2px;
 	background-position-y: center;
+
 	user-select: none;
+	word-spacing: -1px;
+	white-space: nowrap;
+}
+
+.session.active .titlebar::before {
+	content: " ";
+	font-size: 0px;
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background-color: green;
+	margin-left: -2px;
+	margin-right: 4px;
 }
 
 .session.collapsed > .titlebar { background-image: url('../icons/arrowhead-down-12.svg'); }
 .session.expanded > .titlebar { background-image: url('../icons/arrowhead-up-12.svg'); }
 
 .title {
-	position: absolute;
-	top: 0px;
-	left: 18px;
-	height: 32px;
-	line-height: 32px;
+	margin-right: 6px;
+	font-size: 1.25em;
+	white-space: nowrap;
+	cursor: text;
+	user-select: text;
+}
+
+input.title {
+	background-color: white;
+	border:none;
+	min-width: 80px;
+	max-width: calc(100vh - 100px);
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+.title:hover {
+	transition: background-color 0.25s 0.1s;
+	background-color: rgba(32,32,32,0.075);
+}
+
+input.title:hover {
+	background-color: white;
 }
 
 .counter {
-	position: absolute;
-	top: 0px;
-	right: 6px;
-	text-align: right;
 	color: #6D6D6D;
-	font-size: 1em;
 }
-
-.button {
-	display: inline-block;
-	position: relative;
-	top: 4px;
-	width: 16px;
-	height: 16px;
-	background-repeat: no-repeat;
-	background-position: center;
-	border-radius: 2px;
-	cursor: pointer;
-}
-
-.edit {
-	background-image: url('../icons/edit-small.png');
-	margin-left: 6px;
-	top: 3px;
-}
-
-.edit:hover { background-color: lightcyan; }
-.edit:active { background-color: dodgerblue; }
-
-.delete {
-	margin-left: 2px;
-	margin-right: -3px;
-	background-image: url('../icons/delete-16.svg');
-}
-
-.delete:hover { background-color: lightcoral; }
-.delete:active { background-color: red; }
 
 .session:hover > .titlebar {
 	background-color: #F0F0F0;
@@ -78,15 +80,59 @@ a:visited { color: rgb(0, 0, 238); }
 }
 
 .controls {
-	position: relative;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding-left: 1px;
+	padding-right: 2px;
+	padding-top: 2px;
+	height: calc(100% - 2px);
+
+	background-color: inherit;
+
 	text-align: right;
-	padding-right: 6px;
 	white-space: nowrap;
 	user-select: none;
 }
 
+.controls > a {
+	text-decoration: none;
+	margin-right: 1px;
+}
+
+.controls > a:hover {
+	text-decoration: underline;
+}
+
+.session.active .controls > .session-restore-button {
+	display: none;
+}
+
+.session:not(.active) .controls > .session-aside-button {
+	display: none;
+}
+
+.more-button {
+	display: inline-block;
+	position: relative;
+	top: 5px;
+	width: 20px;
+	height: 20px;
+	margin-left: 2px;
+
+	background-image: url('../icons/more-16.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-position-y: 3px;
+	cursor: pointer;
+}
+
+.more-button:hover {
+	background-color: rgba(12,12,12,0.15);
+}
+
 .tabs {
-	margin-top: -6px;
+	margin-top: -8px;
 }
 
 .session.collapsed > .tabs, .session.collapsed > .controls {
@@ -101,6 +147,7 @@ li {
 	margin: 0px;
 	margin-top: 2px;
 	white-space: nowrap;
+	word-spacing: -0.5px;
 }
 
 a.tab:not(:hover) {
@@ -126,4 +173,32 @@ a.tab.pinned::before {
 
 #empty-msg:not(.show) {
 	display: none;
+}
+
+/* session context menu */
+
+#scm-entry-aside {
+	background-image: url('../icons/arrowhead-left-light-16.svg');
+}
+
+#scm-entry-newwindow {
+	background-image: url('../icons/open-in-new-16.svg');
+}
+
+#scm-entry-remove {
+	background-image: url('../icons/delete-light-16.svg');
+}
+
+/* session link context menu */
+
+#slcm-entry-open-copy {
+	background-image: url('../icons/new-16.svg');
+}
+
+#slcm-entry-copy-url {
+	background-image: url('../icons/copy-16.svg');
+}
+
+#slcm-entry-remove {
+	background-image: url('../icons/delete-light-16.svg');
 }

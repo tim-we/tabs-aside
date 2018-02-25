@@ -66,7 +66,7 @@ browser.storage.local.get("bookmarkFolderID").then(data => {
 		
 		browser.bookmarks.get(bmID).then(data => {
 			bmFolder = data[0];
-			bmRootFolder.innerText = bmFolder.title;
+			bmRootFolder.textContent = bmFolder.title;
 		});
 	}
 });
@@ -112,7 +112,7 @@ browser.runtime.onMessage.addListener(message => {
 		browser.bookmarks.get(bmID).then(data => {
 			bmFolder = data[0];
 
-			bmRootFolder.innerText = bmFolder.title;
+			bmRootFolder.textContent = bmFolder.title;
 		});
 	}
 });

@@ -6,9 +6,9 @@ window.addEventListener("load", () => {
 	container = document.getElementById("tabs");
 	var actions = document.getElementById("actions");
 
-	getTabs().then(ts => {
+	utils.getTabs({currentWindow:true}).then(ts => {
 		// filter tabs that could not be reopened by an extension
-		tabs = ts.filter(tabFilter);
+		tabs = ts.filter(tab => utils.urlFilter(tab.url));
 
 		// init selection mask (default value false)
 		selectionMask = new Array(tabs.length);
@@ -26,12 +26,12 @@ window.addEventListener("load", () => {
 
 	// set up buttons
 	document.getElementById("aside-btn").addEventListener("click", () => {
-		browser.sidebarAction.open();
+		browser.sidebarAction.open(); // has to be called from within an event listener
 		actionHandler("aside");
 	});
 
 	document.getElementById("save-btn").addEventListener("click", () => {
-		browser.sidebarAction.open();
+		browser.sidebarAction.open(); // has to be called from within an event listener
 		actionHandler("save");
 	});
 
@@ -94,7 +94,7 @@ function generateTabHTML(tab, index) {
 
 	let title = document.createElement("div");
 	title.classList.add("tab-title");
-	title.innerText = tab.title;
+	title.textContent = tab.title;
 
 	html.appendChild(title);
 

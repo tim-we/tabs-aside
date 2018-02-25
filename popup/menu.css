@@ -1,0 +1,77 @@
+body {
+	width: 268px;
+	min-height: 25px;
+}
+
+.button {
+	position: relative;
+	display: block;
+	height: 25px;
+	line-height: 25px;
+	color: black;
+	padding-left: 36px;
+	padding-right: 12px;
+	text-decoration: none;
+	white-space: nowrap;
+
+	background-color: white;
+	background-repeat: no-repeat;
+	background-position-x: 0px;
+	background-position-y: center;
+}
+
+.mini-button {
+	width: 24px;
+	height: 24px;
+	background-color: inherit;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.button.shortcut::after {
+	position:absolute;
+	color: #6D6D6D;
+	right: 12px;
+	text-align: right;
+}
+
+.button:hover, .mini-button:hover {
+	background-color: #F0F0F0;
+}
+
+.button:active, .mini-button:active {
+	background-color: #E8E8E8;
+}
+
+.button.disabled {
+	background-color: transparent;
+	opacity: 0.5;
+	cursor: default;
+}
+
+.button.complex {
+	background-color: transparent;
+}
+
+.button.aside { background-image: url('../icons/aside1.png'); }
+.button.aside::after { content: "Shift+Alt+Q"; }
+.button.session-btn { background-image: url('../icons/sessions.png'); }
+.button.session-btn::after { content: "Alt+Q"; }
+.button.save-btn { background-image: url('../icons/save.png'); }
+.button.more-btn { background-image: url('../icons/more-16.svg'); background-position: 12px; }
+
+.mini-aside-button {
+	position: absolute;
+	right: 8px;
+	background-image: url('../icons/aside-24.png');
+}
+
+.button.extended { display: none; }
+body.expanded .button.extended { display: block; }
+
+.menu-divider {
+	height:0px;
+	border-top: 1px solid #DEDEDE;
+	margin-top: 6px;
+	margin-bottom: 6px;
+}

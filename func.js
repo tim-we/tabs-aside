@@ -43,7 +43,12 @@ function aside(tabs, closeTabs, parentBookmarkID, sessionTitle) {
 
 			// move tabs aside one by one (recursive)
 			return asideOne();
-		}).catch(error => console.log("Error: " + error));
+		}).catch(
+			error => console.log("Error: " + error)
+		).then(() => {
+			// "return"/resolve sessionID
+			return Promise.resolve(pID);
+		});
 	} else {
 		console.warn("No tabs to set aside!");
 		return Promise.resolve();
@@ -62,22 +67,24 @@ function generateSessionName(prefix = "Session") {
 	return prefix + ` ${now.getMonth()+1}/${now.getDate()}`
 }
 
-function getSessionRootFolder() {
+function getSessionRootFolderID() {
 	return browser.storage.local.get("bookmarkFolderID").then(data => {
-		if (data.bookmarkFolderID) {
-			let bmID = data.bookmarkFolderID;
+		return data.bookmarkFolderID ?
+			data.bookmarkFolderID :
+			Promise.reject("bookmarkFolderID was not set");
+	});
+}
 
-			return browser.bookmarks.getSubTree(bmID).then(data => {
-				return isBMFolder(data[0]) ?
-					Promise.resolve(data[0]) :
-					Promise.reject(`folder with id ${bmID} not found!`);
-			});
-		} else {
-			return Promise.reject("bookmarkFolderID was not set");
-		}
+function getSessionRootFolder() {
+	return getSessionRootFolderID().then(bmID => {
+		return browser.bookmarks.getSubTree(bmID).then(data => {
+			return utils.isBMFolder(data[0]) ?
+				Promise.resolve(data[0]) :
+				Promise.reject(`folder with id ${bmID} not found!`);
+		});
 	});
 }
 
 function getSessions(sessionsRootFolder) {
-	return sessionsRootFolder ? sessionsRootFolder.children.filter(isBMFolder) : [];
+	return sessionsRootFolder ? sessionsRootFolder.children.filter(utils.isBMFolder) : [];
 }
