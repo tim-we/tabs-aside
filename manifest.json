@@ -6,7 +6,7 @@
   "author": "Tim Weissenfels",
 
   "icons": {
-    "48": "icons/arrow-left-48.png"
+    "48": "icons/tabs-aside-16-dark.svg"
   },
 
   "applications": {
@@ -22,9 +22,12 @@
     "menus"
   ],
 
-  "browser_action": {
-    "default_icon": "icons/aside2.png",
-    "default_title": "Tabs aside!",
+"browser_action": {
+    "default_icon": {
+      "16": "icons/tabs-aside-16-dark.svg",
+      "32": "icons/tabs-aside-16-dark.svg"
+    },
+    "default_title": "Tabs Aside!",
     "default_popup": "popup/menu.html",
     "browser_style": true
   },
