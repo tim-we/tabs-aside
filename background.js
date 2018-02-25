@@ -146,6 +146,8 @@ browser.runtime.onMessage.addListener(async message => {
 		}
 	} else if(message.command === "session-update") {
 		updateTabMenus();
+	} else if(message.command === "options-changed") {
+		ActiveSessionManager.loadConfiguration();
 	}
 });
 

@@ -187,8 +187,18 @@ const ActiveSessionManager = (function () {
 		};
 	}
 
+	function loadConfiguration() {
+		browser.storage.local.get("show-badge").then(data => {
+			if(data["show-badge"] !== undefined) {
+				config.showBadge = data["show-badge"];
+			}
+		});
+	}
+
 	// initialization
 	(function () {
+		loadConfiguration();
+
 		// check all tabs
 		browser.tabs.query({}).then(tabs => {
 			let n = 0; // count active sessions
@@ -367,6 +377,7 @@ const ActiveSessionManager = (function () {
 		getActiveSessionData: getASData,
 		getActiveSessionIDs: getActiveSessionIDs,
 		isTabInActiveSession: isTabInActiveSession,
+		loadConfiguration: loadConfiguration,
 		restoreSession: restoreSession,
 		setSessionAside: setSessionAside
 	};

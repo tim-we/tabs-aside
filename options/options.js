@@ -51,10 +51,16 @@ function setUpCheckbox(domID, defaultValue, sKey=domID) {
 	});
 }
 
-setUpSelect("restoreBehavior", "auto-remove", true);
 setUpCheckbox("ignore-pinned", true);
 setUpCheckbox("expand-menu", false);
+setUpCheckbox("show-badge", true);
 setUpSelect("sbSessionDefaultState", "expand-top", false);
+
+document.getElementById("show-badge").addEventListener("change", () => {
+	browser.runtime.sendMessage({
+		command: "options-changed"
+	});
+});
 
 let bmRootFolder = document.getElementById("bm-root-folder");
 let selectorwindowID = null;
