@@ -1,4 +1,4 @@
-function setUpSelect(optionID, defaultValue, setStorage) {
+function initSelectInput(optionID, defaultValue, setStorage) {
 	let domRef = document.getElementById(optionID);
 
 	browser.storage.local.get(optionID).then(data => {
@@ -27,7 +27,7 @@ function setUpSelect(optionID, defaultValue, setStorage) {
 	});
 }
 
-function setUpCheckbox(domID, defaultValue, sKey=domID) {
+function initCheckboxInput(domID, defaultValue, sKey=domID) {
 	let checkbox = document.getElementById(domID);
 
 	// set initial value
@@ -51,10 +51,64 @@ function setUpCheckbox(domID, defaultValue, sKey=domID) {
 	});
 }
 
-setUpCheckbox("ignore-pinned", true);
-setUpCheckbox("expand-menu", false);
-setUpCheckbox("show-badge", true);
-setUpSelect("sbSessionDefaultState", "expand-top", false);
+function initRadioInput(name, defaultValue, storageKey, changeHandler) {
+	let radios = document.querySelectorAll(`input[type=radio][name='${name}']`);
+	
+	console.assert(radios.length > 0, "[TA] input radio not found!");
+
+	function setValue(value) {
+		radios.forEach(r => {
+			if(r.value === value) { r.checked = true; }
+		});
+	}
+
+	browser.storage.local.get(storageKey).then(data => {
+		if(data[storageKey] !== undefined) {
+			setValue(data[storageKey]);
+		} else {
+			setValue(defaultValue);
+		}
+	});
+
+	radios.forEach(r => {
+		let radio = r;
+		r.addEventListener("change", () => {
+			if(radio.checked) {
+				changeHandler(radio.value);
+
+				let options = {};
+				options[storageKey] = radio.value;
+
+				browser.storage.local.set(options);
+			}
+		});
+	});
+}
+
+initCheckboxInput("ignore-pinned", true);
+initCheckboxInput("expand-menu", false);
+initCheckboxInput("show-badge", true);
+initSelectInput("sbSessionDefaultState", "expand-top", false);
+initRadioInput("ba-icon", "dark", "ba-icon", value => {
+	let map = new Map();
+	map.set("dark",    "tabs-aside-16-dark.svg");
+	map.set("light",   "tabs-aside-16-light.svg");
+	map.set("dynamic", "tabs-aside-16.svg");
+
+	if(map.has(value)) {
+		let iconPath = "icons/" + map.get(value);
+
+		browser.browserAction.setIcon({
+			path: {
+				"16": iconPath,
+				"32": iconPath
+			}
+		}).catch(e => console.error(""+e));
+	} else {
+		console.error("[TA] ba-icon error");
+	}
+	
+});
 
 document.getElementById("show-badge").addEventListener("change", () => {
 	browser.runtime.sendMessage({

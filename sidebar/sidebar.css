@@ -8,6 +8,15 @@ a, a:visited { cursor: pointer; color: rgb(0, 0, 238); }
 .session {
 	position: relative;
 	margin-bottom: 6px;
+	background-color: white;
+}
+
+.session:hover {
+	background-color: rgba(240, 240, 240, 0.5);
+}
+
+.session.changed {
+	animation: new-session .5s;
 }
 
 .titlebar {
@@ -16,7 +25,7 @@ a, a:visited { cursor: pointer; color: rgb(0, 0, 238); }
 	height: 32px;
 	line-height: 32px;
 
-	background-color: white;
+	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position-x: 2px;
 	background-position-y: center;
@@ -201,4 +210,16 @@ a.tab.pinned::before {
 
 #slcm-entry-remove {
 	background-image: url('../icons/delete-light-16.svg');
+}
+
+/* animations */
+
+@keyframes new-session {
+	from {
+		background-color: #f48024;
+	}
+
+	to {
+		background-color: transparent;
+	}
 }

@@ -90,11 +90,15 @@ browser.runtime.onMessage.addListener(message => {
 		if(t === "session-updated") {
 			sessions.get(sessionID).update();
 		} else if(t === "session-closed") {
-			sessions.get(sessionID).setState("closed");
+			let session = sessions.get(sessionID);
+			session.setState("closed");
+			session.classList.remove("changed");
+			session.classList.add("changed");
 		} else if(t === "session-created") {
 			let s = new SidebarSession(sessionID, false, true, true);
 			sessions.set(sessionID, s);
 			list.appendChild(s.html);
+			s.html.classList.add("changed");
 			emptyMsg.classList.remove("show");
 		} else if(t === "session-removed") {
 			sessions.get(sessionID).removeHTML();
@@ -104,5 +108,7 @@ browser.runtime.onMessage.addListener(message => {
 				emptyMsg.classList.add("show");
 			}
 		}
+	} else if(message.command === "root-updated") {
+		window.location.reload();
 	}
 });

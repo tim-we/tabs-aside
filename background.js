@@ -11,14 +11,23 @@ function setSessionFolder(bmFolderID) {
 
 		console.log("[TA] BM folder ID set to " + bookmarkFolderID);
 
-		return browser.storage.local.set({
-			bookmarkFolderID: folder.id
-		});
+		return Promise.all([
+			browser.storage.local.set({
+				bookmarkFolderID: folder.id
+			}),
+			browser.runtime.sendMessage({
+				command: "root-updated"
+			})
+		]);
 	});
 }
 
 browser.browserAction.setBadgeBackgroundColor({
 	color: "#0A84FF"
+});
+
+browser.browserAction.setTitle({
+	title: `Tabs Aside ${browser.runtime.getManifest().version}`
 });
 
 browser.storage.local.get("version").then(data => {
@@ -52,7 +61,7 @@ browser.storage.local.get("version").then(data => {
 				// Tabs Aside folder found
 				console.log(`[TA] 'Tabs Aside' folder (${folders[0].id}) found.`);
 
-				return setSessionFolder(folders[0].id).then(refresh);
+				return setSessionFolder(folders[0].id);
 			} else {
 				// Tabs Aside folder not found
 				console.log("[TA] Creating a new bookmark folder...");
@@ -148,6 +157,11 @@ browser.runtime.onMessage.addListener(async message => {
 		updateTabMenus();
 	} else if(message.command === "options-changed") {
 		ActiveSessionManager.loadConfiguration();
+	} else if(message.command === "root-updated") {
+		getSessionRootFolderID().then(folderID => {
+			bookmarkFolderID = folderID;
+		}).then(updateTabMenus)
+		.catch(e => console.error("[TA] " + e));
 	}
 });
 
