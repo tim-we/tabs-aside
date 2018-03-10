@@ -187,6 +187,22 @@ const ActiveSessionManager = (function () {
 		};
 	}
 
+	function freeTabs(sessionID) {
+		let session = activeSessions.get(sessionID);
+
+		if(session) {
+			session.forEach(tabID => {
+				unloadedTabs.delete(tabID);
+				browser.sessions.removeTabValue(tabID, "loadURL");
+				browser.sessions.removeTabValue(tabID, "sessionID");
+				browser.sessions.removeTabValue(tabID, "bookmarkID");
+			});
+
+			// session is not active anymore
+			activeSessions.delete(sessionID);
+		}
+	}
+
 	function loadConfiguration() {
 		browser.storage.local.get("show-badge").then(data => {
 			if(data["show-badge"] !== undefined) {
@@ -374,6 +390,7 @@ const ActiveSessionManager = (function () {
 	// exposed properties & methods
 	return {
 		findSession: findSession,
+		freeTabs: freeTabs,
 		getActiveSessionData: getASData,
 		getActiveSessionIDs: getActiveSessionIDs,
 		isTabInActiveSession: isTabInActiveSession,

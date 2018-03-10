@@ -12,7 +12,7 @@ a, a:visited { cursor: pointer; color: rgb(0, 0, 238); }
 }
 
 .session:hover {
-	background-color: rgba(240, 240, 240, 0.5);
+	background-color: #F0F0F0;
 }
 
 .session.changed {
@@ -47,6 +47,10 @@ a, a:visited { cursor: pointer; color: rgb(0, 0, 238); }
 	margin-right: 4px;
 }
 
+.titlebar:active {
+	background-color: #E8E8E8;
+}
+
 .session.collapsed > .titlebar { background-image: url('../icons/arrowhead-down-12.svg'); }
 .session.expanded > .titlebar { background-image: url('../icons/arrowhead-up-12.svg'); }
 
@@ -78,14 +82,6 @@ input.title:hover {
 
 .counter {
 	color: #6D6D6D;
-}
-
-.session:hover > .titlebar {
-	background-color: #F0F0F0;
-}
-
-.titlebar:active {
-	background-color: #E8E8E8;
 }
 
 .controls {

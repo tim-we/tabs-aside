@@ -25,8 +25,7 @@ class SidebarSession {
 		[this.titleElement, this.counterElement].forEach(i => titlebar.appendChild(i));
 		
 		titlebar.addEventListener("click", () => { this.toggle(); });
-		this.titleElement.addEventListener("click", e => e.stopPropagation());
-		this.titleElement.addEventListener("dblclick", e => {
+		this.titleElement.addEventListener("click", e => {
 			e.stopPropagation();
 
 			this.rename();
@@ -213,21 +212,28 @@ class SidebarSession {
 		});
 	}
 
-	remove() {
-		let p = this.isActive() ? this.setAside() : Promise.resolve();
+	remove(keepOpenTabs = false) {
+		let session = this;
+
+		let p = keepOpenTabs ?
+					externalASMRequest("freeTabs", [this.sessionID])
+						.then(() => session.remove()) :
+					this.setAside();
 
 		return p.then(() => {
-			this.removeHTML();
+			session.removeHTML();
 
-			browser.bookmarks.removeTree(this.sessionID).then(() => {
+			browser.bookmarks.removeTree(session.sessionID).then(() => {
 				return sendRefresh();
 			});
 		});
 	}
 
 	removeHTML() {
-		this.html.remove();
-		this.html = null;
+		if(this.html) {
+			this.html.remove();
+			this.html = null;
+		}
 	}
 
 	updateTitle(newTitle) {
@@ -328,7 +334,7 @@ class SidebarSession {
 				this.expand();
 			});
 		} else {
-			return Promise.reject();
+			return Promise.resolve();
 		}
 	}
 
