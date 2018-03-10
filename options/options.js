@@ -96,7 +96,7 @@ initRadioInput("ba-icon", "dark", "ba-icon", value => {
 	map.set("dynamic", "tabs-aside-16.svg");
 
 	if(map.has(value)) {
-		let iconPath = "icons/" + map.get(value);
+		let iconPath = "../icons/" + map.get(value);
 
 		browser.browserAction.setIcon({
 			path: {
