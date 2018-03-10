@@ -1,7 +1,7 @@
 const TAB_LOADER_PREFIX = browser.extension.getURL("tab-loader/load.html") + "?";
 
 class SidebarSession {
-	
+
 	constructor(bmID, active=false, expand=false, rename=false) {
 		this.title = bmID;
 		this.sessionID = bmID; // bookmark node ID
@@ -14,7 +14,7 @@ class SidebarSession {
 
 		// state
 		this.expanded = expand;
-		this._changeState("closed");
+		this.setState("closed");
 
 		// titlebar
 		let titlebar = this.titlebar = utils.createHTMLElement("div", {
@@ -85,72 +85,14 @@ class SidebarSession {
 		}
 
 		if(active) {
-			this._changeState("active");
+			this.setState("active");
 		}
 	}
 
-	_changeState(newState) {
+	setState(newState) {
 		if (this.state) { this.html.classList.remove(this.state); }
 		this.state = newState;
 		this.html.classList.add(newState);
-	}
-
-	_loadTabsFromBookmarks() {
-		return browser.bookmarks.getChildren(this.sessionID).then(
-			bms => bms.filter(x => !!x.url)
-		);
-	}
-
-	_generateTabHTML(bmData) {
-		let promise = (bmData instanceof Array) ?
-			Promise.resolve(bmData) :
-			this._loadTabsFromBookmarks();
-		
-		let session = this;
-
-		return promise.then(bms => {
-			let tabsOL = bms.reduce((ol, tab) => {
-				let li = document.createElement("li");
-
-				let a = document.createElement("a");
-				a.classList.add("tab");
-				a.href = tab.url;
-				a.addEventListener("click", e => {
-					e.stopPropagation();
-					e.preventDefault();
-
-					// TODO: open session (partially)
-				});
-				a.addEventListener("contextmenu", e => {
-					e.stopImmediatePropagation();
-					e.preventDefault();
-
-					new SessionLinkContextMenu(session, tab, e.clientX, e.clientY);
-				});
-
-				let title = tab.title;
-
-				if(tab.title) {
-					if(tab.title.length > 9 && tab.title.substr(0, 9) === "[pinned] ") {
-						tab.pinned = true;
-						tab.title = title = tab.title.substr(9);
-						a.classList.add("pinned");
-					}
-				} else {
-					title = (new URL(tab.url)).hostname + " [no title]";
-					tab.pinned = false;
-				}
-
-				a.textContent = title;
-				
-				li.appendChild(a);
-				ol.appendChild(li);
-				return ol;
-			}, document.createElement("ol"));
-
-			this.tabsection.innerHTML = "";
-			this.tabsection.appendChild(tabsOL);
-		});
 	}
 
 	update() {
@@ -200,42 +142,54 @@ class SidebarSession {
 		}
 	}
 
+	/**
+	 * restores a session by calling ActiveSessionManager.restoreSession
+	 * @param {boolean} newWindow open tabs in a new window?
+	 * @returns {Promise} the ASM Request promise
+	 */
 	restore(newWindow = false) {
 		if (this.state !== "closed") { return Promise.reject(); }
 
 		console.log(`restoring tabs from "${this.title}"`);
-		this.collapse();
-		this._changeState("restoring");
+		this.setState("restoring");
 		
 		return externalASMRequest("restoreSession", [this.sessionID, newWindow]).then(() => {
-			this._changeState("active");
+			this.setState("active");
 		});
 	}
 
+	/**
+	 * deletes a session (from the bookmarks & the sidebar html element)
+	 * @param {boolean} keepOpenTabs if the session has open tabs (is active), keep them?
+	 * @returns {Promise} a promise
+	 */
 	remove(keepOpenTabs = false) {
 		let session = this;
 
 		let p = keepOpenTabs ?
-					externalASMRequest("freeTabs", [this.sessionID])
-						.then(() => session.remove()) :
+					// free tabs from session (remove session keys etc...)
+					externalASMRequest("freeTabs", [this.sessionID]) :
+					// active tabs will be closed
 					this.setAside();
 
 		return p.then(() => {
+			// remove from sidebar
 			session.removeHTML();
 
-			browser.bookmarks.removeTree(session.sessionID).then(() => {
+			// remove from bookmarks
+			return browser.bookmarks.removeTree(session.sessionID).then(() => {
 				return sendRefresh();
 			});
 		});
 	}
 
+	/** removes this sessions' html element (removes it from the sidebar) */
 	removeHTML() {
-		if(this.html) {
-			this.html.remove();
-			this.html = null;
-		}
+		this.html.remove();
+		this.html = null;
 	}
 
+	/** updates the sessions title in the html view and the bookmarks */
 	updateTitle(newTitle) {
 		if (newTitle.length > 0) {
 			this.title = newTitle;
@@ -254,6 +208,11 @@ class SidebarSession {
 		}
 	}
 
+	/**
+	 * Activates the rename mode.
+	 * Replaces the title element with text input field.
+	 * @returns {Promise} a promise that is fulfilled after the edits are completed
+	*/
 	rename() {
 		// create input element
 		let input = document.createElement("input");
@@ -325,12 +284,16 @@ class SidebarSession {
 		return this.state === "active";
 	}
 
+	/**
+	 * sets the session aside
+	 * @returns {Promise} an ASM request promise
+	*/
 	setAside() {
 		if (this.isActive()) {
-			this._changeState("closing");
+			this.setState("closing");
 
 			return externalASMRequest("setSessionAside", [this.sessionID]).then(() => {
-				this._changeState("closed");
+				this.setState("closed");
 				this.expand();
 			});
 		} else {
@@ -338,7 +301,61 @@ class SidebarSession {
 		}
 	}
 
-	setState(newState) {
-		this._changeState(newState);
+	_loadTabsFromBookmarks() {
+		return browser.bookmarks.getChildren(this.sessionID).then(
+			bms => bms.filter(x => !!x.url)
+		);
+	}
+
+	_generateTabHTML(bmData) {
+		let promise = (bmData instanceof Array) ?
+			Promise.resolve(bmData) :
+			this._loadTabsFromBookmarks();
+		
+		let session = this;
+
+		return promise.then(bms => {
+			let tabsOL = bms.reduce((ol, tab) => {
+				let li = document.createElement("li");
+
+				let a = document.createElement("a");
+				a.classList.add("tab");
+				a.href = tab.url;
+				a.addEventListener("click", e => {
+					e.stopPropagation();
+					e.preventDefault();
+
+					// TODO: open session (partially)
+				});
+				a.addEventListener("contextmenu", e => {
+					e.stopImmediatePropagation();
+					e.preventDefault();
+
+					new SessionLinkContextMenu(session, tab, e.clientX, e.clientY);
+				});
+
+				let title = tab.title;
+
+				if(tab.title) {
+					if(tab.title.length > 9 && tab.title.substr(0, 9) === "[pinned] ") {
+						tab.pinned = true;
+						tab.title = title = tab.title.substr(9);
+						a.classList.add("pinned");
+					}
+				} else {
+					title = (new URL(tab.url)).hostname + " [no title]";
+					tab.pinned = false;
+				}
+
+				a.textContent = title;
+				
+				li.appendChild(a);
+				ol.appendChild(li);
+				return ol;
+			}, document.createElement("ol"));
+
+			this.tabsection.innerHTML = "";
+			this.tabsection.appendChild(tabsOL);
+		});
 	}
 }

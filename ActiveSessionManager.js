@@ -192,7 +192,11 @@ const ActiveSessionManager = (function () {
 
 		if(session) {
 			session.forEach(tabID => {
+				// remove from our own data structure
 				unloadedTabs.delete(tabID);
+				tabBMAssoc.delete(tabID);
+
+				// remove session keys
 				browser.sessions.removeTabValue(tabID, "loadURL");
 				browser.sessions.removeTabValue(tabID, "sessionID");
 				browser.sessions.removeTabValue(tabID, "bookmarkID");
@@ -344,11 +348,13 @@ const ActiveSessionManager = (function () {
 		});
 
 		browser.tabs.onUpdated.addListener((tabID, changeInfo, tab) => {
+			// get this tabs bookmark id
 			let bmID = tabBMAssoc.get(tabID);
 
 			// Map.get returns undefined if the key can't be found
 			if (bmID) {
 				if (changeInfo.url && !utils.urlFilter(changeInfo.url)) {
+					// tab changed to a url Tabs Aside can not handle :/
 					return;
 				}
 
@@ -368,9 +374,12 @@ const ActiveSessionManager = (function () {
 					// bookmark with that id does not exist (anymore)
 					console.error("[TA] " + e);
 
+					// find session
+					let sessionID = findSession(tabID);
+
 					// let's create a new one
 					browser.bookmarks.create({
-						parentId: bm.parentId,
+						parentId: sessionID,
 						title: title,
 						url: tab.url
 					}).then(bm => {
