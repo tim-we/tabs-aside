@@ -1,5 +1,10 @@
 const utils = {
 
+	/**
+	 * waits for a specified number of milisconds
+	 * @param {number} ms time to wait in miliseconds
+	 * @returns {Promise} a Promise that will be fulfilled after the wait time is over
+	 */
 	wait: ms => new Promise(resolve => setTimeout(resolve, ms)),
 
 	// regular expression that parses tab options and title from bookmark title:
@@ -7,12 +12,23 @@ const utils = {
 
 	isBMFolder: bm => bm.type === "folder" || !bm.url,
 
+	/** a filter function for urls that can be opened in a new tab via the API */
 	urlFilter: url => url.startsWith("http") || url.startsWith("view-source:"),
 
+	/**
+	 * creates a title for a tab that encodes the pinned state
+	 * this is as the bookmark title
+	 * @param {tabs.Tab} tab the tab
+	 * @returns {string} returns the bookmark title
+	 */
 	generateTabBMTitle: tab => (tab.pinned ? "[pinned] " : "") + tab.title.trim(),
 
 	containsEmptyTab: tabs => tabs.some(tab => tab.url === "about:newtab"),
 
+	/**
+	 * @param {object} options optional query filters (currentWindow and pinned), falls back to user config
+	 * @returns {Promise} the promise returned by the browser.tabs.query API
+	 */
 	getTabs: (options = {}) => {
 		let queryInfo = {};
 
