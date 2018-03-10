@@ -30,6 +30,13 @@ browser.browserAction.setTitle({
 	title: `Tabs Aside ${browser.runtime.getManifest().version}`
 });
 
+// load browser action icon
+browser.storage.local.get("ba-icon").then(data => {
+	if(data["ba-icon"]) {
+		utils.setBrowserActionIcon(data["ba-icon"]);
+	}
+});
+
 browser.storage.local.get("version").then(data => {
 	if (data.version) {
 		console.assert(data.version === 1, "[TA] Invalid data version!");

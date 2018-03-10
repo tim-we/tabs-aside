@@ -90,24 +90,7 @@ initCheckboxInput("expand-menu", false);
 initCheckboxInput("show-badge", true);
 initSelectInput("sbSessionDefaultState", "expand-top", false);
 initRadioInput("ba-icon", "dark", "ba-icon", value => {
-	let map = new Map();
-	map.set("dark",    "tabs-aside-16-dark.svg");
-	map.set("light",   "tabs-aside-16-light.svg");
-	map.set("dynamic", "tabs-aside-16.svg");
-
-	if(map.has(value)) {
-		let iconPath = "../icons/" + map.get(value);
-
-		browser.browserAction.setIcon({
-			path: {
-				"16": iconPath,
-				"32": iconPath
-			}
-		}).catch(e => console.error(""+e));
-	} else {
-		console.error("[TA] ba-icon error");
-	}
-	
+	utils.setBrowserActionIcon(value);
 });
 
 document.getElementById("show-badge").addEventListener("change", () => {

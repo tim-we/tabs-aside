@@ -88,5 +88,25 @@ const utils = {
 		return new Promise(resolve => {
 			window.addEventListener("load", resolve);
 		});
+	},
+
+	setBrowserActionIcon(icon) {
+		let map = new Map();
+		map.set("dark",    "tabs-aside-16-dark.svg");
+		map.set("light",   "tabs-aside-16-light.svg");
+		map.set("dynamic", "tabs-aside-16.svg");
+
+		if(map.has(icon)) {
+			let iconPath = "../icons/" + map.get(icon);
+
+			browser.browserAction.setIcon({
+				path: {
+					"16": iconPath,
+					"32": iconPath
+				}
+			}).catch(e => console.error(""+e));
+		} else {
+			console.error("[TA] ba-icon error");
+		}
 	}
 }
