@@ -41,11 +41,12 @@
 
 	"background": {
 		"scripts": [
-		"util/common.js",
-		"func.js",
-		"tab-menu.js",
-		"ActiveSessionManager.js",
-		"background.js"
+			"util/common.js",
+			"func.js",
+			"tab-menu.js",
+			"ActiveSessionManager.js",
+			"background.js",
+			"update.js"
 		]
 	},
 
