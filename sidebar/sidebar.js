@@ -3,15 +3,13 @@ let list = document.getElementById("list");
 let emptyMsg = document.getElementById("empty-msg")
 let sessions = new Map(); // maps session IDs to SidebarSession objects
 
-let params = (new URL(location.href)).searchParams;
-
 function loadBMRoot() {
 	return getSessionRootFolder().then(folder => {
 		return (bookmarkFolder = folder);
 	}, e => {
-		// wait 0.2s and try again
+		// wait 0.5s and try again
 		console.log("[TA] " + e);
-		return utils.wait(200).then(loadBMRoot);
+		return utils.wait(500).then(loadBMRoot);
 	});
 }
 
@@ -97,7 +95,7 @@ browser.runtime.onMessage.addListener(message => {
 		} else if(t === "session-created") {
 			let s = new SidebarSession(sessionID, false, true, true);
 			sessions.set(sessionID, s);
-			list.appendChild(s.html);
+			list.prepend(s.html);
 			s.html.classList.add("changed");
 			emptyMsg.classList.remove("show");
 		} else if(t === "session-removed") {
