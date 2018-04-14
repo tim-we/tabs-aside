@@ -205,6 +205,8 @@ const ActiveSessionManager = (function () {
 			// session is not active anymore
 			activeSessions.delete(sessionID);
 		}
+
+		_updateBrowserAction();
 	}
 
 	function loadConfiguration() {
