@@ -192,8 +192,17 @@ const ActiveSessionManager = (function () {
 
 		if(session) {
 			session.forEach(tabID => {
-				// remove from our own data structure
-				unloadedTabs.delete(tabID);
+				// remove from our own data structure (tabBMassoc & unloadedTabs)
+
+				if(unloadedTabs.has(tabID)) {
+					// inject script that handles automatic tab loading
+					browser.tabs.executeScript(tabID, {
+						file: "/tab-loader/free-loader.js"
+					});
+
+					unloadedTabs.delete(tabID);
+				}
+
 				tabBMAssoc.delete(tabID);
 
 				// remove session keys
