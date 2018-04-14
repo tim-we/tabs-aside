@@ -1,18 +1,12 @@
 {
   "manifest_version": 2,
-  "name": "Tabs Aside!",
-  "version": "1.17",
+  "name": "Tabs Aside! (legacy)",
+  "version": "1.17.2",
   "description": "Set your tabs aside and store them in your bookmarks.",
   "author": "Tim Weissenfels",
 
   "icons": {
     "48": "icons/arrow-left-48.png"
-  },
-
-  "applications": {
-    "gecko": {
-      "id": "{644e8eb0-c710-47e9-b81c-5dd69bfcf86b}"
-    }
   },
 
   "permissions": [
