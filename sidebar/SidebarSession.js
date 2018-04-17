@@ -112,6 +112,12 @@ class SidebarSession {
 				if (this.expanded) {
 					return this._generateTabHTML(ts);
 				}
+			}),
+
+			externalASMRequest("isActiveSession", [this.sessionID]).then(active => {
+				if(active !== this.isActive()) {
+					this.setState(active ? "active" : "closed");
+				}
 			})
 		]);
 	}

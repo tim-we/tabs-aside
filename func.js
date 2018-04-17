@@ -10,9 +10,13 @@ function addTabToSession(sessionFolderID, tab, closeTab) {
 		parentId: sessionFolderID,
 		title: title,
 		url: tab.url
-	}).then(() => {
-		// close tab or skip (return resolved promise)
-		return closeTab ? browser.tabs.remove(tab.id) : Promise.resolve();
+	}).then(bookmark => {
+		// close tab or activate session
+		if(closeTab) {
+			return browser.tabs.remove(tab.id);
+		} else {
+			return ActiveSessionManager.addTab(tab.id, sessionFolderID, bookmark.id);
+		}
 	});
 }
 

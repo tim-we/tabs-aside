@@ -18,6 +18,7 @@ browser.runtime.onInstalled.addListener(details => {
 
 	if(showWhatsNew) {
 		browser.tabs.create({
+			active: true,
 			url: GITHUB_PROJECT_ROOT + "/wiki/Tabs-Aside-v2.0:-What's-new%3F"
 		});
 	}

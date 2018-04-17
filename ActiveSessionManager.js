@@ -218,6 +218,26 @@ const ActiveSessionManager = (function () {
 		_updateBrowserAction();
 	}
 
+	function addTabToActiveSession(tabID, sessionID, bookmarkID) {
+		let session = activeSessions.get(sessionID);
+
+		if(!session) {
+			session = new Set();
+			activeSessions.set(sessionID, session);
+		}
+
+		session.add(tabID);
+		tabBMAssoc.set(tabID, bookmarkID);
+
+		_updateBrowserAction();
+		_sendSessionUpdateMsg("session-updated", sessionID);
+
+		return Promise.all([
+			browser.sessions.setTabValue(tabID, "sessionID", sessionID),
+			browser.sessions.setTabValue(tabID, "bookmarkID", bookmarkID)
+		]);
+	}
+
 	function loadConfiguration() {
 		browser.storage.local.get("show-badge").then(data => {
 			if(data["show-badge"] !== undefined) {
@@ -409,10 +429,12 @@ const ActiveSessionManager = (function () {
 
 	// exposed properties & methods
 	return {
+		addTab: addTabToActiveSession,
 		findSession: findSession,
 		freeTabs: freeTabs,
 		getActiveSessionData: getASData,
 		getActiveSessionIDs: getActiveSessionIDs,
+		isActiveSession: sessionID => activeSessions.has(sessionID),
 		isTabInActiveSession: isTabInActiveSession,
 		loadConfiguration: loadConfiguration,
 		restoreSession: restoreSession,
