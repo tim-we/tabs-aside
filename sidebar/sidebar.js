@@ -80,7 +80,11 @@ function getTabSessions(activeSessions) {
 	}).catch(error => console.error("[TA] Error: " + error));
 })();
 
-browser.runtime.onMessage.addListener(message => {
+browser.runtime.onMessage.addListener((message, sender) => {
+	if(!message.command) {
+		return;
+	}
+
 	if(message.command === "session-update") {
 		let t = message.type;
 		let sessionID = message.sessionID;

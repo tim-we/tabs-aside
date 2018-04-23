@@ -91,7 +91,7 @@ function createTabsAsideFolder() {
 }
 
 function asideMessageHandler(message) {
-	let promise = Promise.resolve();
+	let promise, updateType;
 
 	if (message.tabs) {
 		let closeTabs = message.command !== "save";
@@ -104,6 +104,8 @@ function asideMessageHandler(message) {
 
 		if (message.sessionID) {
 			// add to existing session
+			updateType = "session-updated";
+
 			// this is all async so tabs could be out of order
 			promise = Promise.all(
 				message.tabs.map(
@@ -111,7 +113,9 @@ function asideMessageHandler(message) {
 				)
 			);
 		} else {
-			// creating a new session
+			updateType = "session-created";
+
+			// create a new session:
 
 			// custom title?
 			let title = (message.title) ? message.title : generateSessionName();
@@ -123,16 +127,16 @@ function asideMessageHandler(message) {
 				bookmarkFolderID,
 				title
 			);
-
-			// update sidebar
-			promise.then(sessionID => {
-				return browser.runtime.sendMessage({
-					command: "session-update",
-					type: "session-created",
-					sessionID: sessionID
-				});
-			});
 		}
+
+		// update sidebar
+		promise.then(sessionID => {
+			return browser.runtime.sendMessage({
+				command: "session-update",
+				type: updateType,
+				sessionID: sessionID
+			});
+		});
 
 		// update menu
 		promise.then(updateTabMenus);
@@ -154,11 +158,11 @@ browser.runtime.onMessage.addListener(async message => {
 
 		if (result instanceof Promise) {
 			result.then(
-				r => browser.runtime.sendMessage({ result: r }),
-				e => browser.runtime.sendMessage({ error: e, line: e.lineNumber })
+				r => browser.runtime.sendMessage({ class: "ASMResponse", result: r }),
+				e => browser.runtime.sendMessage({ class: "ASMResponse", error: e, line: e.lineNumber })
 			);
 		} else {
-			browser.runtime.sendMessage({result:result});
+			browser.runtime.sendMessage({class:"ASMResponse",result:result});
 		}
 	} else if(message.command === "session-update") {
 		updateTabMenus();

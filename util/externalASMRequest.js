@@ -3,6 +3,8 @@ function externalASMRequest(command, args = [], timeout = 0) {
 
 	return new Promise((resolve, reject) => {
 		let listener = function (response) {
+			if(!response || response.class !== "ASMResponse") { return; }
+
 			// expecting just 1 response:
 			browser.runtime.onMessage.removeListener(listener);
 
