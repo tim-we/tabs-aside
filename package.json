@@ -1,0 +1,25 @@
+{
+  "name": "tabs-aside",
+  "version": "2.2.0",
+  "description": "tab/session manager",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack && web-ext build -i=\"src/*\" \"media/*\" \"*.pdn\" \"*.zip\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tim-we/tabs-aside.git"
+  },
+  "author": "tim-we",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/tim-we/tabs-aside/issues"
+  },
+  "homepage": "https://github.com/tim-we/tabs-aside#readme",
+  "dependencies": {
+    "ts-loader": "^4.2.0",
+    "typescript": "^2.8.3",
+    "web-ext-types": "^2.0.1",
+    "webpack": "^4.6.0"
+  }
+}

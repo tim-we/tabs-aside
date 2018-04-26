@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"strict": true,
+		"target": "es2016",
+		"typeRoots": [
+			"node_modules/@types",
+			"node_modules/web-ext-types"
+		]
+	},
+	"include": [
+		"src/**/*.ts"
+	]
+}
