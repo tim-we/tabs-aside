@@ -37,9 +37,7 @@ window.addEventListener("load", () => {
 			}
 	
 			// show tips
-			if (tipID === -1) {
-				showTip("To keep the session after restoring press CTRL while clicking on <Restore tabs>", 0);
-			} else if(tipID <= 1) {
+			if(tipID <= 1) {
 				showTip(`You can customize the 'Tabs Aside!' behavior in the add-on options.`, 2);
 			} else if(tipID === 2) {
 				showTip(`If you ever choose to uninstall this addon your sessions will be kept in your bookmarks.`, 3);
