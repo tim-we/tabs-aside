@@ -103,10 +103,9 @@ function asideMessageHandler(message) {
 		}
 
 		if (message.sessionID) {
-			// add to existing session
 			updateType = "session-updated";
 
-			// this is all async so tabs could be out of order
+			// add tabs to existing session (all async)
 			promise = Promise.all(
 				message.tabs.map(
 					tab => addTabToSession(message.sessionID, tab, closeTabs)
@@ -129,6 +128,8 @@ function asideMessageHandler(message) {
 			);
 		}
 
+		console.log("sending session update");
+		
 		// update sidebar
 		promise.then(sessionID => {
 			return browser.runtime.sendMessage({
@@ -146,7 +147,7 @@ function asideMessageHandler(message) {
 }
 
 // message listener
-browser.runtime.onMessage.addListener(async message => {
+browser.runtime.onMessage.addListener(message => {
 	if (message.command === "aside" || message.command === "save") {
 		asideMessageHandler(message);
 	} else if (message.command === "updateRoot") {

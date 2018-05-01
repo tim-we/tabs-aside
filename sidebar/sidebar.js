@@ -97,6 +97,13 @@ browser.runtime.onMessage.addListener((message, sender) => {
 			session.classList.remove("changed");
 			session.classList.add("changed");
 		} else if(t === "session-created") {
+			if(sessions.get(sessionID)) {
+				// "session-updated"
+				// the sidebar sometimes opens after the session folder was created
+				// therefore the session already exists
+				sessions.get(sessionID).update();
+				return;
+			}
 			let s = new SidebarSession(sessionID, false, true, true);
 			sessions.set(sessionID, s);
 			list.prepend(s.html);
