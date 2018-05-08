@@ -1,1 +1,1 @@
-web-ext build -i="media/*" "*.pdn" "*.zip" "build.cmd"
+web-ext build -i="media/*" "node_modules/" "src/" "old/" "dist/" "icons/*.pdn" "*.zip" "build.cmd"
