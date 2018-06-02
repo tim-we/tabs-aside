@@ -18,8 +18,8 @@
   },
   "homepage": "https://github.com/tim-we/tabs-aside#readme",
   "dependencies": {
-    "ts-loader": "^4.2.0",
-    "typescript": "^2.8.3",
+    "ts-loader": "^4.3.1",
+    "typescript": "^2.9.1",
     "web-ext-types": "^2.1.0",
     "webpack": "^4.6.0",
     "webpack-cli": "^2.0.15"
