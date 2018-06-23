@@ -1,4 +1,4 @@
-import * as ActiveSessionManager from "../core/ActiveSessionManager";
+import * as ASM from "../core/ActiveSessionManager";
 import { Message, ASMMessage } from "../core/Message";
 
 browser.browserAction.setBadgeBackgroundColor({
@@ -17,16 +17,11 @@ browser.runtime.onMessage.addListener((message:any) => {
 	}
 
 	if(msg.type === "ASM") {
-		let command:string = <"test">(<ASMMessage>msg).cmd;
-		let result = ASM[command].apply(null, message.args || []);
+		let m:ASMMessage = <ASMMessage>msg;
 
-		if (result instanceof Promise) {
-			result.then(
-				r => browser.runtime.sendMessage({ class: "ASMResponse", result: r }),
-				e => browser.runtime.sendMessage({ class: "ASMResponse", error: e, line: e.lineNumber })
-			);
-		} else {
-			browser.runtime.sendMessage({class:"ASMResponse",result:result});
-		}
+		//@ts-ignore TS7017
+		let result:any = ASM[m.cmd].apply(null, m.args || []);
+
+		return (result instanceof Promise) ? result : Promise.resolve(result);
 	}
 });

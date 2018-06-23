@@ -1,3 +1,5 @@
+import { ASMCommand } from "./ActiveSessionManager";
+
 export interface Message {
 	type:string;
 	destination: "all" | "sidebar" | "background" | "menu";
@@ -6,6 +8,6 @@ export interface Message {
 export interface ASMMessage {
 	type:"ASM";
 	destination: "background";
-	cmd:string;
-	data:any;
+	cmd:ASMCommand;
+	args:any[];
 }

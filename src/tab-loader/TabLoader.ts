@@ -8,7 +8,7 @@ interface TabCreateProperties {
 }
 
 export class TabLoader {
-	private unloadedTabs:Map<string, Tab> = new Map<string, Tab>();
+	private unloadedTabs:Map<number, string> = new Map<number, string>();
 
 	constructor() {
 		browser.tabs.onActivated.addListener(this.handleTabActivated);
@@ -28,7 +28,11 @@ export class TabLoader {
 
 		createProperties.url = this.getTabLoaderURL(url, title);
 
-		return browser.tabs.create(createProperties);
+		return browser.tabs.create(createProperties).then(tab => {
+			//@ts-ignore TS2345
+			this.unloadedTabs.set(tab.id, url);
+			return tab;
+		});
 	}
 
 	private getTabLoaderURL(url:string, title:string):string {
@@ -38,7 +42,12 @@ export class TabLoader {
 		].join("&");
 	}
 
-	private handleTabActivated(activeInfo:{tabId:number, windowId:number}) {}
+	private handleTabActivated(activeInfo:{tabId:number, windowId:number}) {
+		// TODO
+		this.unloadedTabs.delete(activeInfo.tabId);
+	}
 
-	private handleTabRemoved(tabId:number, removeInfo:object) {}
+	private handleTabRemoved(tabId:number, removeInfo:object) {
+		this.unloadedTabs.delete(tabId);
+	}
 }
