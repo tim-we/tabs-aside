@@ -1,4 +1,4 @@
-import { ASMCommand } from "./ActiveSessionManager";
+import { ASMCommand } from "./SessionManager";
 
 export interface Message {
 	type:string;
