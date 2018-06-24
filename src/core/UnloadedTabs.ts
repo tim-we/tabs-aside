@@ -1,5 +1,3 @@
-import { Tab } from "../core/Tab";
-
 const TAB_LOADER_BASE_URL = browser.extension.getURL("tab-loader/load.html");
 
 interface TabCreateProperties {
@@ -10,7 +8,7 @@ interface TabCreateProperties {
 type TabActivationListener = (tabId:number) => any;
 
 export class UnloadedTabs {
-	private tabs:Map<number, string> = new Map<number, string>();
+	private tabURLs:Map<number, string> = new Map<number, string>();
 
 	private activateListeners:TabActivationListener[] = [];
 
@@ -24,7 +22,7 @@ export class UnloadedTabs {
 	}
 
 	public getTabIds():number[] {
-		return Array.from(this.tabs.keys());
+		return Array.from(this.tabURLs.keys());
 	}
 
 	public create(
@@ -41,7 +39,7 @@ export class UnloadedTabs {
 		createProperties.url = this.getTabLoaderURL(url, title);
 
 		return browser.tabs.create(createProperties).then(tab => {
-			this.tabs.set(tab.id as number, url);
+			this.tabURLs.set(tab.id as number, url);
 
 			// use the browsers sessions API to store the actual URL
 			// even if this extension is not running anymore
@@ -61,15 +59,25 @@ export class UnloadedTabs {
 	private handleTabActivated(activeInfo:{tabId:number, windowId:number}) {
 		let tabId:number = activeInfo.tabId;
 
-		let url = this.tabs.get(tabId);
+		let url = this.tabURLs.get(tabId);
 
 		if(url) {
-			//TODO
-			this.tabs.delete(tabId);
+			Promise.all([
+				// remove session value
+				browser.sessions.removeTabValue(tabId, "loadURL"),
+
+				// load tab
+				browser.tabs.update(tabId, { url: url })
+			]).then(_ => {
+				this.tabURLs.delete(tabId);
+
+				// call event listeners
+				this.activateListeners.forEach(f => f(tabId));
+			});
 		}
 	}
 
 	private handleTabRemoved(tabId:number, removeInfo:object) {
-		this.tabs.delete(tabId);
+		this.tabURLs.delete(tabId);
 	}
 }

@@ -28,5 +28,4 @@ export class ActiveSessionList {
 	public has(sessionId:string):boolean {
 		return this.activeSessions.has(sessionId);
 	}
-
 }

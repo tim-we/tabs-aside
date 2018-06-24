@@ -1,15 +1,23 @@
-import { Tab } from "./Tab";
 import { UnloadedTabs } from "./UnloadedTabs";
 
 export default class ActiveSession {
 	public bookmarkId:string;
-	private tabs:Tab[] = [];
+	private tabIdBookmarkMapping:Map<number, string> = new Map<number, string>();
 	public windowId:number;
-	private unloadedTabs:UnloadedTabs = new UnloadedTabs();
+	private unloadedTabs:UnloadedTabs;
 
 	constructor(bookmarkId:string, windowId:number = browser.windows.WINDOW_ID_NONE) {
 		this.bookmarkId = bookmarkId;
 		this.windowId = windowId;
+
+		this.unloadedTabs = new UnloadedTabs();
+		this.unloadedTabs.addTabActivationListener(tabId => {
+			// tab was just loaded, add to tracked tabs
+			browser.sessions.getTabValue(tabId, "bookmarkId")
+			.then(x => {
+				this.tabIdBookmarkMapping.set(tabId, x as string);
+			});
+		});
 	}
 
 	public getId():string {
@@ -23,7 +31,8 @@ export default class ActiveSession {
 	}
 
 	public getTabIds():number[] {
-		return this.tabs.map(tab => tab.id).concat(this.unloadedTabs.getTabIds());
+		return Array.from(this.tabIdBookmarkMapping.keys())
+			.concat(this.unloadedTabs.getTabIds());
 	}
 
 	public openAll():Promise<void> {
@@ -31,14 +40,12 @@ export default class ActiveSession {
 			// create tabs (the promise resolves when every tab has been successfully created)
 			return Promise.all(
 				bms.map(
-					bm => this.unloadedTabs.create(
-						_createProperties(bm, this.windowId)
-					).then(tab => {
+					bm => this.createTab(bm).then(tab => {
 						// use the browsers sessions API
 						// (these values will be kept even if the extension stops running)
 						return Promise.all([
-							browser.sessions.setTabValue(tab.id as number, "sessionID", this.bookmarkId),
-							browser.sessions.setTabValue(tab.id as number, "bookmarkID", bm.id)
+							browser.sessions.setTabValue(tab.id as number, "sessionId", this.bookmarkId),
+							browser.sessions.setTabValue(tab.id as number, "bookmarkId", bm.id)
 						]);
 					})
 				)
@@ -53,13 +60,24 @@ export default class ActiveSession {
 			return Promise.reject(reason);
 		});
 	}
-}
 
-// temporary
-function _createProperties(bm:browser.bookmarks.BookmarkTreeNode, windowId:number) {
-	return {
-		pinned: false,
-		url: bm.url as string,
-		windowId: windowId
-	};
+	private createTab(bm:browser.bookmarks.BookmarkTreeNode):Promise<browser.tabs.Tab> {
+		let loadTabsOnActivation:boolean = true;
+
+		let createProperties = {
+			pinned: false,
+			url: bm.url as string,
+			windowId: this.windowId
+		}
+
+		if(loadTabsOnActivation) {
+			return this.unloadedTabs.create(createProperties, bm.title);
+		} else {
+			return browser.tabs.create(createProperties).then(tab => {
+				this.tabIdBookmarkMapping.set(tab.id as number, bm.id);
+
+				return tab;
+			});
+		}
+	}
 }
