@@ -2,22 +2,35 @@ import { UnloadedTabs } from "./UnloadedTabs";
 
 export default class ActiveSession {
 	public bookmarkId:string;
-	private tabIdBookmarkMapping:Map<number, string> = new Map<number, string>();
 	public windowId:number;
-	private unloadedTabs:UnloadedTabs;
+
+	// maps tab ids to their respective bookmark ids
+	private tabBookmarkAssociation:Map<number, string> = new Map<number, string>();
+	
+	private unloadedTabs:UnloadedTabs = new UnloadedTabs();
 
 	constructor(bookmarkId:string, windowId:number = browser.windows.WINDOW_ID_NONE) {
 		this.bookmarkId = bookmarkId;
 		this.windowId = windowId;
+		this.unloadedTabs;
 
-		this.unloadedTabs = new UnloadedTabs();
+		// register tab listeners:
+
 		this.unloadedTabs.addTabActivationListener(tabId => {
 			// tab was just loaded, add to tracked tabs
 			browser.sessions.getTabValue(tabId, "bookmarkId")
 			.then(x => {
-				this.tabIdBookmarkMapping.set(tabId, x as string);
+				this.tabBookmarkAssociation.set(tabId, x as string);
 			});
 		});
+
+		browser.tabs.onUpdated.addListener(
+			(tabID, changeInfo, tab) => this.tabUpdateListener(tabID, changeInfo, tab)
+		);
+
+		browser.tabs.onRemoved.addListener(
+			tabId => this.tabRemovedListener(tabId)
+		);
 	}
 
 	public getId():string {
@@ -31,7 +44,7 @@ export default class ActiveSession {
 	}
 
 	public getTabIds():number[] {
-		return Array.from(this.tabIdBookmarkMapping.keys())
+		return Array.from(this.tabBookmarkAssociation.keys())
 			.concat(this.unloadedTabs.getTabIds());
 	}
 
@@ -64,6 +77,7 @@ export default class ActiveSession {
 	private createTab(bm:browser.bookmarks.BookmarkTreeNode):Promise<browser.tabs.Tab> {
 		let loadTabsOnActivation:boolean = true;
 
+		// TODO
 		let createProperties = {
 			pinned: false,
 			url: bm.url as string,
@@ -74,10 +88,26 @@ export default class ActiveSession {
 			return this.unloadedTabs.create(createProperties, bm.title);
 		} else {
 			return browser.tabs.create(createProperties).then(tab => {
-				this.tabIdBookmarkMapping.set(tab.id as number, bm.id);
+				this.tabBookmarkAssociation.set(tab.id as number, bm.id);
 
 				return tab;
 			});
+		}
+	}
+
+	private tabUpdateListener(tabId:number, changeInfo:object, tab:browser.tabs.Tab):void {
+		let bmId = this.tabBookmarkAssociation.get(tabId);
+
+		if(bmId) {
+
+		}
+	}
+
+	private tabRemovedListener(tabId:number):void {
+		let bmId = this.tabBookmarkAssociation.get(tabId);
+
+		if(bmId) {
+
 		}
 	}
 }
