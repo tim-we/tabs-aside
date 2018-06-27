@@ -5,7 +5,7 @@ module.exports = {
 	entry: {
 		sidebar: "./src/sidebar/sidebar.ts",
 		background: "./src/background/background.ts",
-		popupMenu: "./src/browserAction/main.ts",
+		popupMenu: "./src/browserAction/menu.ts",
 		popupTabSelector: "./src/browserAction/tab-selector.ts",
 		options: "./src/options/options.ts"
 	},

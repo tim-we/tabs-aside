@@ -1,4 +1,3 @@
-web-ext-artifacts/
 node_modules/
 dist/js/
-old/
+releases/
