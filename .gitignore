@@ -1,4 +1,4 @@
 web-ext-artifacts/
 node_modules/
-dist/
+dist/js/
 old/
