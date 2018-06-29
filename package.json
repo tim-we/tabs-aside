@@ -4,7 +4,8 @@
   "description": "tab/session manager",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack && web-ext build -s dist -a releases -i=\"**/*.pdn\" \"**/*.js.map\""
+    "build": "webpack && tsc",
+    "firefox": "web-ext build -s dist -a releases -i=\"**/*.pdn\" \"**/*.js.map\""
   },
   "repository": {
     "type": "git",

@@ -35,23 +35,18 @@
 
 	"sidebar_action": {
 		"default_title": "Tabs you've set aside",
-		"default_panel": "sidebar/sidebar.html",
+		"default_panel": "html/sidebar.html",
 		"default_icon": "icons/tabs.png"
 	},
 
 	"background": {
 		"scripts": [
-			"util/common.js",
-			"func.js",
-			"tab-menu.js",
-			"ActiveSessionManager.js",
-			"background.js",
-			"update.js"
+			"js/background.js"
 		]
 	},
 
 	"options_ui": {
-		"page": "options/options.html",
+		"page": "html/options.html",
 		"browser_style": true
 	},
 

@@ -2,14 +2,15 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"moduleResolution": "node",
-		"strict": true,
+		"strict": false,
 		"target": "es2016",
+		"outDir": "dist/js/",
 		"typeRoots": [
 			"node_modules/@types",
 			"node_modules/web-ext-types"
 		]
 	},
-	"include": [
-		"src/**/*.ts"
+	"files": [
+		"ts/tab-loader/load.ts"
 	]
 }

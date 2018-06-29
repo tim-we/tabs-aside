@@ -3,11 +3,11 @@ module.exports = {
 	devtool: "source-map",
 
 	entry: {
-		sidebar: "./src/sidebar/sidebar.ts",
-		background: "./src/background/background.ts",
-		popupMenu: "./src/browserAction/menu.ts",
-		popupTabSelector: "./src/browserAction/tab-selector.ts",
-		options: "./src/options/options.ts"
+		sidebar: "./ts/sidebar/sidebar.ts",
+		background: "./ts/background/background.ts",
+		popupMenu: "./ts/browserAction/menu.ts",
+		popupTabSelector: "./ts/browserAction/tab-selector.ts",
+		options: "./ts/options/options.ts"
 	},
 
 	output: {
