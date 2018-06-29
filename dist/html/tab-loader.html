@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Tabs Aside Tab Loader</title>
+</head>
+
+<body>
+	<h2>Tabs Aside</h2>
+
+	<p>Tabs Aside has created this tab without loading the actual website to improve performance.</p>
+	<p>This page should be replaced with the website automatically so unfortunately something must have gone wrong.</p>
+	<p>Sorry.</p>
+
+	<p>
+		URL: <span id="url"></span><br>
+		<a id="load-manually" href="#">load tab manually</a>
+	</p>
+	
+	<script>
+		(function () {
+			// URL and title are passed as search parameters
+			let params = new URLSearchParams(document.location.search.substring(1));
+			document.title = params.get("title") || document.title;
+			let url = new URL(params.get("url"));
+
+			// update page content
+			document.getElementById("load-manually").href = url.href;
+			document.getElementById("url").textContent = url.href;
+
+			//set favicon
+			let link = document.createElement('link');
+			link.type = 'image/x-icon';
+			link.rel = 'icon';
+			link.href = url.origin + '/favicon.ico';
+			// alternative:
+			// link.href = "http://s2.googleusercontent.com/s2/favicons?domain=" + url.hostname;
+			document.head.appendChild(link);
+		})();
+	</script>
+</body>
+
+</html>
