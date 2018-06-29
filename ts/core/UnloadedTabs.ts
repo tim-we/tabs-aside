@@ -5,7 +5,7 @@ interface TabCreateProperties {
 	url:string
 }
 
-type TabActivationListener = (tabId:number) => any;
+type TabActivationListener = (tabId:number) => void;
 
 export class UnloadedTabs {
 	private tabURLs:Map<number, string> = new Map<number, string>();

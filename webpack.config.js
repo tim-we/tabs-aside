@@ -6,8 +6,8 @@ module.exports = {
 		sidebar: "./ts/sidebar/sidebar.ts",
 		background: "./ts/background/background.ts",
 		popupMenu: "./ts/browserAction/menu.ts",
-		popupTabSelector: "./ts/browserAction/tab-selector.ts",
-		options: "./ts/options/options.ts"
+		tabSelector: "./ts/browserAction/tab-selector.ts",
+		options: "./ts/options/options-page.ts"
 	},
 
 	output: {

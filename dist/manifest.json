@@ -5,6 +5,8 @@
 	"description": "Set your tabs aside and store them in your bookmarks.",
 	"author": "Tim Weißenfels",
 
+	"default_locale": "en",
+
 	"icons": {
 		"48": "icons/tabs-aside-16-dark.svg"
 	},

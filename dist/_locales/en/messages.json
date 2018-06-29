@@ -1,0 +1,34 @@
+{
+	"option_windowedSession": {
+		"message": "One window for each active session",
+		"description": "Should sessions be opened in a new window?"
+	},
+
+	"option_smartTabLoading": {
+		"message": "Smart tab loading"
+	},
+
+	"option_smartTabLoading_hint": {
+		"message": "does not load all tabs at once when restoring a session"
+	},
+
+	"option_ignorePinned": {
+		"message": "Ignore pinned tabs"
+	},
+
+	"option_ignorePinned_hint": {
+		"message": "pinned tabs that are not part of a session yet"
+	},
+
+	"option_badgeCounter": {
+		"message": "Show number of active sessions in browser action badge"
+	},
+
+	"option_rootFolder":{
+		"message": "Bookmark root folder"
+	},
+
+	"option_rootFolder_hint":{
+		"message": "Pick the folder where sessions are stored."
+	}
+}
