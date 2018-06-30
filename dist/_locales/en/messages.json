@@ -22,7 +22,16 @@
 
 	"option_browserActionIcon": {
 		"message": "Browser action icon",
-		"description": "selector label for the browser action icon"
+		"description": "label for the browser action icon selector, the options are option_browserActionIcon__*"
+	},
+
+	"option_browserActionIcon_info": {
+		"message": "The context dependent icon <a href=\"$URL$\">requires specific Firefox settings</a>.",
+		"placeholders": {
+			"url": {
+				"content": "https://github.com/tim-we/tabs-aside/wiki/dynamic-icon"
+			}
+		}
 	},
 
 	"option_browserActionIcon__dark": { "message": "dark" },

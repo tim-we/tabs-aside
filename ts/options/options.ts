@@ -18,7 +18,8 @@ interface SelectOption<T> {
 }
 
 interface DisplayOptions {
-	hint?:boolean;
+	hint?:boolean; // tooltip
+	info?:boolean; // html
 }
 
 type Option = (BooleanOption | BookmarkOption | SelectOption<string>) & DisplayOptions;
@@ -45,8 +46,9 @@ let options:{[s:string]:Option} = {
 		type: "select",
 		options: ["dark", "light", "context"],
 		default: "dark",
+		info: true,
 		onchange: (newValue:string) => {
-			
+
 		}
 	},
 

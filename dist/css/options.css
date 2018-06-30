@@ -7,9 +7,10 @@
 }
 
 .row {
-	padding-top: 4px;
+	padding-top: 6px;
 	padding-left: 6px;
 	padding-right: 5px;
+	padding-bottom: 2px;
 }
 
 .row:not(:nth-of-type(1)) {
@@ -35,14 +36,13 @@ label, p {
 }
 
 .info {
-	display:inline-block;
+	display: inline-block;
 	position: relative;
-	background-color: lightblue;
+	background-color: rgba(10, 132, 255, 0.5);
 	padding: 5px;
 	padding-left: 24px;
 	margin-top: 5px;
 	border-radius: 2px;
-	animation: 0.5s info-in;
 }
 
 .info::before {
@@ -54,22 +54,6 @@ label, p {
 	width: 16px;
 	height: 16px;
 	background-image: url('../icons/info-16.svg');
-}
-
-@keyframes info-in {
-	from {
-		opacity: 0;
-	}
-
-	to {
-		opacity: 1;
-	}
-}
-
-pre.keyboard-shortcut {
-	display: inline-block;
-	margin-top: 0px;
-	margin-bottom: 0px;
 }
 
 div.bookmarkFolderView {

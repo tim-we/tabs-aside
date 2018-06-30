@@ -63,6 +63,19 @@ document.addEventListener("DOMContentLoaded", _ => {
 			continue;
 		}
 
+		if(option.hint) {
+			row.title = browser.i18n.getMessage(i18nMessageName + "_hint");
+		}
+
+		if(option.info) {
+			row.appendChild(document.createElement("br"));
+			
+			let info:HTMLParagraphElement = document.createElement("p");
+			info.innerHTML = browser.i18n.getMessage(i18nMessageName + "_info");
+			info.classList.add("info");
+			row.appendChild(info);
+		}
+
 		// append row
 		section.appendChild(row);
 		i++;
