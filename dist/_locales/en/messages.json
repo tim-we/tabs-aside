@@ -12,6 +12,14 @@
 		"message": "does not load all tabs at once when restoring a session"
 	},
 
+	"option_activeSessions": {
+		"message": "Active Sessions"
+	},
+
+	"option_activeSessions_hint": {
+		"message": "active session = track tabs & update session"
+	},
+
 	"option_ignorePinned": {
 		"message": "Ignore pinned tabs"
 	},

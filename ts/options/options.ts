@@ -41,6 +41,12 @@ let options:{[s:string]:Option} = {
 		hint: true
 	},
 
+	"activeSessions": {
+		type: "boolean",
+		default: true,
+		hint: true
+	},
+	
 	"ignorePinned": {
 		type: "boolean",
 		default: true,
