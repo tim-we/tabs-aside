@@ -1,4 +1,5 @@
-import Options from "./options";
+import Options from "./Options";
+import * as OptionsManager from "./OptionsManager";
 
 document.addEventListener("DOMContentLoaded", _ => {
 	let section = document.getElementById("main-section");
@@ -16,10 +17,14 @@ document.addEventListener("DOMContentLoaded", _ => {
 		row.classList.add(option.type);
 
 		if(option.type === "boolean") {
+			let value:Promise<boolean> = OptionsManager.getValue<boolean>(optionKey);
+
 			let checkbox:HTMLInputElement = document.createElement("input");
 			checkbox.id = "checkbox" + i;
 			checkbox.type = "checkbox";
 			checkbox.classList.add("browser-style");
+
+			value.then(v => checkbox.checked = v);
 
 			let label = document.createElement("label");
 			label.setAttribute("for", checkbox.id);
@@ -28,15 +33,25 @@ document.addEventListener("DOMContentLoaded", _ => {
 			row.appendChild(checkbox);
 			row.appendChild(label);
 		} else if(option.type === "select") {
+			let value:Promise<string> = OptionsManager.getValue<string>(optionKey);
+
 			let select:HTMLSelectElement = document.createElement("select");
 			select.id = "select" + i;
+			
+			let selectOptions = option.options;
 
-			option.options.forEach(o => {
-				let selectOption:HTMLOptionElement = document.createElement("option");
-				selectOption.value = o;
-				selectOption.innerText = browser.i18n.getMessage(i18nMessageName + "__" + o) || "@ERROR";
+			value.then(v => {
+				selectOptions.forEach(o => {
+					let selectOption:HTMLOptionElement = document.createElement("option");
+					selectOption.value = o;
+					selectOption.innerText = browser.i18n.getMessage(i18nMessageName + "__" + o) || "@ERROR";
+					
+					if(v === o) {
+						selectOption.selected = true;
+					}
 
-				select.appendChild(selectOption);
+					select.appendChild(selectOption);
+				});
 			});
 
 			let label:HTMLLabelElement = document.createElement("label");
@@ -46,11 +61,16 @@ document.addEventListener("DOMContentLoaded", _ => {
 			row.appendChild(label);
 			row.appendChild(select);
 		} else if(option.type === "bookmark") {
+			let value:Promise<string> = OptionsManager.getValue<string>(optionKey);
+
 			let folderView:HTMLDivElement = document.createElement("div");
 			folderView.title = browser.i18n.getMessage("bookmarkFolderSelector_tooltip");
 			folderView.id = "bmBox" + i;
 			folderView.classList.add("bookmarkFolderView");
-			folderView.innerText = "Folder";
+			folderView.innerText = "...";
+			
+			value.then(bookmarkId => browser.bookmarks.get(bookmarkId))
+			 .then(bookmark => folderView.innerText = bookmark[0].title);
 
 			let label:HTMLLabelElement = document.createElement("label");
 			label.setAttribute("for", folderView.id);

@@ -10,10 +10,15 @@ interface BookmarkOption {
 	onchange?: (newValue:string, oldValue?:string) => void;
 }
 
-interface SelectOption<T> {
+interface SelectOption {
 	type: "select";
+	default: string;
+	options: string[];
+	onchange?: (newValue:string, oldValue?:string) => void;
+}
+
+interface GenericOption<T> {
 	default: T;
-	options: T[];
 	onchange?: (newValue:T, oldValue?:T) => void;
 }
 
@@ -22,7 +27,7 @@ interface DisplayOptions {
 	info?:boolean; // html
 }
 
-type Option = (BooleanOption | BookmarkOption | SelectOption<string>) & DisplayOptions;
+type Option = (BooleanOption | BookmarkOption | SelectOption) & GenericOption<any> & DisplayOptions;
 
 let options:{[s:string]:Option} = {
 	"windowedSession": {
