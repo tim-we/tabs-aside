@@ -3,9 +3,9 @@
   "version": "2.2.0",
   "description": "tab/session manager",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack && tsc",
-    "firefox": "web-ext build -s dist -a releases -i=\"**/*.pdn\" \"**/*.js.map\""
+    "build": "webpack && tsc -p tsconfig.single.json",
+    "firefox": "web-ext build -s dist -a releases -i=\"**/*.pdn\" \"**/*.js.map\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

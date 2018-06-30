@@ -1,8 +1,18 @@
-interface Option {
-	type: "boolean" | "bookmark"
-	default: any;
+interface BooleanOption {
+	type: "boolean";
+	default: boolean;
 	hint?: boolean;
+	onchange?: (newValue:boolean, oldValue?:boolean) => void;
 }
+
+interface BookmarkOption {
+	type: "bookmark";
+	default: string | null;
+	hint?: boolean;
+	onchange?: (newValue:string, oldValue?:string) => void;
+}
+
+type Option = BooleanOption | BookmarkOption;
 
 let options:{[s:string]:Option} = {
 	"windowedSession": {
@@ -24,7 +34,10 @@ let options:{[s:string]:Option} = {
 
 	"badgeCounter": {
 		type: "boolean",
-		default: true
+		default: true,
+		onchange: (newValue:boolean) => {
+			
+		}
 	},
 
 	"rootFolder": {

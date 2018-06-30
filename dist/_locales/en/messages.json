@@ -25,10 +25,15 @@
 	},
 
 	"option_rootFolder":{
-		"message": "Bookmark root folder"
+		"message": "Session root folder",
+		"description": "The bookmark folder where sessions (bookmark subfolders) will be stored"
 	},
 
 	"option_rootFolder_hint":{
 		"message": "Pick the folder where sessions are stored."
+	},
+
+	"bookmarkFolderSelector_tooltip": {
+		"message": "open bookmark folder selector"
 	}
 }
