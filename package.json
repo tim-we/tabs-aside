@@ -1,6 +1,6 @@
 {
   "name": "tabs-aside",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "tab/session manager",
   "scripts": {
     "build": "webpack && tsc -p tsconfig.single.json",
