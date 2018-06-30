@@ -8,7 +8,7 @@
 	"default_locale": "en",
 
 	"icons": {
-		"48": "icons/tabs-aside-16-dark.svg"
+		"48": "icons/browserAction/dark.svg"
 	},
 
 	"applications": {
@@ -27,11 +27,11 @@
 
 	"browser_action": {
 		"default_icon": {
-			"16": "icons/tabs-aside-16-dark.svg",
-			"32": "icons/tabs-aside-16-dark.svg"
+			"16": "icons/browserAction/dark.svg",
+			"32": "icons/browserAction/dark.svg"
 		},
 		"default_title": "Tabs Aside!",
-		"default_popup": "popup/menu.html",
+		"default_popup": "html/menu/main.html",
 		"browser_style": true
 	},
 

@@ -20,8 +20,18 @@ label, p {
 	font-size: 1.25rem;
 }
 
-label > u {
-	text-decoration-style: dotted;
+.row.select > label, .row.bookmark > label {
+	margin-right: 8px;
+}
+
+.row.select > select {
+	min-width: 110px;
+	min-height: 20px;
+}
+
+.row.boolean > input[type=checkbox] {
+	margin-left: 0px;
+	margin-right: 8px;
 }
 
 .info {

@@ -1,18 +1,27 @@
 interface BooleanOption {
 	type: "boolean";
 	default: boolean;
-	hint?: boolean;
 	onchange?: (newValue:boolean, oldValue?:boolean) => void;
 }
 
 interface BookmarkOption {
 	type: "bookmark";
 	default: string | null;
-	hint?: boolean;
 	onchange?: (newValue:string, oldValue?:string) => void;
 }
 
-type Option = BooleanOption | BookmarkOption;
+interface SelectOption<T> {
+	type: "select";
+	default: T;
+	options: T[];
+	onchange?: (newValue:T, oldValue?:T) => void;
+}
+
+interface DisplayOptions {
+	hint?:boolean;
+}
+
+type Option = (BooleanOption | BookmarkOption | SelectOption<string>) & DisplayOptions;
 
 let options:{[s:string]:Option} = {
 	"windowedSession": {
@@ -30,6 +39,15 @@ let options:{[s:string]:Option} = {
 		type: "boolean",
 		default: true,
 		hint: true
+	},
+
+	"browserActionIcon": {
+		type: "select",
+		options: ["dark", "light", "context"],
+		default: "dark",
+		onchange: (newValue:string) => {
+			
+		}
 	},
 
 	"badgeCounter": {

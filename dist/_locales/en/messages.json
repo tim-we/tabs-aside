@@ -20,6 +20,15 @@
 		"message": "pinned tabs that are not part of a session yet"
 	},
 
+	"option_browserActionIcon": {
+		"message": "Browser action icon",
+		"description": "selector label for the browser action icon"
+	},
+
+	"option_browserActionIcon__dark": { "message": "dark" },
+	"option_browserActionIcon__light": { "message": "light" },
+	"option_browserActionIcon__context": { "message": "context" },
+
 	"option_badgeCounter": {
 		"message": "Show number of active sessions in browser action badge"
 	},
