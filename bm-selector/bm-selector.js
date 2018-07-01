@@ -4,7 +4,7 @@ async function getSubFolders(bmFolderNode) {
 	}
 
 	return Promise.resolve(
-		bmFolderNode.children.filter(isBMFolder)
+		bmFolderNode.children.filter(bm => bm.type === "folder")
 	);
 }
 
