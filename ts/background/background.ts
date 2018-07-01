@@ -1,5 +1,5 @@
 import * as ASM from "../core/SessionManager";
-import { Message, ASMMessage } from "../core/Message";
+import { Message, ASMMessage } from "../core/Messages";
 
 browser.browserAction.setBadgeBackgroundColor({
 	color: "#0A84FF"

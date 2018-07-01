@@ -30,6 +30,10 @@ document.addEventListener("DOMContentLoaded", _ => {
 			label.setAttribute("for", checkbox.id);
 			label.innerText = browser.i18n.getMessage(i18nMessageName);
 
+			checkbox.addEventListener("change", () => {
+				OptionsManager.setValue(optionKey, checkbox.checked);
+			});
+
 			row.appendChild(checkbox);
 			row.appendChild(label);
 		} else if(option.type === "select") {
@@ -57,6 +61,11 @@ document.addEventListener("DOMContentLoaded", _ => {
 			let label:HTMLLabelElement = document.createElement("label");
 			label.setAttribute("for", select.id);
 			label.innerText = browser.i18n.getMessage(i18nMessageName) || "empty";
+
+			select.addEventListener("change", () => {
+				let x = select.options[select.selectedIndex].value;
+				OptionsManager.setValue(optionKey, x);
+			});
 
 			row.appendChild(label);
 			row.appendChild(select);

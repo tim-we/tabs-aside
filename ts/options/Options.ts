@@ -58,8 +58,15 @@ let options:{[s:string]:Option} = {
 		options: ["dark", "light", "context"],
 		default: "dark",
 		info: true,
-		onchange: (newValue:string) => {
+		onchange: (newIcon:string) => {
+			let iconPath:string = "../icons/browserAction/" + newIcon + ".svg";
 
+			browser.browserAction.setIcon({
+				path: {
+					"16": iconPath,
+					"32": iconPath
+				}
+			}).catch(e => console.error("[TA] " + e));
 		}
 	},
 
