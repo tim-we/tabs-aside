@@ -30,11 +30,6 @@ interface DisplayOptions {
 type Option = (BooleanOption | BookmarkOption | SelectOption) & GenericOption<any> & DisplayOptions;
 
 let options:{[s:string]:Option} = {
-	"windowedSession": {
-		type: "boolean",
-		default: true
-	},
-
 	"smartTabLoading": {
 		type: "boolean",
 		default: true,
@@ -45,6 +40,11 @@ let options:{[s:string]:Option} = {
 		type: "boolean",
 		default: true,
 		hint: true
+	},
+
+	"windowedSession": {
+		type: "boolean",
+		default: true
 	},
 	
 	"ignorePinned": {
