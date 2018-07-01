@@ -58,7 +58,7 @@ export function update():void {
 	// update folder view
 	folderView.innerHTML = "";
 
-	folders.forEach((folder,i) => {
+	Model.getFolders().forEach((folder,i) => {
 		let folderDIV = document.createElement("div");
 		folderDIV.classList.add("folder");
 
@@ -85,7 +85,7 @@ export function update():void {
 
 			Model.clearSelection(false);
 
-			navOpenFolder(i);
+			Model.navOpenFolder(i);
 
 			return false;
 		});
@@ -95,6 +95,8 @@ export function update():void {
 
 	// update breadcrumbs view
 	breadcrumbsView.innerHTML = "";
+
+	let bcrumbs = Model.getBreadcrumbs();
 
 	bcrumbs.forEach((bc,i) => {
 		let bcDIV = document.createElement("div");
@@ -107,7 +109,7 @@ export function update():void {
 			bcDIV.addEventListener("click", () => {
 				Model.clearSelection(false);
 
-				navBreadcrumb(i);
+				Model.navBreadcrumb(i);
 			});
 		}
 

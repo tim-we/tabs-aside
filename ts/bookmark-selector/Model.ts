@@ -168,3 +168,11 @@ export function createFolder(name:string):Promise<void> {
 		return View.update();
 	});
 }
+
+export function getFolders():browser.bookmarks.BookmarkTreeNode[] {
+	return folders;
+}
+
+export function getBreadcrumbs():browser.bookmarks.BookmarkTreeNode[] {
+	return bcrumbs;
+}
