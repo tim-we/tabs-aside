@@ -75,11 +75,40 @@ document.addEventListener("DOMContentLoaded", _ => {
 			let folderView:HTMLDivElement = document.createElement("div");
 			folderView.title = browser.i18n.getMessage("bookmarkFolderSelector_tooltip");
 			folderView.id = "bmBox" + i;
+			folderView.setAttribute("data-bmId", "");
 			folderView.classList.add("bookmarkFolderView");
 			folderView.innerText = "...";
 			
-			value.then(bookmarkId => browser.bookmarks.get(bookmarkId))
-			 .then(bookmark => folderView.innerText = bookmark[0].title);
+			value.then(bookmarkId => {
+				if(bookmarkId) {
+					folderView.setAttribute("data-bmId", bookmarkId);
+					return browser.bookmarks.get(bookmarkId);
+				} else {
+					return Promise.reject();
+				}
+			}).then(
+				bookmark => folderView.innerText = bookmark[0].title
+			);
+
+			folderView.addEventListener("click", () => {
+				let url = "../html/bookmark-selector.html?fpreset=" + encodeURIComponent("Tabs Aside");
+				
+				let bmId:string = folderView.getAttribute("data-bmId") || "";
+
+				if(bmId) {
+					url += "&selected=" + bmId;
+				}
+
+				browser.windows.create({
+					//focused: true, // not supported by FF
+					width: 500,
+					height: 300,
+					//@ts-ignore
+					titlePreface: "Tabs Aside! ",
+					type: "popup",
+					url: url
+				});
+			});
 
 			let label:HTMLLabelElement = document.createElement("label");
 			label.setAttribute("for", folderView.id);
