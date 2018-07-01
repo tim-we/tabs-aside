@@ -15,6 +15,10 @@ export function init():void {
 	selectButton = document.getElementById("select");
 	newFolderButton = document.getElementById("newfolder");
 
+	// i18n
+	selectButton.innerText = browser.i18n.getMessage("bookmarkFolderSelector_select");
+	newFolderButton.innerText = browser.i18n.getMessage("bookmarkFolderSelector_newFolderTooltip");
+
 	// set up event listeners
 	selectButton.addEventListener("click", () => {
 		if (Model.selectedFolderID) {
@@ -26,14 +30,19 @@ export function init():void {
 
 			// the creator of this window is now expected to close it
 		} else {
-			alert("You need to select a folder.");
+			alert(browser.i18n.getMessage("bookmarkFolderSelector_noSelection"));
 		}
 	});
 
 	newFolderButton.addEventListener("click", () => {
+		if(Model.isRoot(Model.getCurrentFolder())) {
+			alert(browser.i18n.getMessage("bookmarkFolderSelector_rootError"));
+			return;
+		}
+
 		// prompt does not work on mobile browsers
 		let folderName = window.prompt(
-			"Enter a name for the new folder",
+			browser.i18n.getMessage("bookmarkFolderSelector_newFolderDialog"),
 			Model.FolderNamePreset
 		);
 
@@ -75,7 +84,8 @@ export function update():void {
 		}
 
 		folderDIV.addEventListener("click", () => {
-			Model.select(folder.id);
+			unselect();
+			Model.select(folder.id, false);
 			selectedFolder = folderDIV;
 			folderDIV.classList.add("selected");
 		});
@@ -84,7 +94,6 @@ export function update():void {
 			e.stopPropagation();
 
 			Model.clearSelection(false);
-
 			Model.navOpenFolder(i);
 
 			return false;

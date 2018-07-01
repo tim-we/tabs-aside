@@ -61,5 +61,25 @@
 
 	"bookmarkFolderSelector_tooltip": {
 		"message": "open bookmark folder selector"
+	},
+
+	"bookmarkFolderSelector_rootError": {
+		"message": "You can not create folders in the root folder."
+	},
+
+	"bookmarkFolderSelector_newFolderDialog": {
+		"message": "Enter a name for the new folder"
+	},
+
+	"bookmarkFolderSelector_noSelection": {
+		"message": "You need to select a folder."
+	},
+
+	"bookmarkFolderSelector_select": {
+		"message": "Select"
+	},
+
+	"bookmarkFolderSelector_newFolderTooltip": {
+		"message": "create folder"
 	}
 }

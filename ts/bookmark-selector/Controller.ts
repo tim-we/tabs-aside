@@ -22,11 +22,7 @@ Promise.all([
 		window.addEventListener("load", () => {
 			View.init();
 
-			if(params["fpreset"]) {
-				Model.setFolderNamePreset(decodeURIComponent(params["fpreset"]).trim());
-			}
-
 			resolve();
 		});
 	})
-]);
+]).then(_ => View.update());

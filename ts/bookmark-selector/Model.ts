@@ -2,7 +2,6 @@ import * as View from "./View";
 
 type BMTreeNode = browser.bookmarks.BookmarkTreeNode;
 
-// state vars
 export var selectedFolderID:string = "";
 export var oldSelectedFolderID:string = "";
 // folders in breadcrumbs:
@@ -10,7 +9,9 @@ var bcrumbs:browser.bookmarks.BookmarkTreeNode[] = [];
 // folders in current view / folder
 var folders:browser.bookmarks.BookmarkTreeNode[] = [];
 
-export var FolderNamePreset:string = "New Folder";
+var rootId:string;
+
+export var FolderNamePreset:string = "Tabs Aside";
 
 export function setFolderNamePreset(name:string):void {
 	FolderNamePreset = name;
@@ -23,6 +24,9 @@ function makeBreadcrumbs(folder:BMTreeNode|BMTreeNode[]):Promise<void> {
 
 	if (folder.parentId) {
 		return browser.bookmarks.get(folder.parentId).then(makeBreadcrumbs);
+	} else {
+		// this is the root node
+		rootId = folder.id;
 	}
 
 	return Promise.resolve();
@@ -157,15 +161,17 @@ export function createFolder(name:string):Promise<void> {
 	return browser.bookmarks.create({
 		title: name,
 		type: "folder",
-		url: null,
 		parentId: bcrumbs[bcrumbs.length - 1].id
 	}).then(bmFolder => {
 		// auto-select new folder
 		select(bmFolder.id, false);
 
 		return refreshChildren();
+	}, e => {
+		alert("Error: Folder was not created.");
+		console.error(e+"");
 	}).then(() => {
-		return View.update();
+		View.update();
 	});
 }
 
@@ -175,4 +181,14 @@ export function getFolders():browser.bookmarks.BookmarkTreeNode[] {
 
 export function getBreadcrumbs():browser.bookmarks.BookmarkTreeNode[] {
 	return bcrumbs;
+}
+
+export function getCurrentFolder():browser.bookmarks.BookmarkTreeNode {
+	console.assert(bcrumbs.length > 0);
+
+	return bcrumbs[bcrumbs.length - 1];
+}
+
+export function isRoot(folder:browser.bookmarks.BookmarkTreeNode):boolean {
+	return folder && folder.id === rootId;
 }
