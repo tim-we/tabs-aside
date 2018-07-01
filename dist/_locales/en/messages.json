@@ -1,9 +1,4 @@
 {
-	"option_windowedSession": {
-		"message": "One window for each active session",
-		"description": "Should sessions be opened in a new window?"
-	},
-
 	"option_smartTabLoading": {
 		"message": "Smart tab loading"
 	},
@@ -11,13 +6,18 @@
 	"option_smartTabLoading_hint": {
 		"message": "does not load all tabs at once when restoring a session"
 	},
-
+	
 	"option_activeSessions": {
 		"message": "Active Sessions"
 	},
 
 	"option_activeSessions_hint": {
 		"message": "active session = track tabs & update session"
+	},
+
+	"option_windowedSession": {
+		"message": "One window for each (active) session",
+		"description": "Should sessions be opened in a new window?"
 	},
 
 	"option_ignorePinned": {
