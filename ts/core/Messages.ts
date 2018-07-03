@@ -1,7 +1,7 @@
 import { ASMCommand } from "./SessionManager";
 
 export interface Message {
-	type:string;
+	type: "ASM" | "OptionUpdate";
 	destination: "all" | "sidebar" | "background" | "menu";
 }
 

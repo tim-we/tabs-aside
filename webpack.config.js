@@ -6,9 +6,9 @@ module.exports = {
 		background: "./ts/background/background.ts",
 		bmSelector: "./ts/bookmark-selector/Controller.ts",
 		menu: "./ts/browserAction/menu.ts",
-		options: "./ts/options/options-page.ts",
+		options: "./ts/options/OptionsPage.ts",
 		sidebar: "./ts/sidebar/sidebar.ts",
-		tabSelector: "./ts/browserAction/tab-selector.ts"
+		tabSelector: "./ts/tab-selector/TabSelector.ts"
 	},
 
 	output: {

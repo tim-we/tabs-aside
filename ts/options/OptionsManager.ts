@@ -26,14 +26,11 @@ export function setValue<T>(key:string, value:T):Promise<void> {
 			// otherwise update options
 			storedOptions[key] = value;
 
-			return storage.set({"options": storedOptions}).then(_ => {
+			return storage.set({
+				"options": storedOptions
+			}).then(_ => {
 				console.log(`[TA] Option ${key} updated.`);
 
-				if(Options[key].onchange) {
-					// invoke onchange event listener
-					Options[key].onchange(value, oldValue);
-				}
-			}).then(_ => {
 				// notify other scripts about the update
 				browser.runtime.sendMessage<OptionUpdateEvent, void>({
 					type: "OptionUpdate",
