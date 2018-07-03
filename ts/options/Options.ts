@@ -1,13 +1,7 @@
-interface BooleanOption {
-	type: "boolean";
-	default: boolean;
-	onchange?: (newValue:boolean, oldValue?:boolean) => void;
-}
-
-interface BookmarkOption {
-	type: "bookmark";
-	default: string | null;
-	onchange?: (newValue:string, oldValue?:string) => void;
+interface SimpleOption<S,T> {
+	type: S;
+	default: T;
+	onchange?: (newValue:T, oldValue:T) => void;
 }
 
 interface SelectOption {
@@ -25,9 +19,14 @@ interface GenericOption<T> {
 interface DisplayOptions {
 	hint?:boolean; // tooltip
 	info?:boolean; // html
+	hidden?:boolean;
 }
 
-type Option = (BooleanOption | BookmarkOption | SelectOption) & GenericOption<any> & DisplayOptions;
+type Option = (SelectOption
+	| SimpleOption<"boolean", boolean>
+	| SimpleOption<"bookmark", string>)
+	& GenericOption<any> // this is required for the OptionManager.ts
+	& DisplayOptions;
 
 let options:{[s:string]:Option} = {
 	"smartTabLoading": {
