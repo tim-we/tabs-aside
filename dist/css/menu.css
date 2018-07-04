@@ -28,6 +28,14 @@ body {
 	background-repeat: no-repeat;
 }
 
+.button.icon {
+	background-image: var(--iconURL, none);
+}
+
+#buttons:not(.showAll) > .button.optional {
+	display: none;
+}
+
 .button:hover, .mini-button:hover {
 	background-color: #F0F0F0;
 }
@@ -36,8 +44,10 @@ body {
 	background-color: #E8E8E8;
 }
 
-.button.disabled {
-	background-color: transparent;
-	opacity: 0.5;
-	cursor: default;
+.button.shortcut::after {
+	content: var(--shortcut, '');
+	position:absolute;
+	color: #6D6D6D;
+	right: 12px;
+	text-align: right;
 }

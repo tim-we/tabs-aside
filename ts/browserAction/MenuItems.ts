@@ -3,13 +3,15 @@ import { MenuItem } from "./MenuItemType";
 let menuItems:MenuItem[] = [
 	{
 		id: "tabs-aside",
-		shortcut: "Shift + Alt + Q",
+		icon: "aside1.png",
+		shortcut: "Shift+Alt+Q",
 		onclick: () => {}
 	},
 	{
 		id: "show-sessions",
-		shortcut: "Alt + Q",
-		onclick: () => {}
+		icon: "sessions.png",
+		shortcut: "Alt+Q",
+		onclick: () => browser.sidebarAction.open()
 	},
 	{
 		id: "tab-selector",
@@ -19,7 +21,7 @@ let menuItems:MenuItem[] = [
 	{
 		id: "options",
 		optional: true,
-		onclick: () => {}
+		onclick: () => browser.runtime.openOptionsPage()
 	}
 ];
 
