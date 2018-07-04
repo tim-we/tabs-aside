@@ -44,8 +44,8 @@ body {
 	background-color: #E8E8E8;
 }
 
-.button.shortcut::after {
-	content: var(--shortcut, '');
+.button[data-shortcut]::after {
+	content: attr(data-shortcut);
 	position:absolute;
 	color: #6D6D6D;
 	right: 12px;

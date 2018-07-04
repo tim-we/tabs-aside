@@ -51,8 +51,7 @@ function createButton(item:MenuItem):HTMLAnchorElement {
 	}
 
 	if(item.shortcut) {
-		button.style.setProperty("--shortcut", item.shortcut);
-		button.classList.add("shortcut");
+		button.dataset.shortcut = item.shortcut;
 	}
 
 	button.addEventListener("click", e => {
