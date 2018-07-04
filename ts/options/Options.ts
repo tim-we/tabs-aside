@@ -36,6 +36,11 @@ let options:{[s:string]:Option} = {
 		default: true
 	},
 
+	"menuShowAll": {
+		type: "boolean",
+		default: false
+	},
+
 	"rootFolder": {
 		type: "bookmark",
 		default: null

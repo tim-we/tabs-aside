@@ -1,4 +1,20 @@
 {
+	"menu_tabs-aside_label": {
+		"message": "Tabs aside"
+	},
+
+	"menu_show-sessions_label": {
+		"message": "Show sessions"
+	},
+
+	"menu_tab-selector_label": {
+		"message": "Tab selector"
+	},
+
+	"menu_options_label": {
+		"message": "Options"
+	},
+
 	"option_smartTabLoading": {
 		"message": "Smart tab loading"
 	},
@@ -48,6 +64,10 @@
 
 	"option_badgeCounter": {
 		"message": "Show number of active sessions in browser action badge"
+	},
+
+	"option_menuShowAll": {
+		"message": "Always show all menu items"
 	},
 
 	"option_rootFolder":{
