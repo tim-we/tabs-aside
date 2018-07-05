@@ -19,7 +19,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 		item => buttonsContainer.appendChild(createButton(item))
 	);
 
-	if(!showAll) {
+	if(showAll) {
+		buttonsContainer.classList.add("showAll");
+	} else {
 		let more = createButton({
 			id: "more",
 			icon: "more-16.svg",
