@@ -41,13 +41,12 @@ export function create(
 	folderView.id = "bmBox" + i;
 	folderView.setAttribute("data-bmId", "");
 	folderView.classList.add("bookmarkFolderView");
-	folderView.innerText = "...";
 
     updateFolderView(folderView, bookmarkId);
 
 	folderView.addEventListener("click", async () => {
 		let url = "../html/bookmark-selector.html?fpreset=" + encodeURIComponent("Tabs Aside");
-		
+		url += "&option=" + encodeURIComponent(option.id);
 		let bmId:string = folderView.getAttribute("data-bmId") || "";
 
 		if(bmId) {

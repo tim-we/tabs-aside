@@ -10,11 +10,14 @@ var params = parseQueryString();
 var initPromise:Promise<void>;
 
 if (params["selected"]) {
-	console.log(`ID ${params["selected"]} selected`);
+	console.log(`[TA] [BMS] bookmark ${params["selected"]} selected`);
 	let selectedFolderID = params["selected"].trim();
-	initPromise = Model.init(selectedFolderID);
+	initPromise = Model.init(
+		params["option"],
+		selectedFolderID
+	);
 } else {
-	initPromise = Model.init();
+	initPromise = Model.init(params["option"]);
 }
 
 Promise.all([
@@ -29,5 +32,5 @@ Promise.all([
 ]).then(_ => View.update());
 
 export function selectRootFolder(folderId:string) {
-	OptionsManager.setValue("rootFolder", folderId);
+	OptionsManager.setValue(Model.OptionId, folderId);
 }

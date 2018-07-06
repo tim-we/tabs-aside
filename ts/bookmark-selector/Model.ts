@@ -11,6 +11,8 @@ var folders:browser.bookmarks.BookmarkTreeNode[] = [];
 
 var rootId:string;
 
+export var OptionId:string;
+
 export var FolderNamePreset:string = "Tabs Aside";
 
 export function setFolderNamePreset(name:string):void {
@@ -32,7 +34,9 @@ function makeBreadcrumbs(folder:BMTreeNode|BMTreeNode[]):Promise<void> {
 	return Promise.resolve();
 }
 
-export function init(bmFolderId?:string):Promise<any> {
+export function init(option:string, bmFolderId?:string):Promise<any> {
+	OptionId = option;
+
 	if (bmFolderId) {
 		return browser.bookmarks.get(bmFolderId).then(async function(data) {
 			console.assert(data.length === 1);
@@ -56,7 +60,7 @@ export function init(bmFolderId?:string):Promise<any> {
 			return folders;
 		}, err => {
 			console.error("Bookmark Folder Selector: Folder not found!");
-			return init();
+			return init(option);
 		});
 	} else {
 		return browser.bookmarks.getTree().then(data => {
