@@ -13,11 +13,16 @@
 	padding-bottom: 2px;
 }
 
+.row.browser-style {
+	padding-bottom: 0px;
+	margin-bottom: 1px;
+}
+
 .row:not(:nth-of-type(1)) {
 	border-top: 1px solid rgb(215, 215, 219);
 }
 
-label, p {
+label {
 	font-size: 1.25rem;
 }
 
@@ -28,11 +33,6 @@ label, p {
 .row.select > select {
 	min-width: 110px;
 	min-height: 20px;
-}
-
-.row.boolean > input[type=checkbox] {
-	margin-left: 0px;
-	margin-right: 8px;
 }
 
 .info {

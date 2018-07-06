@@ -20,8 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		// create row
 		let row:HTMLDivElement = document.createElement("div");
-		row.classList.add("row");
-		row.classList.add(option.type);
+		row.classList.add("row", "browser-style", option.type);
 
 		if(option.type === "boolean") {
 			let value:boolean = await OptionsManager.getValue<boolean>(option.id);

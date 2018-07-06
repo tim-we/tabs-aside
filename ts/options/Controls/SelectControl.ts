@@ -9,6 +9,7 @@ export function create(
 ):void {
     let select:HTMLSelectElement = document.createElement("select");
 	select.id = "select" + i;
+	select.classList.add("browser-style");
 	
 	let selectOptions = option.options;
 
