@@ -1,6 +1,7 @@
 import * as Model from "./Model";
 import * as View from "./View";
 import parseQueryString from "../util/parseQuerystring";
+import * as OptionsManager from "../options/OptionsManager";
 
 // url search params
 var params = parseQueryString();
@@ -26,3 +27,7 @@ Promise.all([
 		});
 	})
 ]).then(_ => View.update());
+
+export function selectRootFolder(folderId:string) {
+	OptionsManager.setValue("rootFolder", folderId);
+}

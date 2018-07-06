@@ -16,7 +16,11 @@
 	},
 
 	"menu_more_label": {
-		"message": "More options"
+		"message": "More..."
+	},
+
+	"menu_more_tooltip": {
+		"message": "expand menu and show all options"
 	},
 
 	"option_smartTabLoading": {

@@ -1,11 +1,10 @@
 export interface GenericOption<S,T> {
+	id: string;
 	type: S;
 	default: T;
 }
 
-export interface SelectOption {
-	type: "select";
-	default: string;
+export interface SelectOption extends GenericOption<"select", string> {
 	options: string[];
 }
 
@@ -15,7 +14,11 @@ interface DisplayOptions {
 	hidden?:boolean;
 }
 
+export type BooleanOption = GenericOption<"boolean", boolean>;
+
+export type BookmarkOption = GenericOption<"bookmark", string>;
+
 export type Option = (SelectOption
-	| GenericOption<"boolean", boolean>
-	| GenericOption<"bookmark", string>)
+	| BooleanOption
+	| BookmarkOption)
 	& DisplayOptions;

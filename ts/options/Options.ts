@@ -1,50 +1,51 @@
 import { Option } from "./OptionTypeDefinition";
 
-let options:{[s:string]:Option} = {
-	"smartTabLoading": {
+let options:Option[] = [
+	{
+		id: "smartTabLoading",
 		type: "boolean",
 		default: true,
 		hint: true
 	},
-
-	"activeSessions": {
+	{
+		id: "activeSessions",
 		type: "boolean",
 		default: true,
 		hint: true
 	},
-
-	"windowedSession": {
+	{
+		id: "windowedSession",
 		type: "boolean",
 		default: true
 	},
-	
-	"ignorePinned": {
+	{
+		id: "ignorePinned",
 		type: "boolean",
 		default: true,
 		hint: true
 	},
-
-	"browserActionIcon": {
+	{
+		id: "browserActionIcon",
 		type: "select",
 		options: ["dark", "light", "context"],
 		default: "dark",
 		info: true
 	},
-
-	"badgeCounter": {
+	{
+		id: "badgeCounter",
 		type: "boolean",
 		default: true
 	},
-
-	"menuShowAll": {
+	{
+		id: "menuShowAll",
 		type: "boolean",
 		default: false
 	},
-
-	"rootFolder": {
+	{
+		id: "rootFolder",
 		type: "bookmark",
 		default: null
 	}
-}
+];
 
 export default options;

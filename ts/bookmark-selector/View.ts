@@ -1,4 +1,5 @@
 import * as Model from "./Model";
+import * as Controller from "./Controller";
 
 // DOM references
 var folderView:HTMLElement;
@@ -22,12 +23,9 @@ export function init():void {
 	// set up event listeners
 	selectButton.addEventListener("click", () => {
 		if (Model.selectedFolderID) {
-			//window.close(); // does not work !!!
-			browser.runtime.sendMessage({
-				command: "updateRoot",
-				bmID: Model.selectedFolderID
-			});
+			Controller.selectRootFolder(Model.selectedFolderID);
 
+			//window.close(); // does not work !
 			// the creator of this window is now expected to close it
 		} else {
 			alert(browser.i18n.getMessage("bookmarkFolderSelector_noSelection"));

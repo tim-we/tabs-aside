@@ -5,4 +5,5 @@ export interface MenuItem {
 	icon?:string;
 	onclick: (e:MouseEvent) => void;
 	closeMenu?:boolean; // default: true
+	tooltip?:boolean; // default: false
 }

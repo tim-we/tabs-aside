@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 			id: "more",
 			icon: "more-16.svg",
 			closeMenu: false,
+			tooltip: true,
 			onclick: () => {
 				buttonsContainer.classList.add("showAll");
 				more.remove();
@@ -54,6 +55,10 @@ function createButton(item:MenuItem):HTMLAnchorElement {
 
 	if(item.shortcut) {
 		button.dataset.shortcut = item.shortcut;
+	}
+
+	if(item.tooltip) {
+		button.title = browser.i18n.getMessage("menu_" + item.id + "_tooltip")
 	}
 
 	button.addEventListener("click", e => {
