@@ -44,7 +44,7 @@ button {
 	content:" ";
 	width:16px;
 	height:25px;
-	background-image: url("../icons/arrowhead-right-16.svg");
+	background-image: url("../img/arrowhead-right-16.svg");
 	background-position-y: center;
 	background-repeat: no-repeat;
 	cursor: default;
@@ -109,7 +109,7 @@ button {
 	top: 2px;
 	margin-right: 6px;
 	margin-left: 8px;
-	background-image: url("../icons/folder-16.svg");
+	background-image: url("../img/folder-16.svg");
 	width: 16px;
 	height: 16px;
 }
@@ -127,6 +127,6 @@ button {
 	right: 2px;
 	width: 16px;
 	height: 16px;
-	background-image: url("../icons/check-16.svg");
+	background-image: url("../img/check-16.svg");
 	opacity: 0.6;
 }

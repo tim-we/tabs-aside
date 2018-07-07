@@ -48,7 +48,7 @@ function createButton(item:MenuItem):HTMLAnchorElement {
 	button.innerText = browser.i18n.getMessage("menu_" + item.id + "_label") || item.id;
 
 	if(item.icon) {
-		let iconURL:string = "../../icons/menu/" + item.icon;
+		let iconURL:string = "../../img/menu/" + item.icon;
 		button.style.setProperty("--iconURL", `url('${iconURL}')`);
 		button.classList.add("icon");
 	}

@@ -44,7 +44,7 @@ async function updateBadge() {
 }
 
 function updateIcon(newIcon:string):Promise<void> {
-	let iconPath:string = "../icons/browserAction/" + newIcon;
+	let iconPath:string = "../img/browserAction/" + newIcon;
 
 	return browser.browserAction.setIcon({
 		path: {

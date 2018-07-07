@@ -1,12 +1,17 @@
+body {
+	padding-top: 6px;
+}
+
 #sessions {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    overflow-x: hidden;
 }
 
 .session {
     position: relative;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
     --header-height: 30px;
     --header-bg-color: white;
 }

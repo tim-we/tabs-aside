@@ -53,14 +53,14 @@ label {
 	content: " ";
 	width: 16px;
 	height: 16px;
-	background-image: url('../icons/info-16.svg');
+	background-image: url('../img/info-16.svg');
 }
 
 div.bookmarkFolderView {
 	display: inline-block;
 	border: 1px solid rgb(100, 100, 100);
 	background-color: rgba(200,200,200,0.3);
-	background-image: url("../icons/folder-16.svg");
+	background-image: url("../img/folder-16.svg");
 	background-position: 3px center;
 	background-repeat: no-repeat;
 	color: black;

@@ -8,7 +8,7 @@
 	"default_locale": "en",
 
 	"icons": {
-		"48": "icons/browserAction/dark.svg"
+		"48": "img/browserAction/dark.svg"
 	},
 
 	"applications": {
@@ -27,8 +27,8 @@
 
 	"browser_action": {
 		"default_icon": {
-			"16": "icons/browserAction/dark.svg",
-			"32": "icons/browserAction/dark.svg"
+			"16": "img/browserAction/dark.svg",
+			"32": "img/browserAction/dark.svg"
 		},
 		"default_title": "Tabs Aside!",
 		"default_popup": "html/menu/main.html",
@@ -38,7 +38,7 @@
 	"sidebar_action": {
 		"default_title": "Tabs you've set aside",
 		"default_panel": "html/sidebar.html",
-		"default_icon": "icons/tabs.png"
+		"default_icon": "img/tabs.png"
 	},
 
 	"background": {
