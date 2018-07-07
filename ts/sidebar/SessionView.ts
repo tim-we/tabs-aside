@@ -54,6 +54,10 @@ export default class SessionView {
         this.titleElement = this.html.querySelector(".title");
         this.tabCounter = this.html.querySelector(".number-of-tabs");
         this.tabViewContainer = this.html.querySelector(".content");
+
+        this.html.querySelector(".header").addEventListener("click", () => {
+            this.toggle();
+        });
     }
 
     public toggle() {
@@ -69,10 +73,11 @@ export default class SessionView {
     }
 
     public expand() {
-        let tabView = TabViewFactory.createTabView(this.bookmarkId);
+        //let tabView = TabViewFactory.createTabView(this.bookmarkId);
+        this.html.classList.add("expanded");
     }
 
     public collapse() {
-
+        this.html.classList.remove("expanded");
     }
 }

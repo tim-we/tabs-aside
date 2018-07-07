@@ -2,6 +2,7 @@ import * as TabViewFactory from "./TabViewFactory";
 import * as OptionsManager from "../options/OptionsManager";
 import { OptionUpdateEvent, Message } from "../core/Messages";
 import SessionView from "./SessionView";
+import * as Search from "./Search";
 
 // if one of these options changes reload the window
 let optionsThatRequireReload:Set<string> = new Set<string>(["rootFolder", "sidebarTabLayout"]);
@@ -41,9 +42,11 @@ Promise.all([
         sessionContainer.appendChild(view.getHTML());
 
         return view;
-    })
+    });
 }).then(() => {
     browser.runtime.onMessage.addListener(messageHandler);
+
+    Search.init();
 }).catch(e => {
     console.error("[TA] " + e);
 

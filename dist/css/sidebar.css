@@ -1,8 +1,14 @@
 body {
-	padding-top: 6px;
+    --search-height: 32px;
 }
 
 #sessions {
+    position: absolute;
+    top: 5px;
+    bottom: calc(var(--search-height) + 2px);
+    left: 0px;
+    right: 0px;
+
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -12,22 +18,50 @@ body {
 .session {
     position: relative;
     margin-bottom: 5px;
-    --header-height: 30px;
+    --header-height: 32px;
     --header-bg-color: white;
+}
+
+.session:hover {
+    --header-bg-color: #F0F0F0;
 }
 
 .session > .header {
     position: relative;
+    padding-left: 18px;
     height: var(--header-height);
     background-color: var(--header-bg-color);
 }
 
+.session > .header::before {
+    content: " ";
+    position: absolute;
+    top: calc(0.5 * (var(--header-height) - 12px));
+    left: 2px;
+    height: 12px;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-image: url("../img/sidebar/arrowhead-down-12.svg");
+    width: 12px;
+
+    transition: transform 0.25s;
+}
+
+.session:not(.expanded) > .header::before {
+    transform: rotate(-90deg);
+}
+
 .session > .header .title {
     margin-right: 3px;
+    line-height: var(--header-height);
+    font-size: 1.2em;
+    white-space: nowrap;
 }
 
 .session > .header .number-of-tabs {
-    opacity: 0.75;
+    color: #6D6D6D;
+    line-height: var(--header-height);
+    white-space: nowrap;
 }
 
 .session > .header > .align-right {
@@ -42,12 +76,21 @@ body {
     flex-direction: row;
     flex-wrap: nowrap;
     background-color: var(--header-bg-color);
+    line-height: var(--header-height);
+    height: var(--header-height);
     padding-left: 1px;
     padding-right: 5px;
+    user-select: none;
 }
 
 .session > .header .restore {
     margin-right: 5px;
+    color: rgb(0,0,238);
+    cursor: pointer;
+}
+
+.session > .header .restore:hover {
+    text-decoration: underline;
 }
 
 .session:not(.expanded) > .content {
@@ -60,4 +103,36 @@ body {
 
 .session:not(.active) > .header .close {
     display: none;
+}
+
+#search {
+    position: absolute;
+    bottom: 1px;
+    left: 0px;
+    right: 0px;
+    height: var(--search-height);
+    border-top: 1px solid #E3E3E3;
+}
+
+#search-input {
+    box-sizing: border-box;
+    border: none;
+    position: absolute;
+    top: 0px;
+    left: var(--search-height);
+    height: var(--search-height);
+    width: calc(100% - var(--search-height) - 1px);
+}
+
+#search-icon {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: var(--search-height);
+    width: var(--search-height);
+    padding-left: 2px;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("../img/sidebar/Search.svg");
 }
