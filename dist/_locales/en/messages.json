@@ -87,6 +87,19 @@
 		"message": "Pick the folder where sessions are stored."
 	},
 
+	"sidebar_session_restore": {
+		"message": "Restore",
+		"description": "Label of the session restore button"
+	},
+
+	"sidebar_session_restore_tooltip": {
+		"message": "restore all tabs from this session"
+	},
+
+	"sidebar_session_close": {
+		"message": "Set aside"
+	},
+
 	"bookmarkFolderSelector_tooltip": {
 		"message": "open bookmark folder selector"
 	},

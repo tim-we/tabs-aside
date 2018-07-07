@@ -1,0 +1,58 @@
+#sessions {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.session {
+    position: relative;
+    margin-bottom: 0px;
+    --header-height: 30px;
+    --header-bg-color: white;
+}
+
+.session > .header {
+    position: relative;
+    height: var(--header-height);
+    background-color: var(--header-bg-color);
+}
+
+.session > .header .title {
+    margin-right: 3px;
+}
+
+.session > .header .number-of-tabs {
+    opacity: 0.75;
+}
+
+.session > .header > .align-right {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: var(--header-height);
+}
+
+.session > .header .controls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    background-color: var(--header-bg-color);
+    padding-left: 1px;
+    padding-right: 5px;
+}
+
+.session > .header .restore {
+    margin-right: 5px;
+}
+
+.session:not(.expanded) > .content {
+    display: none;
+}
+
+.session.active > .header .restore {
+    display: none;
+}
+
+.session:not(.active) > .header .close {
+    display: none;
+}
