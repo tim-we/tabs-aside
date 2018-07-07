@@ -25,6 +25,13 @@ let options:Option[] = [
 		hint: true
 	},
 	{
+		id: "sidebarTabLayout",
+		type: "select",
+		options: ["simple-list"],
+		default: "simple-list",
+		hidden: true,
+	},
+	{
 		id: "browserActionIcon",
 		type: "select",
 		options: ["dark", "light", "context"],
