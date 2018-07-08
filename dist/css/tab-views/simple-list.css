@@ -1,0 +1,11 @@
+.tab-view > ol {
+    padding-left: 20px;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 1rem;
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+.tab-view > ol a {
+    font-family: 'Open Sans', Segoe UI, sans-serif;
+}

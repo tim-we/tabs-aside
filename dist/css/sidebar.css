@@ -5,6 +5,11 @@ body {
     --search-height: 32px;
 }
 
+a, a:visited {
+    cursor: pointer;
+    color: rgb(0, 0, 238);
+}
+
 .state-info {
     position: absolute;
     top: 0px;
@@ -40,19 +45,20 @@ body {
     position: relative;
     margin-bottom: 5px;
     --header-height: 32px;
-    --header-bg-color: white;
+    --bg-color: white;
+    --hover-trans-dur: .25s;
+    transition: background var(--hover-trans-dur);
+    background-color: var(--bg-color);
 }
 
 .session:hover {
-    --header-bg-color: #F0F0F0;
-    transition: .25s;
+    --bg-color: #F0F0F0;
 }
 
 .session > .header {
     position: relative;
     padding-left: 14px;
     height: var(--header-height);
-    background-color: var(--header-bg-color);
 }
 
 .session > .header::before {
@@ -86,6 +92,8 @@ body {
     line-height: var(--header-height);
     white-space: nowrap;
     font-family: 'Open Sans Condensed', sans-serif;
+    cursor: default;
+    -moz-user-select: none;
 }
 
 .session > .header > .align-right {
@@ -99,12 +107,13 @@ body {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    background-color: var(--header-bg-color);
+    background-color: var(--bg-color);
     line-height: var(--header-height);
     height: var(--header-height);
     padding-left: 1px;
     padding-right: 3px;
-    user-select: none;
+    -moz-user-select: none;
+    transition: background var(--hover-trans-dur);
 }
 
 .session > .header .restore {
@@ -131,7 +140,7 @@ body {
     text-decoration: underline;
 }
 
-.session:not(.expanded) > .content {
+.session:not(.expanded) > .tab-view {
     display: none;
 }
 

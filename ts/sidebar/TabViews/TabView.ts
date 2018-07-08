@@ -1,12 +1,14 @@
+type Bookmark = browser.bookmarks.BookmarkTreeNode;
+
 export default abstract class TabView {
-    private bookmarkId:string;
+    protected bookmarkId:string;
 
-    constructor(bookmarkId:string) {
-        this.bookmarkId = bookmarkId;
+    constructor(sessionId:string) {
+        this.bookmarkId = sessionId;
     }
 
-    public getSessionTabs():Promise<browser.bookmarks.BookmarkTreeNode[]> {
-        return browser.bookmarks.getChildren(this.bookmarkId)
-    }
+    public abstract createHTML(tabBookmarks:Bookmark[]):HTMLElement;
+
+    public abstract update(tabBookmarks:Bookmark[]):void;
 
 }

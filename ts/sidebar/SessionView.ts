@@ -1,5 +1,8 @@
 import * as TabViewFactory from "./TabViewFactory";
 import {clean} from "../util/HTMLUtilities";
+import TabView from "./TabViews/TabView";
+
+type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 function i18n(messageName:string):string {
     return browser.i18n.getMessage("sidebar_"+messageName);
@@ -18,7 +21,7 @@ template.innerHTML = clean(`
             </div>
         </div>
     </div>
-    <div class="content"></div>
+    <div class="tab-view"></div>
 `);
 
 export default class SessionView {
@@ -29,7 +32,9 @@ export default class SessionView {
     private tabCounter:HTMLElement;
     private tabViewContainer:HTMLElement;
 
-    constructor(bookmark:browser.bookmarks.BookmarkTreeNode) {
+    private tabView:TabView = null;
+
+    constructor(bookmark:Bookmark) {
         this.bookmarkId = bookmark.id;
 
         this.createHTML(bookmark);
@@ -41,12 +46,16 @@ export default class SessionView {
     }
 
     public async update() {
-        let sessionBookmark:browser.bookmarks.BookmarkTreeNode = (await browser.bookmarks.getSubTree(this.bookmarkId))[0];
+        let sessionBookmark:Bookmark = (await browser.bookmarks.getSubTree(this.bookmarkId))[0];
         this.titleElement.textContent = sessionBookmark.title;
         this.tabCounter.textContent = sessionBookmark.children.length + " tabs";
+
+        if(this.tabView) {
+            this.tabView.update(sessionBookmark.children);
+        }
     }
 
-    private createHTML(bookmark:browser.bookmarks.BookmarkTreeNode) {
+    private createHTML(bookmark:Bookmark) {
         this.html = document.createElement("section");
         this.html.classList.add("session");
         this.html.dataset.id = bookmark.id;
@@ -54,7 +63,7 @@ export default class SessionView {
 
         this.titleElement = this.html.querySelector(".title");
         this.tabCounter = this.html.querySelector(".number-of-tabs");
-        this.tabViewContainer = this.html.querySelector(".content");
+        this.tabViewContainer = this.html.querySelector(".tab-view");
 
         this.html.querySelector(".header").addEventListener("click", () => {
             this.toggle();
@@ -73,12 +82,27 @@ export default class SessionView {
         return this.html.classList.contains("expanded");
     }
 
-    public expand() {
-        //let tabView = TabViewFactory.createTabView(this.bookmarkId);
+    public async expand(data?:Bookmark[]) {
+        // create TabView
+        let tabView:TabView = TabViewFactory.createTabView(this.bookmarkId);
+        this.tabView = tabView;
+
+        // optimization: if data is already available do not hit API again
+        let tabBMs:Bookmark[] = (data instanceof Array) ? 
+            data : (await browser.bookmarks.getChildren(this.bookmarkId));
+
+        this.tabViewContainer.appendChild(
+            tabView.createHTML(tabBMs)
+        );
+
         this.html.classList.add("expanded");
     }
 
     public collapse() {
         this.html.classList.remove("expanded");
+
+        // remove tab view
+        this.tabViewContainer.innerHTML = "";
+        this.tabView = null;
     }
 }
