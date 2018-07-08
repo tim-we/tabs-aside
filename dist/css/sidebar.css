@@ -42,6 +42,7 @@ body {
 
 .session:hover {
     --header-bg-color: #F0F0F0;
+    transition: .25s;
 }
 
 .session > .header {
@@ -105,6 +106,20 @@ body {
     margin-right: 5px;
     color: rgb(0,0,238);
     cursor: pointer;
+}
+
+.session > .header .more {
+    width: 20px;
+    height: var(--header-height);
+    background-repeat: no-repeat;
+    background-position: center 9px;
+    background-image: url("../img/sidebar/more-16.svg");
+    cursor: pointer;
+}
+
+.session > .header .more:hover {
+    background-color: rgba(0,0,0,0.1);
+    transition: .2s;
 }
 
 .session > .header .restore:hover {

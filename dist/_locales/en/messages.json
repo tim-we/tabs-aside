@@ -108,6 +108,10 @@
 		"message": "Set aside"
 	},
 
+	"sidebar_session_more": {
+		"message": "More"
+	},
+
 	"bookmarkFolderSelector_tooltip": {
 		"message": "open bookmark folder selector"
 	},

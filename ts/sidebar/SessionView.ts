@@ -14,7 +14,7 @@ template.innerHTML = clean(`
             <div class="controls">
                 <div class="restore" title="${i18n("session_restore_tooltip")}">${i18n("session_restore")}</div>
                 <div class="close">${i18n("session_close")}</div>
-                <div class="more">...</div>
+                <div class="more" title="${i18n("session_more")}"></div>
             </div>
         </div>
     </div>
