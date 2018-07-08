@@ -31,6 +31,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("search-icon").addEventListener("click", () => {
         searchInput.focus();
     });
+
+    window.addEventListener("keydown", e => {
+        if(e.keyCode == 70 && e.ctrlKey) { // CTRL + F
+            e.preventDefault();
+
+            searchInput.focus();
+        }
+    });
 });
 
 let rootId:string;
