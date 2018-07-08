@@ -2,6 +2,24 @@ body {
     --search-height: 32px;
 }
 
+.state-info {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 5px;
+    font-size: 1.25em;
+}
+
+.state-info:not(.show) {
+    display: none;
+}
+
+#no-sessions {
+    bottom: 0px;
+    background-color: white;
+}
+
 #sessions {
     position: absolute;
     top: 5px;
@@ -102,6 +120,10 @@ body {
 }
 
 .session:not(.active) > .header .close {
+    display: none;
+}
+
+.session.hidden {
     display: none;
 }
 

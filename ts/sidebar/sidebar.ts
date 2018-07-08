@@ -11,6 +11,7 @@ let rootId:string;
 
 let sessionViews:SessionView[];
 let sessionContainer:HTMLElement;
+let noSessionsInfo:HTMLElement;
 
 // initialize...
 Promise.all([
@@ -27,7 +28,8 @@ Promise.all([
 
     new Promise(resolve => {
         document.addEventListener("DOMContentLoaded", () => {
-            sessionContainer= document.getElementById("sessions");
+            sessionContainer = document.getElementById("sessions");
+            noSessionsInfo = document.getElementById("no-sessions");
 
             resolve();
         });
@@ -43,10 +45,16 @@ Promise.all([
 
         return view;
     });
+
+    if(sessions.length === 0) {
+        noSessionsInfo.classList.add("show");
+    } else {
+        noSessionsInfo.classList.remove("show");
+    }
 }).then(() => {
     browser.runtime.onMessage.addListener(messageHandler);
 
-    Search.init(rootId);
+    Search.init(rootId, sessionContainer);
 }).catch(e => {
     console.error("[TA] " + e);
 

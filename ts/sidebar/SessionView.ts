@@ -7,7 +7,7 @@ function i18n(messageName:string):string {
 
 let template:HTMLTemplateElement = document.createElement("template");
 template.innerHTML = clean(`
-    <div class="header">
+    <div class="header" data-id="">
         <span class="title"></span>
         <span class="number-of-tabs"></span>
         <div class="align-right">
@@ -48,7 +48,8 @@ export default class SessionView {
 
     private createHTML(bookmark:browser.bookmarks.BookmarkTreeNode) {
         this.html = document.createElement("section");
-        this.html.classList.add("session");    
+        this.html.classList.add("session");
+        this.html.dataset.id = bookmark.id;
         this.html.appendChild(document.importNode(template.content, true));
 
         this.titleElement = this.html.querySelector(".title");

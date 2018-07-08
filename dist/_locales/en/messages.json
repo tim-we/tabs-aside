@@ -91,6 +91,10 @@
 		"message": "search sessions..."
 	},
 
+	"sidebar_search_noresults": {
+		"message": "No matching sessions found."
+	},
+
 	"sidebar_session_restore": {
 		"message": "Restore",
 		"description": "Label of the session restore button"
