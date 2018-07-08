@@ -46,7 +46,7 @@ Promise.all([
 }).then(() => {
     browser.runtime.onMessage.addListener(messageHandler);
 
-    Search.init();
+    Search.init(rootId);
 }).catch(e => {
     console.error("[TA] " + e);
 
