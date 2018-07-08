@@ -1,4 +1,7 @@
+@import url("../fonts/open-sans.css");
+
 body {
+    font-family: 'Open Sans', Segoe UI, sans-serif;
     --search-height: 32px;
 }
 
@@ -8,7 +11,7 @@ body {
     left: 0px;
     right: 0px;
     padding: 5px;
-    font-size: 1.25em;
+    font-size: 1.2rem;
 }
 
 .state-info:not(.show) {
@@ -47,7 +50,7 @@ body {
 
 .session > .header {
     position: relative;
-    padding-left: 18px;
+    padding-left: 14px;
     height: var(--header-height);
     background-color: var(--header-bg-color);
 }
@@ -56,7 +59,7 @@ body {
     content: " ";
     position: absolute;
     top: calc(0.5 * (var(--header-height) - 12px));
-    left: 2px;
+    left: 0px;
     height: 12px;
     background-repeat: no-repeat;
     background-position-y: center;
@@ -73,14 +76,16 @@ body {
 .session > .header .title {
     margin-right: 3px;
     line-height: var(--header-height);
-    font-size: 1.2em;
     white-space: nowrap;
+    font-size: 1.2rem;
+    word-spacing: -.075rem;
 }
 
 .session > .header .number-of-tabs {
     color: #6D6D6D;
     line-height: var(--header-height);
     white-space: nowrap;
+    font-family: 'Open Sans Condensed', sans-serif;
 }
 
 .session > .header > .align-right {
@@ -98,12 +103,12 @@ body {
     line-height: var(--header-height);
     height: var(--header-height);
     padding-left: 1px;
-    padding-right: 5px;
+    padding-right: 3px;
     user-select: none;
 }
 
 .session > .header .restore {
-    margin-right: 5px;
+    margin-right: 3px;
     color: rgb(0,0,238);
     cursor: pointer;
 }
