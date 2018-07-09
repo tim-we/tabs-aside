@@ -8,6 +8,11 @@ let menuItems:MenuItem[] = [
 		onclick: () => {}
 	},
 	{
+		id: "create-session",
+		tooltip: true,
+		onclick: () => {}
+	},
+	{
 		id: "show-sessions",
 		icon: "sessions.png",
 		shortcut: "Alt+Q",
@@ -20,6 +25,7 @@ let menuItems:MenuItem[] = [
 	},
 	{
 		id: "options",
+		icon: "options-16.svg",
 		optional: true,
 		onclick: () => browser.runtime.openOptionsPage()
 	}

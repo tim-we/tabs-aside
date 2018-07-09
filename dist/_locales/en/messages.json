@@ -3,6 +3,14 @@
 		"message": "Tabs aside"
 	},
 
+	"menu_create-session_label": {
+		"message": "Create session"
+	},
+
+	"menu_create-session_tooltip": {
+		"message": "Turn the tabs from this window into a session"
+	},
+
 	"menu_show-sessions_label": {
 		"message": "Show sessions"
 	},
