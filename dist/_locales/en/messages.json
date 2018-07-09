@@ -120,6 +120,16 @@
 		"message": "More"
 	},
 
+	"sidebar_session_number_of_tabs": {
+		"message": "$N$ tabs",
+		"placeholders": {
+			"n" : {
+				"content" : "$1",
+				"example" : "42"
+			}
+		  }
+	},
+
 	"bookmarkFolderSelector_tooltip": {
 		"message": "open bookmark folder selector"
 	},
