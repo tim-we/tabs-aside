@@ -1,11 +1,30 @@
 .tab-view > ol {
-    padding-left: 20px;
-    font-family: 'Open Sans Condensed', sans-serif;
-    font-size: 1rem;
-    margin-top: 4px;
-    margin-bottom: 2px;
+	padding-left: 1.2em;
+	font-family: 'Open Sans Condensed', sans-serif;
+	font-size: 1rem;
+	margin-top: 4px;
+	margin-bottom: 2px;
+}
+
+.tab-view > ol.geq10 {
+	padding-left: 1.45em;
+}
+
+.tab-view > ol.geq100 {
+	padding-left: 1.8em;
+}
+
+.tab-view > ol > li {
+	border-radius: 1px;
+	transition: background .42s;
+}
+
+.tab-view > ol > li:hover {
+	background-color: rgba(0,0,0,0.1);
 }
 
 .tab-view > ol a {
-    font-family: 'Open Sans', Segoe UI, sans-serif;
+	font-family: 'Open Sans', Segoe UI, sans-serif;
+	font-size: 1rem;
+	
 }

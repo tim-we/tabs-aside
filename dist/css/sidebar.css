@@ -1,189 +1,189 @@
 @import url("../fonts/open-sans.css");
 
 body {
-    font-family: 'Open Sans', Segoe UI, sans-serif;
-    --search-height: 32px;
+	font-family: 'Open Sans', Segoe UI, sans-serif;
+	--search-height: 32px;
 }
 
 a, a:visited {
-    cursor: pointer;
-    color: rgb(0, 0, 238);
+	cursor: pointer;
+	color: rgb(0, 0, 238);
 }
 
 .state-info {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    padding: 5px;
-    font-size: 1.2rem;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	padding: 5px;
+	font-size: 1.2rem;
 }
 
 .state-info:not(.show) {
-    display: none;
+	display: none;
 }
 
 #no-sessions {
-    bottom: 0px;
-    background-color: white;
+	bottom: 0px;
+	background-color: white;
 }
 
 #sessions {
-    position: absolute;
-    top: 5px;
-    bottom: calc(var(--search-height) + 2px);
-    left: 0px;
-    right: 0px;
+	position: absolute;
+	top: 5px;
+	bottom: calc(var(--search-height) + 2px);
+	left: 0px;
+	right: 0px;
 
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    overflow-x: hidden;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	overflow-x: hidden;
 }
 
 .session {
-    position: relative;
-    margin-bottom: 5px;
-    --header-height: 32px;
-    --bg-color: white;
-    --hover-trans-dur: .25s;
-    transition: background var(--hover-trans-dur);
-    background-color: var(--bg-color);
+	position: relative;
+	margin-bottom: 5px;
+	--header-height: 32px;
+	--bg-color: white;
+	--hover-trans-dur: .25s;
+	transition: background var(--hover-trans-dur);
+	background-color: var(--bg-color);
 }
 
 .session:hover {
-    --bg-color: #F0F0F0;
+	--bg-color: #F0F0F0;
 }
 
 .session > .header {
-    position: relative;
-    padding-left: 14px;
-    height: var(--header-height);
+	position: relative;
+	padding-left: 14px;
+	height: var(--header-height);
 }
 
 .session > .header::before {
-    content: " ";
-    position: absolute;
-    top: calc(0.5 * (var(--header-height) - 12px));
-    left: 0px;
-    height: 12px;
-    background-repeat: no-repeat;
-    background-position-y: center;
-    background-image: url("../img/sidebar/arrowhead-down-12.svg");
-    width: 12px;
+	content: " ";
+	position: absolute;
+	top: calc(0.5 * (var(--header-height) - 12px));
+	left: 0px;
+	height: 12px;
+	background-repeat: no-repeat;
+	background-position-y: center;
+	background-image: url("../img/sidebar/arrowhead-down-12.svg");
+	width: 12px;
 
-    transition: transform 0.25s;
+	transition: transform 0.25s;
 }
 
 .session:not(.expanded) > .header::before {
-    transform: rotate(-90deg);
+	transform: rotate(-90deg);
 }
 
 .session > .header .title {
-    margin-right: 3px;
-    line-height: var(--header-height);
-    white-space: nowrap;
-    font-size: 1.2rem;
-    word-spacing: -.075rem;
+	margin-right: 3px;
+	line-height: var(--header-height);
+	white-space: nowrap;
+	font-size: 1.2rem;
+	word-spacing: -.075rem;
 }
 
 .session > .header .number-of-tabs {
-    color: #6D6D6D;
-    line-height: var(--header-height);
-    white-space: nowrap;
-    font-family: 'Open Sans Condensed', sans-serif;
-    cursor: default;
-    -moz-user-select: none;
+	color: #6D6D6D;
+	line-height: var(--header-height);
+	white-space: nowrap;
+	font-family: 'Open Sans Condensed', sans-serif;
+	cursor: default;
+	-moz-user-select: none;
 }
 
 .session > .header > .align-right {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    height: var(--header-height);
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	height: var(--header-height);
 }
 
 .session > .header .controls {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    background-color: var(--bg-color);
-    line-height: var(--header-height);
-    height: var(--header-height);
-    padding-left: 1px;
-    padding-right: 3px;
-    -moz-user-select: none;
-    transition: background var(--hover-trans-dur);
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	background-color: var(--bg-color);
+	line-height: var(--header-height);
+	height: var(--header-height);
+	padding-left: 1px;
+	padding-right: 3px;
+	-moz-user-select: none;
+	transition: background var(--hover-trans-dur);
 }
 
 .session > .header .restore {
-    margin-right: 3px;
-    color: rgb(0,0,238);
-    cursor: pointer;
+	margin-right: 3px;
+	color: rgb(0,0,238);
+	cursor: pointer;
 }
 
 .session > .header .more {
-    width: 20px;
-    height: var(--header-height);
-    background-repeat: no-repeat;
-    background-position: center 9px;
-    background-image: url("../img/sidebar/more-16.svg");
-    cursor: pointer;
+	width: 20px;
+	height: var(--header-height);
+	background-repeat: no-repeat;
+	background-position: center 9px;
+	background-image: url("../img/sidebar/more-16.svg");
+	cursor: pointer;
 }
 
 .session > .header .more:hover {
-    background-color: rgba(0,0,0,0.1);
-    transition: .2s;
+	background-color: rgba(0,0,0,0.1);
+	transition: .2s;
 }
 
 .session > .header .restore:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 .session:not(.expanded) > .tab-view {
-    display: none;
+	display: none;
 }
 
 .session.active > .header .restore {
-    display: none;
+	display: none;
 }
 
 .session:not(.active) > .header .close {
-    display: none;
+	display: none;
 }
 
 .session.hidden {
-    display: none;
+	display: none;
 }
 
 #search {
-    position: absolute;
-    bottom: 1px;
-    left: 0px;
-    right: 0px;
-    height: var(--search-height);
-    border-top: 1px solid #E3E3E3;
+	position: absolute;
+	bottom: 1px;
+	left: 0px;
+	right: 0px;
+	height: var(--search-height);
+	border-top: 1px solid #E3E3E3;
 }
 
 #search-input {
-    box-sizing: border-box;
-    border: none;
-    position: absolute;
-    top: 0px;
-    left: var(--search-height);
-    height: var(--search-height);
-    width: calc(100% - var(--search-height) - 1px);
+	box-sizing: border-box;
+	border: none;
+	position: absolute;
+	top: 0px;
+	left: var(--search-height);
+	height: var(--search-height);
+	width: calc(100% - var(--search-height) - 1px);
 }
 
 #search-icon {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    height: var(--search-height);
-    width: var(--search-height);
-    padding-left: 2px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: var(--search-height);
+	width: var(--search-height);
+	padding-left: 2px;
 
-    background-repeat: no-repeat;
-    background-position: center;
-    background-image: url("../img/sidebar/Search.svg");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url("../img/sidebar/Search.svg");
 }
