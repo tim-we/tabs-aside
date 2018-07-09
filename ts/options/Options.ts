@@ -30,23 +30,27 @@ let options:Option[] = [
 		options: ["simple-list"],
 		default: "simple-list",
 		hidden: true,
+		group: "appearance"
 	},
 	{
 		id: "browserActionIcon",
 		type: "select",
 		options: ["dark", "light", "context"],
 		default: "dark",
-		info: true
+		info: true,
+		group: "appearance"
 	},
 	{
 		id: "badgeCounter",
 		type: "boolean",
-		default: true
+		default: true,
+		group: "appearance"
 	},
 	{
 		id: "menuShowAll",
 		type: "boolean",
-		default: false
+		default: false,
+		group: "appearance"
 	},
 	{
 		id: "rootFolder",
