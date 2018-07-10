@@ -53,6 +53,20 @@ let options:Option[] = [
 		group: "appearance"
 	},
 	{
+		id: "aside-command",
+		type: "command",
+		default: browser.runtime.getManifest()
+				 .commands["tabs-aside"].suggested_key.default,
+		hidden: true
+	},
+	{
+		id: "sidebar-command",
+		type: "command",
+		default: browser.runtime.getManifest()
+				 .commands["_execute_sidebar_action"].suggested_key.default,
+		hidden: true
+	},
+	{
 		id: "rootFolder",
 		type: "bookmark",
 		default: null

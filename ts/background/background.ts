@@ -1,8 +1,11 @@
 import * as ASM from "../core/SessionManager";
 import { Message, ASMMessage } from "../core/Messages";
 import * as BrowserActionManager from "../browserAction/BrowserActionManager";
+import * as CommandHandler from "./CommandHandler";
 
 BrowserActionManager.init();
+
+CommandHandler.init();
 
 browser.runtime.onMessage.addListener((message:Message) => {
 

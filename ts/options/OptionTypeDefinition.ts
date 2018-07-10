@@ -21,7 +21,10 @@ export type BooleanOption = GenericOption<"boolean", boolean>;
 
 export type BookmarkOption = GenericOption<"bookmark", string>;
 
+export type CommandOption = GenericOption<"command", string>;
+
 export type Option = (SelectOption
-	| BooleanOption
-	| BookmarkOption)
-	& DisplayOptions;
+					| CommandOption
+					| BooleanOption
+					| BookmarkOption)
+					& DisplayOptions;
