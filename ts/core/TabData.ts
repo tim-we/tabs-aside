@@ -25,6 +25,7 @@ export default class TabData {
 	public readonly isInReaderMode:boolean;
 	public readonly title:string;
 	public readonly url:string;
+	public readonly favIconUrl:string;
 
 	public static createFromTab(tab:Tab):TabData {
 		return new TabData(tab, null);
@@ -56,6 +57,7 @@ export default class TabData {
 			this.pinned = tab.pinned;
 			this.title = tab.title;
 			this.url = tab.url;
+			this.favIconUrl = tab.favIconUrl;
 			
 			if(tab.isInReaderMode) {
 				this.isInReaderMode = true;
@@ -70,9 +72,13 @@ export default class TabData {
 		} else if(bookmark) { // create from bookmark
 			let data:TitleData = this.decodeTitle(bookmark.title);
 
+			this.url = bookmark.url;
 			this.title = data.title;
 			this.pinned = data.options.has("pinned");
 			this.isInReaderMode = data.options.has("rm");
+
+			// guess the favicon path
+			this.favIconUrl = (new URL(bookmark.url)).origin + "/favicon.ico";
 		}
 	}
 
