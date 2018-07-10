@@ -1,4 +1,5 @@
 import TabView from "./TabView";
+import TabData from "../../core/TabData";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -16,14 +17,16 @@ export default class SimpleList extends TabView {
 		this.list = ol;
 		this.setTabCountClass(tabBookmarks.length);
 
-		tabBookmarks.forEach(tab => {
+		tabBookmarks.forEach(bm => {
+			let data:TabData = TabData.createFromBookmark(bm);
+
 			let li:HTMLLIElement = document.createElement("li");
 
 			let a:HTMLAnchorElement = document.createElement("a");
 			a.classList.add("tab");
-			a.textContent = tab.title;
-			a.dataset.id = tab.id;
-			a.href = tab.url;
+			a.textContent = data.title;
+			a.dataset.id = bm.id;
+			a.href = data.url;
 
 			a.onclick = e => e.preventDefault();
 
