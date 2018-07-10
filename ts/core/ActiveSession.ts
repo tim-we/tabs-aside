@@ -1,4 +1,8 @@
 import { UnloadedTabs } from "./UnloadedTabs";
+import TabData from "./TabData";
+
+type Tab = browser.tabs.Tab;
+type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 export default class ActiveSession {
 	public bookmarkId:string;
@@ -37,7 +41,7 @@ export default class ActiveSession {
 		return this.bookmarkId;
 	}
 
-	private getTabBookmarks():Promise<browser.bookmarks.BookmarkTreeNode[]> {
+	private getTabBookmarks():Promise<Bookmark[]> {
 		return browser.bookmarks.getChildren(this.bookmarkId)
 			// just bookmarks that have a URL property (no folders)
 			.then(bms => bms.filter(bm => bm.url));
@@ -74,18 +78,17 @@ export default class ActiveSession {
 		});
 	}
 
-	private createTab(bm:browser.bookmarks.BookmarkTreeNode):Promise<browser.tabs.Tab> {
+	private createTab(bm:Bookmark):Promise<Tab> {
 		let loadTabsOnActivation:boolean = true;
 
+		let data:TabData = TabData.createFromBookmark(bm);
+
 		// TODO
-		let createProperties = {
-			pinned: false,
-			url: bm.url as string,
-			windowId: this.windowId
-		}
+		let createProperties = data.getTabCreateProperties();
+		createProperties.windowId = this.windowId;
 
 		if(loadTabsOnActivation) {
-			return this.unloadedTabs.create(createProperties, bm.title);
+			return this.unloadedTabs.create(createProperties, data.title);
 		} else {
 			return browser.tabs.create(createProperties).then(tab => {
 				this.tabBookmarkAssociation.set(tab.id as number, bm.id);
@@ -95,7 +98,7 @@ export default class ActiveSession {
 		}
 	}
 
-	private tabUpdateListener(tabId:number, changeInfo:object, tab:browser.tabs.Tab):void {
+	private tabUpdateListener(tabId:number, changeInfo:object, tab:Tab):void {
 		let bmId = this.tabBookmarkAssociation.get(tabId);
 
 		if(bmId) {
