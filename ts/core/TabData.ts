@@ -56,6 +56,10 @@ export default class TabData {
 		return validURL.test(this.url);
 	}
 
+	public getHostname():string {
+		return (new URL(this.url)).hostname;
+	}
+
 	private constructor(tab:Tab, bookmark:Bookmark) {
 		if(tab) { // create from tab
 			this.pinned = tab.pinned;
@@ -86,7 +90,7 @@ export default class TabData {
 		}
 
 		if(this.title.trim() === "") {
-			this.title = (new URL(this.url)).hostname;
+			this.title = this.getHostname();
 		}
 	}
 

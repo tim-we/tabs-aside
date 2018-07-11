@@ -4,6 +4,8 @@
 	font-size: 1rem;
 	margin-top: 4px;
 	margin-bottom: 2px;
+	animation: simpleListExpand 0.05s;
+	animation-timing-function: ease-out;
 }
 
 .tab-view > ol.geq10 {
@@ -15,17 +17,17 @@
 }
 
 .tab-view > ol > li {
-	border-radius: 1px;
 	transition: background .42s;
-}
-
-.tab-view > ol > li:hover {
-	background-color: rgba(0,0,0,0.1);
 }
 
 .tab-view > ol a {
 	font-family: 'Open Sans', Segoe UI, sans-serif;
 	font-size: 1rem;
+}
+
+.tab-view > ol a.tab:not(:hover) {
+	color: #222426;
+	text-decoration: none;
 }
 
 .tab-view .state-icon {
@@ -49,4 +51,20 @@
 
 .tab-view .state-icon.rm {
 	background-image: url("../../img/sidebar/readermode.svg");
+}
+
+@keyframes simpleListExpand {
+	0% {
+		transform: translateY(-10px);
+		opacity: 0;
+		overflow: hidden;
+		max-height: 10px;
+	}
+
+	100% {
+		transform: translateY(0px);
+		max-height: 500px;
+		overflow: hidden;
+		opacity: 1;
+	}
 }

@@ -34,6 +34,7 @@ export default class SimpleList extends TabView {
 		a.textContent = data.title;
 		a.dataset.id = tabBookmark.id;
 		a.href = data.url;
+		a.title = data.getHostname();
 		a.onclick = e => {
 			e.preventDefault();
 

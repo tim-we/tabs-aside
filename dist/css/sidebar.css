@@ -49,6 +49,7 @@ a, a:visited {
 	--hover-trans-dur: .25s;
 	transition: background var(--hover-trans-dur);
 	background-color: var(--bg-color);
+	z-index: 1;
 }
 
 .session:hover {
@@ -59,6 +60,7 @@ a, a:visited {
 	position: relative;
 	padding-left: 14px;
 	height: var(--header-height);
+	z-index: 3;
 }
 
 .session > .header::before {
@@ -138,6 +140,10 @@ a, a:visited {
 
 .session > .header .restore:hover {
 	text-decoration: underline;
+}
+
+.session > .tab-view {
+	z-index: 2;
 }
 
 .session:not(.expanded) > .tab-view {

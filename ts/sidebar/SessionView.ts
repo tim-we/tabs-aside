@@ -68,8 +68,16 @@ export default class SessionView {
 		this.tabCounter = this.html.querySelector(".number-of-tabs");
 		this.tabViewContainer = this.html.querySelector(".tab-view");
 
-		this.html.querySelector(".header").addEventListener("click", () => {
+		let header:HTMLElement = this.html.querySelector(".header");
+
+		// click on session header -> toggle tab visibility
+		header.addEventListener("click", () => {
 			this.toggle();
+		});
+
+		// do not toggle tab visibility when clicking controls
+		header.querySelector(".controls").addEventListener("click", e => {
+			e.stopPropagation();
 		});
 	}
 

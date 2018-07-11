@@ -15,59 +15,59 @@ let noSessionsInfo:HTMLElement;
 
 // initialize...
 Promise.all([
-    OptionsManager.getValue<string>("rootFolder").then(v => {
-        if(v) {
-            rootId = v;
-            return Promise.resolve();
-        } else {
-            return Promise.reject();
-        }
-    }),
+	OptionsManager.getValue<string>("rootFolder").then(v => {
+		if(v) {
+			rootId = v;
+			return Promise.resolve();
+		} else {
+			return Promise.reject();
+		}
+	}),
 
-    TabViewFactory.init(),
+	TabViewFactory.init(),
 
-    new Promise(resolve => {
-        document.addEventListener("DOMContentLoaded", () => {
-            sessionContainer = document.getElementById("sessions");
-            noSessionsInfo = document.getElementById("no-sessions");
+	new Promise(resolve => {
+		document.addEventListener("DOMContentLoaded", () => {
+			sessionContainer = document.getElementById("sessions");
+			noSessionsInfo = document.getElementById("no-sessions");
 
-            resolve();
-        });
-    })
+			resolve();
+		});
+	})
 
 ]).then(async () => {
-    let sessions:browser.bookmarks.BookmarkTreeNode[] = await browser.bookmarks.getChildren(rootId);
+	let sessions:browser.bookmarks.BookmarkTreeNode[] = await browser.bookmarks.getChildren(rootId);
 
-    sessionViews = sessions.map(sessionBookmark => {
-        let view = new SessionView(sessionBookmark);
+	sessionViews = sessions.map(sessionBookmark => {
+		let view = new SessionView(sessionBookmark);
 
-        sessionContainer.appendChild(view.getHTML());
+		sessionContainer.appendChild(view.getHTML());
 
-        return view;
-    });
+		return view;
+	});
 
-    if(sessions.length === 0) {
-        noSessionsInfo.classList.add("show");
-    } else {
-        noSessionsInfo.classList.remove("show");
-    }
+	if(sessions.length === 0) {
+		noSessionsInfo.classList.add("show");
+	} else {
+		noSessionsInfo.classList.remove("show");
+	}
 }).then(() => {
-    browser.runtime.onMessage.addListener(messageHandler);
+	browser.runtime.onMessage.addListener(messageHandler);
 
-    Search.init(rootId, sessionContainer);
+	Search.init(rootId, sessionContainer);
 }).catch(e => {
-    console.error("[TA] " + e);
+	console.error("[TA] " + e);
 
-    document.body.innerHTML = "Error";
+	document.body.innerHTML = "Error";
 });
 
 function messageHandler(message:Message) {
-    if(message.type === "OptionUpdate") {
-        let msg:OptionUpdateEvent = message as OptionUpdateEvent;
+	if(message.type === "OptionUpdate") {
+		let msg:OptionUpdateEvent = message as OptionUpdateEvent;
 
-        if(optionsThatRequireReload.has(msg.key)) {
-            window.location.reload();
-        }
-    }
+		if(optionsThatRequireReload.has(msg.key)) {
+			window.location.reload();
+		}
+	}
 }
 
