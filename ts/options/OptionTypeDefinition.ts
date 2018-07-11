@@ -1,8 +1,7 @@
-export interface GenericOption<S,T> {
+export interface GenericOption<S extends string, T> {
 	id: string;
 	type: S;
 	default: T;
-	guard?: (newValue:T, currentValue:T) => Promise<boolean>;
 }
 
 export interface SelectOption extends GenericOption<"select", string> {

@@ -13,18 +13,7 @@ let options:Option[] = [
 		id: "activeSessions",
 		type: "boolean",
 		default: true,
-		hint: true,
-		guard: async (newValue:boolean, currentValue:boolean) => {
-			console.assert(currentValue !== newValue);
-
-			if(currentValue && newValue === false) {
-				//TODO: check if there are active sessions
-				// if there are -> return false
-				return false;
-			} else {
-				return true;
-			}
-		}
+		hint: true
 	},
 	{
 		id: "windowedSession",
