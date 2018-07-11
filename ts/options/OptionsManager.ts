@@ -16,44 +16,42 @@ function getOption(optionId:string):Option {
 	return null;
 }
 
-export function getValue<T>(key:string):Promise<T> {
-	return storage.get("options").then(data => {
-		let storedOptions = data["options"] as {[s:string]: any} || {};
-		let option:Option = getOption(key);
+export async function getValue<T>(key:string):Promise<T> {
+	// receive stored options from the storage API
+	let storedOptions = (await storage.get("options"))["options"] as {[s:string]: any} || {};
 
-		let value = (storedOptions[key] !== undefined) ? storedOptions[key] : option.default;
+	// get option definition
+	let option:Option = getOption(key);
 
-		return value as T;
-	});
+	let value = (storedOptions[key] !== undefined) ? storedOptions[key] : option.default;
+
+	return value as T;
 }
 
-export function setValue<T>(key:string, value:T):Promise<void> {
-	return storage.get("options").then(data => {
-		let storedOptions = data["options"] as {[s:string]: any} || {};
-		let option:Option = getOption(key);
+export async function setValue<T>(key:string, value:T, skipGuard:boolean = false) {
+	// receive stored options from the storage API
+	let storedOptions = (await storage.get("options"))["options"] as {[s:string]: any} || {};
+	
+	// get option definition
+	let option:Option = getOption(key);
 
-		let oldValue:T = (storedOptions[key] !== undefined) ? storedOptions[key] : option.default;
+	let oldValue:T = (storedOptions[key] !== undefined) ?
+		storedOptions[key] : option.default;
 
-		if(value === oldValue) {
-			// if value has not changed abort here
-			return Promise.resolve();
-		} else {
-			// otherwise update options
-			storedOptions[key] = value;
+	// if value has changed -> update options
+	if(value !== oldValue) {
+		storedOptions[key] = value;
 
-			return storage.set({
-				"options": storedOptions
-			}).then(_ => {
-				console.log(`[TA] Option ${key} updated.`);
+		// update options (Storage API)
+		await storage.set({"options": storedOptions});
+		console.log(`[TA] Option ${key} updated.`);
 
-				// notify other scripts about the update
-				browser.runtime.sendMessage<OptionUpdateEvent, void>({
-					type: "OptionUpdate",
-					destination: "all",
-					key: key,
-					newValue: value
-				});
-			});
-		}
-	});
+		// notify other scripts about the update
+		browser.runtime.sendMessage<OptionUpdateEvent, void>({
+			type: "OptionUpdate",
+			destination: "all",
+			key: key,
+			newValue: value
+		});
+	}
 }

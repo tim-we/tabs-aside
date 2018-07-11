@@ -13,7 +13,18 @@ let options:Option[] = [
 		id: "activeSessions",
 		type: "boolean",
 		default: true,
-		hint: true
+		hint: true,
+		guard: async (newValue:boolean, currentValue:boolean) => {
+			console.assert(currentValue !== newValue);
+
+			if(currentValue && newValue === false) {
+				//TODO: check if there are active sessions
+				// if there are -> return false
+				return false;
+			} else {
+				return true;
+			}
+		}
 	},
 	{
 		id: "windowedSession",
@@ -58,7 +69,8 @@ let options:Option[] = [
 		id: "aside-command",
 		type: "command",
 		default: manifest.commands["tabs-aside"].suggested_key.default,
-		hidden: true
+		hidden: true,
+		group: "keyboard"
 	},
 	{
 		id: "sidebar-command",
@@ -69,7 +81,8 @@ let options:Option[] = [
 	{
 		id: "rootFolder",
 		type: "bookmark",
-		default: null
+		default: null,
+		group: "keyboard"
 	}
 ];
 

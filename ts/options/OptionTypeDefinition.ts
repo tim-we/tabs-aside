@@ -2,13 +2,14 @@ export interface GenericOption<S,T> {
 	id: string;
 	type: S;
 	default: T;
+	guard?: (newValue:T, currentValue:T) => Promise<boolean>;
 }
 
 export interface SelectOption extends GenericOption<"select", string> {
 	options: string[];
 }
 
-type OptionsGroup = "appearance";
+type OptionsGroup = "appearance" | "keyboard";
 
 interface DisplayOptions {
 	hint?:boolean; // tooltip
