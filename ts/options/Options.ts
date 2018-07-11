@@ -1,5 +1,7 @@
 import { Option } from "./OptionTypeDefinition";
 
+const manifest = browser.runtime.getManifest();
+
 let options:Option[] = [
 	{
 		id: "smartTabLoading",
@@ -55,15 +57,13 @@ let options:Option[] = [
 	{
 		id: "aside-command",
 		type: "command",
-		default: browser.runtime.getManifest()
-				 .commands["tabs-aside"].suggested_key.default,
+		default: manifest.commands["tabs-aside"].suggested_key.default,
 		hidden: true
 	},
 	{
 		id: "sidebar-command",
 		type: "command",
-		default: browser.runtime.getManifest()
-				 .commands["_execute_sidebar_action"].suggested_key.default,
+		default: manifest.commands["_execute_sidebar_action"].suggested_key.default,
 		hidden: true
 	},
 	{
