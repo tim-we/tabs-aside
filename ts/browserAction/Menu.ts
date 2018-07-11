@@ -51,6 +51,10 @@ function createButton(item:MenuItem):HTMLAnchorElement {
 		let iconURL:string = "../../img/menu/" + item.icon;
 		button.style.setProperty("--iconURL", `url('${iconURL}')`);
 		button.classList.add("icon");
+
+		if(item.wideIcon) {
+			button.classList.add("wide");
+		}
 	}
 
 	if(item.shortcut) {

@@ -1,13 +1,15 @@
 body {
 	width: 268px;
-	min-height: 25px;
+	--button-height: 25px;
+	--icon-size: 16px;
+	min-height: calc(3 * var(--button-height));
 }
 
 .button {
 	position: relative;
 	display: block;
-	height: 25px;
-	line-height: 25px;
+	height: var(--button-height);
+	line-height: var(--button-height);
 	color: black;
 	padding-left: 36px;
 	padding-right: 12px;
@@ -15,9 +17,6 @@ body {
 	white-space: nowrap;
 
 	background-color: white;
-	background-repeat: no-repeat;
-	background-position-x: 0px;
-	background-position-y: center;
 }
 
 .mini-button {
@@ -28,8 +27,24 @@ body {
 	background-repeat: no-repeat;
 }
 
-.button.icon {
+.button.icon::before {
+	content: " ";
+	display: block;
+	position: absolute;
+	left: calc(36px - var(--icon-size) - 8px);
+	top: calc(0.5 * (var(--button-height) - var(--icon-size)));
+	height: var(--icon-size);
+	width: var(--icon-size);
+
+	background-color: inherit;
 	background-image: var(--iconURL, none);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.button.icon.wide::before {
+	left: calc(36px - 24px - 8px);
+	width: 24px;
 }
 
 #buttons:not(.showAll) > .button.optional {

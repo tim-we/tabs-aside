@@ -7,12 +7,14 @@ let tabsAside:MenuItem, showSessions:MenuItem;
 let menuItems:MenuItem[] = [
 	tabsAside = {
 		id: "tabs-aside",
-		icon: "aside1.png",
+		icon: "aside.png",
+		wideIcon: true,
 		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
 		onclick: () => {}
 	},
 	{
 		id: "create-session",
+		icon: "add.svg",
 		tooltip: true,
 		onclick: () => {}
 	},
