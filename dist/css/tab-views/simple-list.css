@@ -26,5 +26,27 @@
 .tab-view > ol a {
 	font-family: 'Open Sans', Segoe UI, sans-serif;
 	font-size: 1rem;
-	
+}
+
+.tab-view .state-icon {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin-right: 1px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	transform: translateY(2px);
+}
+
+.tab-view .state-icon:last-of-type {
+	margin-right: 2px;
+}
+
+.tab-view .state-icon.pinned {
+	background-image: url("../../img/sidebar/pin-12.svg");
+}
+
+.tab-view .state-icon.rm {
+	background-image: url("../../img/sidebar/readermode.svg");
 }
