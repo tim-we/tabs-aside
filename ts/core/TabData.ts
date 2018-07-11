@@ -17,7 +17,7 @@ type BookmarkCreateDetails = browser.bookmarks.CreateDetails;
  * Example bookmark title: "[pinned,rm] Actual title"
  */
 const bmTitleParser:RegExp = /^(\[(rm,|pinned,)*(rm|pinned)?\]\s)?(.*)$/;
-
+const validURL:RegExp = /^(https?:|view-source:)/i;
 const readerPrefix:string = "about:reader?url=";
 
 export default class TabData {
@@ -50,6 +50,10 @@ export default class TabData {
 			title: this.encodeTitle(),
 			url: this.url
 		};
+	}
+
+	public isPrivileged():boolean {
+		return validURL.test(this.url);
 	}
 
 	private constructor(tab:Tab, bookmark:Bookmark) {
