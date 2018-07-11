@@ -84,6 +84,10 @@ export default class TabData {
 			// guess the favicon path
 			this.favIconUrl = (new URL(bookmark.url)).origin + "/favicon.ico";
 		}
+
+		if(this.title.trim() === "") {
+			this.title = (new URL(this.url)).hostname;
+		}
 	}
 
 	private encodeTitle():string {
