@@ -8,30 +8,30 @@ let bmsWindowIds:number[] = [];
 let optionIdFolderViewMap:Map<string, HTMLDivElement> = new Map<string, HTMLDivElement>();
 
 browser.windows.onRemoved.addListener((windowId:number) => {
-    let i:number = bmsWindowIds.indexOf(windowId);
+	let i:number = bmsWindowIds.indexOf(windowId);
 
-    if(i >= 0) {
-        bmsWindowIds.splice(i, 1);
-    }
+	if(i >= 0) {
+		bmsWindowIds.splice(i, 1);
+	}
 });
 
 browser.runtime.onMessage.addListener((message:Message) => {
-    if(message.type === "OptionUpdate") {
-        let msg:OptionUpdateEvent = message as OptionUpdateEvent;
+	if(message.type === "OptionUpdate") {
+		let msg:OptionUpdateEvent = message as OptionUpdateEvent;
 
-        if(optionIdFolderViewMap.has(msg.key)) {
-            let view:HTMLDivElement = optionIdFolderViewMap.get(msg.key);
+		if(optionIdFolderViewMap.has(msg.key)) {
+			let view:HTMLDivElement = optionIdFolderViewMap.get(msg.key);
 
-            updateFolderView(view, msg.newValue);
+			updateFolderView(view, msg.newValue);
 
-            closeAllBMSWindows();
-        }
-    }
+			closeAllBMSWindows();
+		}
+	}
 });
 
 export function create(
-    row:HTMLDivElement,
-    i:number,
+	row:HTMLDivElement,
+	i:number,
 	option:Option, bookmarkId:string,
 	i18nMessageName:string,
 	
@@ -42,7 +42,7 @@ export function create(
 	folderView.setAttribute("data-bmId", "");
 	folderView.classList.add("bookmarkFolderView");
 
-    updateFolderView(folderView, bookmarkId);
+	updateFolderView(folderView, bookmarkId);
 
 	folderView.addEventListener("click", async () => {
 		let url = "../html/bookmark-selector.html?fpreset=" + encodeURIComponent("Tabs Aside");
@@ -55,6 +55,7 @@ export function create(
 
 		let bmsWindow:browser.windows.Window = await browser.windows.create({
 			//focused: true, // not supported by FF
+			allowScriptsToClose: true,
 			width: 500,
 			height: 300,
 			//@ts-ignore
@@ -71,27 +72,27 @@ export function create(
 	label.innerText = browser.i18n.getMessage(i18nMessageName);
 
 	row.appendChild(label);
-    row.appendChild(folderView);
-    
-    optionIdFolderViewMap.set(option.id, folderView);
+	row.appendChild(folderView);
+	
+	optionIdFolderViewMap.set(option.id, folderView);
 }
 
 async function updateFolderView(view:HTMLDivElement, bookmarkId:string) {
-    if(bookmarkId) {
-        let title:string = (await browser.bookmarks.get(bookmarkId))[0].title;
+	if(bookmarkId) {
+		let title:string = (await browser.bookmarks.get(bookmarkId))[0].title;
 
-        view.innerText = title;
-    } else {
-        view.innerText = "-";
-    }
+		view.innerText = title;
+	} else {
+		view.innerText = "-";
+	}
 
-    view.setAttribute("data-bmId", bookmarkId);
+	view.setAttribute("data-bmId", bookmarkId);
 }
 
 function closeAllBMSWindows() {
-    return Promise.all(
-        bmsWindowIds.map(
-            windowId => browser.windows.remove(windowId)
-        )
-    );
+	return Promise.all(
+		bmsWindowIds.map(
+			windowId => browser.windows.remove(windowId)
+		)
+	);
 }
