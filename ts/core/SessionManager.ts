@@ -1,70 +1,55 @@
 import ActiveSession from "./ActiveSession";
-import { ActiveSessionList } from "./ActiveSessionList";
+import * as OptionsManager from "../options/OptionsManager";
+import TabData from "./TabData";
 
 export type ASMCommand = "openSession";
+type SessionId = string;
+type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
-var activeSessions:ActiveSessionList = new ActiveSessionList();
+let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
-var config = {
-	newWindow: true,
-	parentBookmarkId: ""
-};
-
-export function openSession(sessionId:string, newWindow = config.newWindow):Promise<void> {
+export async function restoreSession(sessionId:string, ):Promise<void> {
 	// sanity-check
 	if (activeSessions.has(sessionId)) {
-		return Promise.reject(`Session ${sessionId} is already active.`);
+		throw new Error(`Session ${sessionId} is already active.`);
 	}
 
-	let p = Promise.resolve();
-	let windowId:number = browser.windows.WINDOW_ID_CURRENT;
-
-	// do we need a new window?
-	if (newWindow) {
-		p = browser.windows.create({
-			type: "normal"
-		}).then(w => {
-			windowId = w.id as number;
-
-			browser.sessions.setWindowValue(windowId, "sessionId", sessionId);
-		});
-	}
-
-	return p.then(_ => {
-		let session = new ActiveSession(sessionId, windowId);
-
-		activeSessions.add(session);
-
-		return session.openAll();
-	});
+	let session:ActiveSession = await ActiveSession.restoreAll(sessionId);
+	activeSessions.set(sessionId, session);
 }
 
-export function createSessionFromTabs(title:string, tabs:browser.tabs.Tab[]):Promise<string> {
+/*export async function createSessionFromTabs(tabs:browser.tabs.Tab[], title?:string):Promise<SessionId> {
 	if(tabs.length === 0) {
-		return Promise.reject();
+		throw new Error("Illegal argument. Sessions can not be empty.");
 	}
 
-	return browser.bookmarks.create({
-		parentId: config.parentBookmarkId,
+	let folder:Bookmark = await browser.bookmarks.create({
+		parentId: await OptionsManager.getValue<string>("rootFolder"),
 		title: title
-	}).then(folder => {
-		let sessionFolderId:string = folder.id;
-
-		return Promise.all(
-			tabs.map(
-				tab => browser.bookmarks.create({
-					parentId: sessionFolderId,
-					title: title,
-					url: tab.url
-				})
-			)
-		).then(_ => {
-			return sessionFolderId;
-		});
 	});
-}
+	
+	let sessionId:string = folder.id;
 
-export function createSessionFromWindow(title:string, windowId?:number):Promise<string> {
+	await Promise.all(
+		tabs.map(
+			async tab => {
+				let data:TabData = TabData.createFromTab(tab);
+
+				if(data.isPrivileged()) {
+					return;
+				}
+
+				await browser.bookmarks.create(
+					data.getBookmarkCreateDetails(sessionId)
+				);
+			}
+		)
+	);
+
+	return sessionId;
+}*/
+
+/*export function createSessionFromWindow(title?:string, windowId?:number):Promise<string> {
 	if(windowId === undefined) {
 		windowId = browser.windows.WINDOW_ID_CURRENT;
 	}
@@ -75,6 +60,5 @@ export function createSessionFromWindow(title:string, windowId?:number):Promise<
 		windowId: windowId
 	};
 
-	//TODO: filter
 	return browser.tabs.query(query).then(tabs => createSessionFromTabs(title, tabs));
-}
+}*/
