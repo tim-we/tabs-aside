@@ -28,6 +28,7 @@ export default class ActiveSession {
 			// create session window
 			let wnd:Window = await createWindow(sessionData.title);
 			activeSession.windowId = wnd.id;
+			await browser.sessions.setWindowValue(wnd.id, "sessionID", sessionId);
 		}
 
 		let load:boolean = !(await OptionsManager.getValue<boolean>("smartTabLoading"));

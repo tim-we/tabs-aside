@@ -45,8 +45,9 @@ export default class TabData {
 		return createProperties;
 	}
 
-	public getBookmarkCreateDetails():BookmarkCreateDetails {
+	public getBookmarkCreateDetails(parentId:string):BookmarkCreateDetails {
 		return {
+			parentId: parentId,
 			title: this.encodeTitle(),
 			url: this.url
 		};
