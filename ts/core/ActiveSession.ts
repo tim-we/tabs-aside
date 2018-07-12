@@ -1,116 +1,92 @@
-import { UnloadedTabs } from "./UnloadedTabs";
 import TabData from "./TabData";
+import * as OptionsManager from "../options/OptionsManager";
 
 type Tab = browser.tabs.Tab;
+type Window = browser.windows.Window;
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 export default class ActiveSession {
-	public bookmarkId:string;
+	public readonly bookmarkId:string;
 	public windowId:number;
-
-	// maps tab ids to their respective bookmark ids
-	private tabBookmarkAssociation:Map<number, string> = new Map<number, string>();
 	
-	private unloadedTabs:UnloadedTabs = new UnloadedTabs();
+	// maps tab ids to bookmark ids
+	private tabs:Map<number, string> = new Map();
+	private unloadedTabs:Set<number> = new Set();
 
-	constructor(bookmarkId:string, windowId:number = browser.windows.WINDOW_ID_NONE) {
-		this.bookmarkId = bookmarkId;
-		this.windowId = windowId;
-		this.unloadedTabs;
+	private constructor(sessionId:string, tabBookmarkId?:string) {
+		this.bookmarkId = sessionId;
+	}
 
-		// register tab listeners:
+	public static async restoreAll(sessionId:string):Promise<ActiveSession> {
+		let activeSession:ActiveSession = new ActiveSession(sessionId);
 
-		this.unloadedTabs.addTabActivationListener(tabId => {
-			// tab was just loaded, add to tracked tabs
-			browser.sessions.getTabValue(tabId, "bookmarkId")
-			.then(x => {
-				this.tabBookmarkAssociation.set(tabId, x as string);
-			});
-		});
+		let sessionData:Bookmark = (await browser.bookmarks.getSubTree(sessionId))[0];
+		console.assert(sessionData && sessionData.children.length > 0);
 
-		browser.tabs.onUpdated.addListener(
-			(tabID, changeInfo, tab) => this.tabUpdateListener(tabID, changeInfo, tab)
+		if(await OptionsManager.getValue<boolean>("windowedSession")) {
+			// create session window
+			let wnd:Window = await createWindow(sessionData.title);
+			activeSession.windowId = wnd.id;
+		}
+
+		// add tabs
+		await Promise.all(
+			sessionData.children.map(
+				tabBookmark => {
+					activeSession.addTab(tabBookmark);
+				}
+			)
 		);
 
-		browser.tabs.onRemoved.addListener(
-			tabId => this.tabRemovedListener(tabId)
-		);
+		return activeSession;
 	}
 
-	public getId():string {
-		return this.bookmarkId;
+	public static async restoreSingleTab(tabBookmarkId:string):Promise<ActiveSession> {
+		let bm:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
+		console.assert(bm);
+
+		let sessionId:string = bm.parentId;
+		let activeSession:ActiveSession = new ActiveSession(sessionId);
+
+		if(await OptionsManager.getValue<boolean>("windowedSession")) {
+			let sessionBookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
+
+			// create session window
+			let wnd:Window = await createWindow(sessionBookmark.title);
+			activeSession.windowId = wnd.id;
+		}
+
+		activeSession.addTab(bm);
+
+		return activeSession;
 	}
 
-	private getTabBookmarks():Promise<Bookmark[]> {
-		return browser.bookmarks.getChildren(this.bookmarkId)
-			// just bookmarks that have a URL property (no folders)
-			.then(bms => bms.filter(bm => bm.url));
-	}
-
-	public getTabIds():number[] {
-		return Array.from(this.tabBookmarkAssociation.keys())
-			.concat(this.unloadedTabs.getTabIds());
-	}
-
-	public openAll():Promise<void> {
-		return this.getTabBookmarks().then(bms => {
-			// create tabs (the promise resolves when every tab has been successfully created)
-			return Promise.all(
-				bms.map(
-					bm => this.createTab(bm).then(tab => {
-						// use the browsers sessions API
-						// (these values will be kept even if the extension stops running)
-						return Promise.all([
-							browser.sessions.setTabValue(tab.id as number, "sessionId", this.bookmarkId),
-							browser.sessions.setTabValue(tab.id as number, "bookmarkId", bm.id)
-						]);
-					})
-				)
-			);
-		}).then(_ => {
-			console.log(`[TA] Session ${this.bookmarkId} restored.`);
-		}, reason => {
-			console.error(`[TA] Error restoring session ${this.bookmarkId}.`);
-			console.error(`[TA] Reason:\n${reason}`);
-
-			// let the caller know something went wrong
-			return Promise.reject(reason);
-		});
-	}
-
-	private createTab(bm:Bookmark):Promise<Tab> {
-		let loadTabsOnActivation:boolean = true;
-
-		let data:TabData = TabData.createFromBookmark(bm);
-
-		// TODO
+	private async addTab(tabBookmark:Bookmark):Promise<Tab> {
+		let data:TabData = TabData.createFromBookmark(tabBookmark);
 		let createProperties = data.getTabCreateProperties();
-		createProperties.windowId = this.windowId;
 
-		if(loadTabsOnActivation) {
-			return this.unloadedTabs.create(createProperties, data.title);
-		} else {
-			return browser.tabs.create(createProperties).then(tab => {
-				this.tabBookmarkAssociation.set(tab.id as number, bm.id);
-
-				return tab;
-			});
+		if(this.windowId) {
+			createProperties.windowId = this.windowId;
 		}
+
+		let browserTab:Tab = await browser.tabs.create(createProperties);
+
+		this.tabs.set(browserTab.id, tabBookmark.id);
+
+		return browserTab;
 	}
 
-	private tabUpdateListener(tabId:number, changeInfo:object, tab:Tab):void {
-		let bmId = this.tabBookmarkAssociation.get(tabId);
+	public async openSingleTab(tabBookmarkId:string):Promise<void> {
+		let bm:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
 
-		if(bmId) {
+		console.assert(bm && bm.parentId === this.bookmarkId);
 
-		}
+		await this.addTab(bm);
 	}
+}
 
-	private tabRemovedListener(tabId:number):void {
-		let bmId = this.tabBookmarkAssociation.get(tabId);
-
-		if(bmId) {
-
-		}
-	}
+function createWindow(sessionTitle?:string):Promise<Window> {
+	return browser.windows.create(
+		sessionTitle ? {titlePreface: sessionTitle} : {}
+	);
 }
