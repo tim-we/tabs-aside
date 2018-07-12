@@ -4,17 +4,29 @@
 
 import TabData from "./TabData";
 
-interface TabCreateProperties {
-	active?:boolean,
-	url:string
+type TabCreateProperties = {
+	active?:boolean;
+	openInReaderMode?:boolean;
+	url:string;
+};
+
+type TabUpdateProperties = {
+	active?:boolean;
+	url?:string;
+	loadReplace?:boolean;
+	muted?:boolean;
+	pinned?:boolean;
 }
 
 type Tab = browser.tabs.Tab;
+type TabId = number;
+type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 const TAB_LOADER_BASE_URL = browser.extension.getURL("tab-loader/load.html");
 
 // maps tab ids to their actual URL
-let tabURLs:Map<number, string> = new Map();
+let tabURLs:Map<TabId, TabData> = new Map();
+let readerTabs:Set<TabId> = new Set();
 
 export async function init() {
 	browser.tabs.onActivated.addListener(handleTabActivated);
@@ -29,19 +41,18 @@ export async function init() {
 	);
 }
 
-export async function create(tab:TabData):Promise<Tab> {
-	let createProperties:TabCreateProperties = tab.getTabCreateProperties();
-
+export async function create(createProperties:TabCreateProperties, tab:TabData):Promise<Tab> {
 	// modify create properties
 	createProperties.active = false;
+	createProperties.openInReaderMode = false;
 	createProperties.url = getTabLoaderURL(tab.url, tab.title);
 
 	// create unloaded tab
 	let browserTab:Tab = await browser.tabs.create(createProperties);
 	
-	// store the actual URL in @{tabURLs}
-	// and as a tab value (sessions API) to allow extension reload
-	tabURLs.set(browserTab.id, tab.url);
+	// store tab data and as a tab value (sessions API)
+	// to handle extension/browser crashes or reloads
+	tabURLs.set(browserTab.id, tab);
 	await browser.sessions.setTabValue(browserTab.id, "loadURL", tab.url);
 
 	return browserTab;
@@ -54,26 +65,27 @@ function getTabLoaderURL(url:string, title:string):string {
 	].join("&");
 }
 
-async function handleTabActivated(activeInfo:{tabId:number, windowId:number}) {
+async function handleTabActivated(activeInfo:{tabId:TabId, windowId:number}) {
 	let tabId:number = activeInfo.tabId;
 
-	let url:string = tabURLs.get(tabId);
+	let tab:TabData = tabURLs.get(tabId);
 
-	// this is the check if the tab is one of the unloaded ones
-	if(url) {
-		await Promise.all([
-			// remove session value
-			browser.sessions.removeTabValue(tabId, "loadURL"),
-
-			// load tab
-			browser.tabs.update(tabId, { url: url, loadReplace: true })
-		]);
-		
+	// check if the tab is one of the unloaded ones
+	if(tab) {
+		// clear bookkeeping
+		await browser.sessions.removeTabValue(tabId, "loadURL");
 		tabURLs.delete(tabId);
+		
+		// load tab
+		await browser.tabs.update(tabId, { url: tab.url, loadReplace: true });
+
+		if(tab.isInReaderMode) {
+			await browser.tabs.toggleReaderMode(tabId);
+		}
 	}
 }
 
-function handleTabRemoved(tabId:number, removeInfo:object) {
+function handleTabRemoved(tabId:TabId, removeInfo:object) {
 	tabURLs.delete(tabId);
 }
 
@@ -90,8 +102,17 @@ async function searchTabsForUnloadedTabs(tabs:Tab[]) {
 
 			// check if the tab is an unloaded tab (loadURL value set)
 			if(loadURL) {
-				// store in the map for quick synchronous access
-				tabURLs.set(tab.id, loadURL);
+				// get the tabs bookmark id
+				let bookmarkId:string = (await browser.sessions.getTabValue(tab.id, "bookmarkID")) as string;
+				
+				if(bookmarkId) {
+					let bookmark:Bookmark = (await browser.bookmarks.get(bookmarkId))[0];
+
+					let data:TabData = TabData.createFromBookmark(bookmark);
+
+					// store in the map for quick synchronous access
+					tabURLs.set(tab.id, data);
+				}
 			}
 		}
 	}

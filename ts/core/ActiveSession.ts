@@ -1,4 +1,5 @@
 import TabData from "./TabData";
+import * as UnloadedTabs from "./UnloadedTabs";
 import * as OptionsManager from "../options/OptionsManager";
 
 type Tab = browser.tabs.Tab;
@@ -29,11 +30,13 @@ export default class ActiveSession {
 			activeSession.windowId = wnd.id;
 		}
 
+		let load:boolean = !(await OptionsManager.getValue<boolean>("smartTabLoading"));
+
 		// add tabs
 		await Promise.all(
 			sessionData.children.map(
 				tabBookmark => {
-					activeSession.addTab(tabBookmark);
+					activeSession.addTab(tabBookmark, load);
 				}
 			)
 		);
@@ -61,7 +64,7 @@ export default class ActiveSession {
 		return activeSession;
 	}
 
-	private async addTab(tabBookmark:Bookmark):Promise<Tab> {
+	private async addTab(tabBookmark:Bookmark, load:boolean = true):Promise<Tab> {
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
 		let createProperties = data.getTabCreateProperties();
 
@@ -69,7 +72,16 @@ export default class ActiveSession {
 			createProperties.windowId = this.windowId;
 		}
 
-		let browserTab:Tab = await browser.tabs.create(createProperties);
+		let browserTab:Tab = await (load ?
+			browser.tabs.create(createProperties) :
+			UnloadedTabs.create(createProperties, data)
+		);
+
+		// store session info via the sessions API
+		await Promise.all([
+			browser.sessions.setTabValue(browserTab.id, "sessionID", this.bookmarkId),
+			browser.sessions.setTabValue(browserTab.id, "bookmarkID", tabBookmark.id)
+		]);
 
 		this.tabs.set(browserTab.id, tabBookmark.id);
 
