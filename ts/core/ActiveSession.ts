@@ -133,6 +133,13 @@ export default class ActiveSession {
 			createProperties.windowId = this.windowId;
 		}
 
+		if(createProperties.openInReaderMode) {
+			// tab loader does not currently support reader mode
+			// since tabs.toggleReaderMode() does not work while
+			// the tab is still loading :(
+			load = true;
+		}
+
 		let browserTab:Tab = await (load ?
 			browser.tabs.create(createProperties) :
 			UnloadedTabs.create(createProperties, data)

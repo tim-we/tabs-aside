@@ -43,7 +43,6 @@ export async function init() {
 export async function create(createProperties:TabCreateProperties, tab:TabData):Promise<Tab> {
 	// modify create properties
 	createProperties.active = false;
-	createProperties.openInReaderMode = false;
 	createProperties.url = getTabLoaderURL(tab.url, tab.title);
 
 	// create unloaded tab
@@ -73,10 +72,6 @@ async function handleTabActivated(activeInfo:{tabId:TabId, windowId:number}) {
 	if(tab) {
 		// load tab
 		await browser.tabs.update(tabId, { url: tab.url, loadReplace: true });
-
-		if(tab.isInReaderMode) {
-			await browser.tabs.toggleReaderMode(tabId);
-		}
 
 		// clear bookkeeping
 		tabURLs.delete(tabId);
