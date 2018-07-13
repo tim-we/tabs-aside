@@ -71,18 +71,14 @@ async function handleTabActivated(activeInfo:{tabId:TabId, windowId:number}) {
 
 	// check if the tab is one of the unloaded ones
 	if(tab) {
-		console.log(`updating tab ${tabId} with url ${tab.url}`);
-
 		// load tab
 		await browser.tabs.update(tabId, { url: tab.url, loadReplace: true });
 
 		if(tab.isInReaderMode) {
-			console.log("reader mode");
 			await browser.tabs.toggleReaderMode(tabId);
 		}
 
 		// clear bookkeeping
-		console.log("clear bookkeeping");
 		tabURLs.delete(tabId);
 		await browser.sessions.removeTabValue(tabId, "loadURL");
 	}
