@@ -25,10 +25,14 @@ export default class ActiveSession {
 		let sessionData:Bookmark = (await browser.bookmarks.getSubTree(sessionId))[0];
 		console.assert(sessionData && sessionData.children.length > 0);
 
-		if(await OptionsManager.getValue<boolean>("windowedSession")) {
+		let windowedSession:boolean = await OptionsManager.getValue<boolean>("windowedSession");
+		let emptyTab:Tab = null;
+
+		if(windowedSession) {
 			// create session window
 			let wnd:Window = await createWindow(sessionData.title);
 			activeSession.windowId = wnd.id;
+			emptyTab = wnd.tabs[0];
 			await browser.sessions.setWindowValue(wnd.id, "sessionID", sessionId);
 		}
 
@@ -42,6 +46,12 @@ export default class ActiveSession {
 				}
 			)
 		);
+
+		// new window contains a "newtab" tab
+		// -> close it after sessions tabs are restored
+		if(emptyTab) {
+			browser.tabs.remove(emptyTab.id);
+		}
 
 		return activeSession;
 	}
