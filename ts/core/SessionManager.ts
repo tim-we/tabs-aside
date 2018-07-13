@@ -1,6 +1,6 @@
 import ActiveSession from "./ActiveSession";
 import TabData from "./TabData";
-import { SessionCommand } from "./Messages";
+import { SessionCommand, SessionEvent } from "./Messages";
 
 type SessionId = string;
 
@@ -25,6 +25,8 @@ export async function restoreSession(sessionId:SessionId):Promise<void> {
 
 	let session:ActiveSession = await ActiveSession.restoreAll(sessionId);
 	activeSessions.set(sessionId, session);
+
+	sendEventMessage(sessionId, "activated");
 }
 
 export async function createSessionFromTabs(
@@ -39,6 +41,8 @@ export async function createSessionFromTabs(
 	tabs = tabs.filter(tab => !TabData.createFromTab(tab).isPrivileged());
 
 	let session:ActiveSession = await ActiveSession.createFromTabs(tabs, title, windowId);
+
+	sendEventMessage(session.bookmarkId, "activated");
 
 	return session.bookmarkId;
 }
@@ -57,4 +61,15 @@ export async function createSessionFromWindow(title?:string, windowId?:number):P
 	let tabs = await browser.tabs.query(query);
 	
 	return await createSessionFromTabs(tabs, title, windowId);
+}
+
+async function sendEventMessage(sessionId:string, event):Promise<void> {
+	let message:SessionEvent = {
+		type: "SessionEvent",
+		destination: "all",
+		sessionId: sessionId,
+		event: event
+	};
+
+	await browser.runtime.sendMessage(message);
 }

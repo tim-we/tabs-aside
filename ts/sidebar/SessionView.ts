@@ -90,8 +90,6 @@ export default class SessionView {
 			};
 			
 			await browser.runtime.sendMessage(cmd);
-
-			this.html.classList.add("active");
 		});
 	}
 
@@ -129,5 +127,13 @@ export default class SessionView {
 		// remove tab view
 		this.tabViewContainer.innerHTML = "";
 		this.tabView = null;
+	}
+
+	public setActiveState(active:boolean):void {
+		if(active) {
+			this.html.classList.add("active");
+		} else {
+			this.html.classList.remove("active");
+		}
 	}
 }

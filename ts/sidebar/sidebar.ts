@@ -1,15 +1,17 @@
 import * as TabViewFactory from "./TabViewFactory";
 import * as OptionsManager from "../options/OptionsManager";
-import { OptionUpdateEvent, Message } from "../core/Messages";
+import { OptionUpdateEvent, Message, SessionEvent } from "../core/Messages";
 import SessionView from "./SessionView";
 import * as Search from "./Search";
+
+type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 // if one of these options changes reload the window
 let optionsThatRequireReload:Set<string> = new Set<string>(["rootFolder", "sidebarTabLayout"]);
 
 let rootId:string;
 
-let sessionViews:SessionView[];
+let sessionViews:Map<string, SessionView> = new Map();
 let sessionContainer:HTMLElement;
 let noSessionsInfo:HTMLElement;
 
@@ -36,14 +38,14 @@ Promise.all([
 	})
 
 ]).then(async () => {
-	let sessions:browser.bookmarks.BookmarkTreeNode[] = await browser.bookmarks.getChildren(rootId);
+	let sessions:Bookmark[] = await browser.bookmarks.getChildren(rootId);
 
-	sessionViews = sessions.map(sessionBookmark => {
+	sessions.forEach(sessionBookmark => {
 		let view = new SessionView(sessionBookmark);
 
 		sessionContainer.appendChild(view.getHTML());
 
-		return view;
+		sessionViews.set(sessionBookmark.id, view);
 	});
 
 	if(sessions.length === 0) {
@@ -67,6 +69,17 @@ function messageHandler(message:Message) {
 
 		if(optionsThatRequireReload.has(msg.key)) {
 			window.location.reload();
+		}
+	} else if(message.type === "SessionEvent") {
+		let msg:SessionEvent = message as SessionEvent;
+
+		let sessionView:SessionView = sessionViews.get(msg.sessionId);
+		if(!sessionView) { return; }
+
+		if(msg.event === "activated") {
+			sessionView.setActiveState(true);
+		} else if(msg.event === "set-aside") {
+			sessionView.setActiveState(false);
 		}
 	}
 }
