@@ -8,7 +8,7 @@ type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
-export async function restoreSession(sessionId:string, ):Promise<void> {
+export async function restoreSession(sessionId:string):Promise<void> {
 	// sanity-check
 	if (activeSessions.has(sessionId)) {
 		throw new Error(`Session ${sessionId} is already active.`);
@@ -18,38 +18,23 @@ export async function restoreSession(sessionId:string, ):Promise<void> {
 	activeSessions.set(sessionId, session);
 }
 
-/*export async function createSessionFromTabs(tabs:browser.tabs.Tab[], title?:string):Promise<SessionId> {
-	if(tabs.length === 0) {
-		throw new Error("Illegal argument. Sessions can not be empty.");
-	}
+export async function createSessionFromTabs(
+	tabs:browser.tabs.Tab[],
+	title?:string,
+	windowId?:number
+):Promise<SessionId> {
+	//TODO: title generator
+	title = title ? title : "no title";
 
-	let folder:Bookmark = await browser.bookmarks.create({
-		parentId: await OptionsManager.getValue<string>("rootFolder"),
-		title: title
-	});
-	
-	let sessionId:string = folder.id;
+	// filter tabs that cannot be restored
+	tabs = tabs.filter(tab => !TabData.createFromTab(tab).isPrivileged());
 
-	await Promise.all(
-		tabs.map(
-			async tab => {
-				let data:TabData = TabData.createFromTab(tab);
+	let session:ActiveSession = await ActiveSession.createFromTabs(tabs, title, windowId);
 
-				if(data.isPrivileged()) {
-					return;
-				}
+	return session.bookmarkId;
+}
 
-				await browser.bookmarks.create(
-					data.getBookmarkCreateDetails(sessionId)
-				);
-			}
-		)
-	);
-
-	return sessionId;
-}*/
-
-/*export function createSessionFromWindow(title?:string, windowId?:number):Promise<string> {
+export async function createSessionFromWindow(title?:string, windowId?:number):Promise<string> {
 	if(windowId === undefined) {
 		windowId = browser.windows.WINDOW_ID_CURRENT;
 	}
@@ -60,5 +45,7 @@ export async function restoreSession(sessionId:string, ):Promise<void> {
 		windowId: windowId
 	};
 
-	return browser.tabs.query(query).then(tabs => createSessionFromTabs(title, tabs));
-}*/
+	let tabs = await browser.tabs.query(query);
+	
+	return await createSessionFromTabs(tabs, title, windowId);
+}
