@@ -4,11 +4,7 @@
 		"moduleResolution": "node",
 		"strict": false,
 		"target": "es2017",
-		"outDir": "dist/js/",
-		"typeRoots": [
-			"node_modules/@types",
-			"node_modules/web-ext-types"
-		]
+		"outDir": "dist/js/"
 	},
 	"include": [
 		"ts/**/*.ts"

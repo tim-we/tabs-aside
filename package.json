@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/tim-we/tabs-aside#readme",
   "dependencies": {
+    "@types/firefox-webext-browser": "^58.0.3",
     "ts-loader": "^4.4.1",
     "typescript": "^2.9.2",
     "web-ext": "^2.7.0",
-    "web-ext-types": "^2.1.0",
     "webpack": "^4.12.0",
     "webpack-cli": "^2.1.5"
   }
