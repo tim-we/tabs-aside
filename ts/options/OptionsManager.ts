@@ -35,12 +35,14 @@ export async function setValue<T>(key:string, value:T, skipGuard:boolean = false
 		console.log(`[TA] Option ${key} updated.`);
 
 		// notify other scripts about the update
-		browser.runtime.sendMessage<OptionUpdateEvent, void>({
+		let updateEvent:OptionUpdateEvent = {
 			type: "OptionUpdate",
 			destination: "all",
 			key: key,
 			newValue: value
-		})
+		};
+
+		browser.runtime.sendMessage(updateEvent)
 		// ignore no receiver error
 		.catch(() => {});
 	}
