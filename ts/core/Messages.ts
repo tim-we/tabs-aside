@@ -1,14 +1,12 @@
-import { ASMCommand } from "./SessionManager";
-
 export interface Message {
-	type: "ASM" | "OptionUpdate";
+	type: "SessionCommand" | "OptionUpdate";
 	destination: "all" | "sidebar" | "background" | "menu";
 }
 
-export interface ASMMessage extends Message {
-	type:"ASM";
+export interface SessionCommand extends Message {
+	type:"SessionCommand";
 	destination: "background";
-	cmd:ASMCommand;
+	cmd: "restore" | "restoreSingle";
 	args:any[];
 }
 

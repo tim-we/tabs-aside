@@ -1,14 +1,23 @@
 import ActiveSession from "./ActiveSession";
-import * as OptionsManager from "../options/OptionsManager";
 import TabData from "./TabData";
+import { SessionCommand } from "./Messages";
 
-export type ASMCommand = "openSession";
 type SessionId = string;
-type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
-export async function restoreSession(sessionId:string):Promise<void> {
+export async function execCommand(cmd:SessionCommand):Promise<any> {
+	let c = cmd.cmd;
+
+	if(c === "restore") {
+		let sessionId:SessionId = cmd.args[0];
+		return await restoreSession(sessionId);
+	} else if(c === "restoreSingle") {
+		//TODO (ActiveSession.restoreSingleTab)
+	}
+}
+
+export async function restoreSession(sessionId:SessionId):Promise<void> {
 	// sanity-check
 	if (activeSessions.has(sessionId)) {
 		throw new Error(`Session ${sessionId} is already active.`);
@@ -34,7 +43,7 @@ export async function createSessionFromTabs(
 	return session.bookmarkId;
 }
 
-export async function createSessionFromWindow(title?:string, windowId?:number):Promise<string> {
+export async function createSessionFromWindow(title?:string, windowId?:number):Promise<SessionId> {
 	if(windowId === undefined) {
 		windowId = browser.windows.WINDOW_ID_CURRENT;
 	}

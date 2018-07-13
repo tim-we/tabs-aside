@@ -22,11 +22,10 @@ type Tab = browser.tabs.Tab;
 type TabId = number;
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
-const TAB_LOADER_BASE_URL = browser.extension.getURL("tab-loader/load.html");
+const TAB_LOADER_BASE_URL = browser.extension.getURL("html/tab-loader.html");
 
 // maps tab ids to their actual URL
 let tabURLs:Map<TabId, TabData> = new Map();
-let readerTabs:Set<TabId> = new Set();
 
 export async function init() {
 	browser.tabs.onActivated.addListener(handleTabActivated);
@@ -72,16 +71,20 @@ async function handleTabActivated(activeInfo:{tabId:TabId, windowId:number}) {
 
 	// check if the tab is one of the unloaded ones
 	if(tab) {
-		// clear bookkeeping
-		await browser.sessions.removeTabValue(tabId, "loadURL");
-		tabURLs.delete(tabId);
-		
+		console.log(`updating tab ${tabId} with url ${tab.url}`);
+
 		// load tab
 		await browser.tabs.update(tabId, { url: tab.url, loadReplace: true });
 
 		if(tab.isInReaderMode) {
+			console.log("reader mode");
 			await browser.tabs.toggleReaderMode(tabId);
 		}
+
+		// clear bookkeeping
+		console.log("clear bookkeeping");
+		tabURLs.delete(tabId);
+		await browser.sessions.removeTabValue(tabId, "loadURL");
 	}
 }
 

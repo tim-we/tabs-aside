@@ -1,6 +1,7 @@
 import * as TabViewFactory from "./TabViewFactory";
 import {clean} from "../util/HTMLUtilities";
 import TabView from "./TabViews/TabView";
+import { SessionCommand } from "../core/Messages";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -78,6 +79,19 @@ export default class SessionView {
 		// do not toggle tab visibility when clicking controls
 		header.querySelector(".controls").addEventListener("click", e => {
 			e.stopPropagation();
+		});
+
+		header.querySelector(".restore").addEventListener("click", async () => {
+			let cmd:SessionCommand = {
+				type: "SessionCommand",
+				destination: "background",
+				cmd: "restore",
+				args: [bookmark.id]
+			};
+			
+			await browser.runtime.sendMessage(cmd);
+
+			this.html.classList.add("active");
 		});
 	}
 

@@ -1,24 +1,22 @@
-import * as ASM from "../core/SessionManager";
-import { Message, ASMMessage } from "../core/Messages";
+import * as SessionManager from "../core/SessionManager";
+import { Message, SessionCommand } from "../core/Messages";
 import * as BrowserActionManager from "../browserAction/BrowserActionManager";
 import * as CommandHandler from "./CommandHandler";
+import * as UnloadedTabs from "../core/UnloadedTabs";
 
 BrowserActionManager.init();
-
+UnloadedTabs.init();
 CommandHandler.init();
 
-browser.runtime.onMessage.addListener((message:Message) => {
+browser.runtime.onMessage.addListener(async (message:Message) => {
 
 	if(message.destination !== "background" && message.destination !== "all") {
 		return;
 	}
 
-	if(message.type === "ASM") {
-		let m:ASMMessage = <ASMMessage>message;
+	if(message.type === "SessionCommand") {
+		let cmd:SessionCommand = message as SessionCommand;
 
-		//@ts-ignore TS7017
-		let result:any = ASM[m.cmd].apply(null, m.args || []);
-
-		return (result instanceof Promise) ? result : Promise.resolve(result);
+		return await SessionManager.execCommand(cmd);
 	}
 });
