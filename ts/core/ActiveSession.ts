@@ -160,7 +160,9 @@ export default class ActiveSession {
 }
 
 function createWindow(sessionTitle?:string):Promise<Window> {
+	let prefix:string = sessionTitle + " | ";
+	
 	return browser.windows.create(
-		sessionTitle ? {titlePreface: sessionTitle} : {}
+		sessionTitle ? {titlePreface: prefix} : {}
 	);
 }
