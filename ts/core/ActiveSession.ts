@@ -157,6 +157,16 @@ export default class ActiveSession {
 
 		await this.addTab(bm);
 	}
+
+	public async setAside():Promise<void> {
+		// this is just temporary
+		this.tabs = new Map();
+		this.unloadedTabs = new Set();
+
+		if(this.windowId) {
+			await browser.windows.remove(this.windowId);
+		}
+	}
 }
 
 function createWindow(sessionTitle?:string):Promise<Window> {

@@ -81,7 +81,7 @@ export default class SessionView {
 			e.stopPropagation();
 		});
 
-		header.querySelector(".restore").addEventListener("click", async () => {
+		header.querySelector(".restore").addEventListener("click", () => {
 			let cmd:SessionCommand = {
 				type: "SessionCommand",
 				destination: "background",
@@ -89,7 +89,18 @@ export default class SessionView {
 				args: [bookmark.id]
 			};
 			
-			await browser.runtime.sendMessage(cmd);
+			browser.runtime.sendMessage(cmd);
+		});
+
+		header.querySelector(".aside").addEventListener("click", () => {
+			let cmd:SessionCommand = {
+				type: "SessionCommand",
+				destination: "background",
+				cmd: "set-aside",
+				args: [bookmark.id]
+			}
+
+			browser.runtime.sendMessage(cmd);
 		});
 	}
 

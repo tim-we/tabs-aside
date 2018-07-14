@@ -8,16 +8,18 @@ let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
 export async function execCommand(cmd:SessionCommand):Promise<any> {
 	let c = cmd.cmd;
+	let sessionId:SessionId = cmd.args[0];
 
 	if(c === "restore") {
-		let sessionId:SessionId = cmd.args[0];
-		return await restoreSession(sessionId);
+		return await restore(sessionId);
 	} else if(c === "restoreSingle") {
 		//TODO (ActiveSession.restoreSingleTab)
+	} else if(c === "set-aside") {
+		return await setAside(sessionId);
 	}
 }
 
-export async function restoreSession(sessionId:SessionId):Promise<void> {
+export async function restore(sessionId:SessionId):Promise<void> {
 	// sanity-check
 	if (activeSessions.has(sessionId)) {
 		throw new Error(`Session ${sessionId} is already active.`);
@@ -61,6 +63,19 @@ export async function createSessionFromWindow(title?:string, windowId?:number):P
 	let tabs = await browser.tabs.query(query);
 	
 	return await createSessionFromTabs(tabs, title, windowId);
+}
+
+export async function setAside(sessionId:SessionId):Promise<void> {
+	let session:ActiveSession = activeSessions.get(sessionId);
+
+	if(!session) {
+		throw new Error(`Cannot set aside non-active session ${sessionId}.`);
+	}
+
+	activeSessions.delete(sessionId);
+	await session.setAside();
+
+	sendEventMessage(session.bookmarkId, "set-aside");
 }
 
 async function sendEventMessage(sessionId:string, event):Promise<void> {

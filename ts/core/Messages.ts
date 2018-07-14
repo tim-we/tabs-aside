@@ -6,7 +6,7 @@ export interface Message {
 export interface SessionCommand extends Message {
 	type:"SessionCommand";
 	destination: "background";
-	cmd: "restore" | "restoreSingle";
+	cmd: "restore" | "restoreSingle" | "set-aside";
 	args:any[];
 }
 
