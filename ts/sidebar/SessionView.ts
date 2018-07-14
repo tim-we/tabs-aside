@@ -16,8 +16,8 @@ template.innerHTML = clean(`
 		<span class="number-of-tabs"></span>
 		<div class="align-right">
 			<div class="controls">
-				<div class="restore" title="${i18n("session_restore_tooltip")}">${i18n("session_restore")}</div>
-				<div class="close">${i18n("session_close")}</div>
+				<div class="restore textbutton" title="${i18n("session_restore_tooltip")}">${i18n("session_restore")}</div>
+				<div class="aside textbutton">${i18n("session_aside")}</div>
 				<div class="more" title="${i18n("session_more")}"></div>
 			</div>
 		</div>

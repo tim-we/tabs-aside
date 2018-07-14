@@ -123,10 +123,13 @@ a, a:visited {
 	transition: background var(--hover-trans-dur);
 }
 
-.session > .header .restore {
-	margin-right: 3px;
+.session > .header .textbutton {
 	color: rgb(0,0,238);
 	cursor: pointer;
+}
+
+.session > .header .textbutton:hover {
+	text-decoration: underline;
 }
 
 .session > .header .more {
@@ -135,16 +138,13 @@ a, a:visited {
 	background-repeat: no-repeat;
 	background-position: center 9px;
 	background-image: url("../img/sidebar/more-16.svg");
+	margin-left: 2px;
 	cursor: pointer;
 }
 
 .session > .header .more:hover {
 	background-color: rgba(0,0,0,0.1);
 	transition: .2s;
-}
-
-.session > .header .restore:hover {
-	text-decoration: underline;
 }
 
 .session > .tab-view {
@@ -159,7 +159,7 @@ a, a:visited {
 	display: none;
 }
 
-.session:not(.active) > .header .close {
+.session:not(.active) > .header .aside {
 	display: none;
 }
 
