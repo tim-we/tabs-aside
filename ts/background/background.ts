@@ -1,5 +1,5 @@
 import * as SessionManager from "../core/SessionManager";
-import { Message, SessionCommand } from "../core/Messages";
+import { Message, SessionCommand, DataRequest } from "../core/Messages";
 import * as BrowserActionManager from "../browserAction/BrowserActionManager";
 import * as KeyboardCommands from "./KeyboardCommands";
 import * as UnloadedTabs from "../core/UnloadedTabs";
@@ -18,5 +18,11 @@ browser.runtime.onMessage.addListener(async (message:Message) => {
 		let cmd:SessionCommand = message as SessionCommand;
 
 		return await SessionManager.execCommand(cmd);
+	} else if(message.type === "DataRequest") {
+		let req:DataRequest = message as DataRequest;
+
+		if(req.data === "active-sessions") {
+			return SessionManager.getActiveSessions();
+		}
 	}
 });

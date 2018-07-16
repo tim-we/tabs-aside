@@ -1,8 +1,9 @@
 import * as TabViewFactory from "./TabViewFactory";
 import * as OptionsManager from "../options/OptionsManager";
-import { OptionUpdateEvent, Message, SessionEvent } from "../core/Messages";
+import { OptionUpdateEvent, Message, SessionEvent, DataRequest } from "../core/Messages";
 import SessionView from "./SessionView";
 import * as Search from "./Search";
+import { ActiveSessionData } from "../core/ActiveSession";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -12,6 +13,7 @@ let optionsThatRequireReload:Set<string> = new Set<string>(["rootFolder", "sideb
 let rootId:string;
 
 let sessionViews:Map<string, SessionView> = new Map();
+let activeSessions:Map<string, ActiveSessionData> = new Map();
 let sessionContainer:HTMLElement;
 let noSessionsInfo:HTMLElement;
 
@@ -39,9 +41,15 @@ Promise.all([
 
 ]).then(async () => {
 	let sessions:Bookmark[] = await browser.bookmarks.getChildren(rootId);
+	await getActiveSessions();
 
 	sessions.forEach(sessionBookmark => {
 		let view = new SessionView(sessionBookmark);
+		
+		// by default session are not active
+		if(activeSessions.has(view.bookmarkId)) {
+			view.setActiveState(true);
+		}
 
 		sessionContainer.appendChild(view.getHTML());
 
@@ -62,6 +70,22 @@ Promise.all([
 
 	document.body.innerHTML = "Error";
 });
+
+/**
+ * Populates the activeSessions Map
+ */
+async function getActiveSessions() {
+	let req:DataRequest = {
+		type: "DataRequest",
+		destination: "background",
+		data: "active-sessions"
+	};
+
+	let response:ActiveSessionData[] = await browser.runtime.sendMessage(req);
+
+	activeSessions.clear();
+	response.map(data => activeSessions.set(data.bookmarkId, data));
+}
 
 function messageHandler(message:Message) {
 	if(message.type === "OptionUpdate") {

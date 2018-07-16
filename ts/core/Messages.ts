@@ -1,5 +1,5 @@
 export interface Message {
-	type: "SessionCommand" | "SessionEvent" | "OptionUpdate";
+	type: "SessionCommand" | "SessionEvent" | "DataRequest" | "OptionUpdate";
 	destination: "all" | "sidebar" | "background" | "menu";
 }
 
@@ -8,6 +8,12 @@ export interface SessionCommand extends Message {
 	destination: "background";
 	cmd: "restore" | "restoreSingle" | "set-aside";
 	args:any[];
+}
+
+export interface DataRequest extends Message {
+	type: "DataRequest";
+	destination: "background";
+	data: "active-sessions"
 }
 
 export interface SessionEvent extends Message {

@@ -1,4 +1,4 @@
-import ActiveSession from "./ActiveSession";
+import ActiveSession, { ActiveSessionData } from "./ActiveSession";
 import TabData from "./TabData";
 import { SessionCommand, SessionEvent } from "./Messages";
 
@@ -17,6 +17,10 @@ export async function execCommand(cmd:SessionCommand):Promise<any> {
 	} else if(c === "set-aside") {
 		return await setAside(sessionId);
 	}
+}
+
+export function getActiveSessions():ActiveSessionData[] {
+	return Array.from(activeSessions.values(), session => session.getData());
 }
 
 export async function restore(sessionId:SessionId):Promise<void> {

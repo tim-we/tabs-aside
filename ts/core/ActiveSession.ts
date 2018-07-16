@@ -6,6 +6,13 @@ type Tab = browser.tabs.Tab;
 type Window = browser.windows.Window;
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
+export interface ActiveSessionData {
+	readonly bookmarkId;
+	readonly title:string;
+	readonly windowId:number;
+	readonly tabs:number[];
+}
+
 export default class ActiveSession {
 	public readonly bookmarkId:string;
 	private title:string;
@@ -15,15 +22,18 @@ export default class ActiveSession {
 	private tabs:Map<number, string> = new Map();
 	private unloadedTabs:Set<number> = new Set();
 
-	private constructor(sessionId:string) {
+	private constructor(sessionId:string, title?:string) {
 		this.bookmarkId = sessionId;
+		this.title = title;
 	}
 
 	public static async restoreAll(sessionId:string):Promise<ActiveSession> {
-		let activeSession:ActiveSession = new ActiveSession(sessionId);
-
+		// get session bookmark & children
 		let sessionData:Bookmark = (await browser.bookmarks.getSubTree(sessionId))[0];
 		console.assert(sessionData && sessionData.children.length > 0);
+
+		// create ActiveSession instance
+		let activeSession:ActiveSession = new ActiveSession(sessionId, sessionData.title);
 
 		let windowedSession:boolean = await OptionsManager.getValue<boolean>("windowedSession");
 		let emptyTab:Tab = null;
@@ -69,7 +79,7 @@ export default class ActiveSession {
 		});
 
 		// ActiveSession instance
-		let session:ActiveSession = new ActiveSession(folder.id);
+		let session:ActiveSession = new ActiveSession(folder.id, title);
 
 		// setup tabs
 		await Promise.all(
@@ -91,11 +101,12 @@ export default class ActiveSession {
 	}
 
 	public static async restoreSingleTab(tabBookmarkId:string):Promise<ActiveSession> {
-		let bm:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
-		console.assert(bm);
+		let tabBookmark:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
+		console.assert(tabBookmark);
 
-		let sessionId:string = bm.parentId;
-		let activeSession:ActiveSession = new ActiveSession(sessionId);
+		let sessionId:string = tabBookmark.parentId;
+		let sessionBookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
+		let activeSession:ActiveSession = new ActiveSession(sessionId, sessionBookmark.title);
 
 		if(await OptionsManager.getValue<boolean>("windowedSession")) {
 			let sessionBookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
@@ -105,7 +116,7 @@ export default class ActiveSession {
 			activeSession.windowId = wnd.id;
 		}
 
-		activeSession.addTab(bm);
+		activeSession.addTab(tabBookmark);
 
 		return activeSession;
 	}
@@ -166,6 +177,25 @@ export default class ActiveSession {
 		if(this.windowId) {
 			await browser.windows.remove(this.windowId);
 		}
+	}
+
+	private getTabsIds():number[] {
+		return Array.from(
+			this.tabs.keys()
+		).concat(
+			Array.from(
+				this.unloadedTabs.values()
+			)
+		);
+	}
+
+	public getData():ActiveSessionData {
+		return {
+			bookmarkId: this.bookmarkId,
+			title: this.title,
+			windowId: this.windowId,
+			tabs: this.getTabsIds()
+		};
 	}
 }
 
