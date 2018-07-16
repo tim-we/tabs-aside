@@ -50,10 +50,22 @@ a, a:visited {
 	transition: background var(--hover-trans-dur);
 	background-color: var(--bg-color);
 	z-index: 1;
+	animation: session-in .25s ease-out;
 }
 
 .session:hover {
 	--bg-color: #F0F0F0;
+}
+
+@keyframes session-in {
+	0% {
+		opacity: 0;
+		transform: translateX(5px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(0px);
+	}
 }
 
 .session > .header {
