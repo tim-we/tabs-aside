@@ -40,6 +40,8 @@ export function init(option:string, bmFolderId?:string):Promise<any> {
 	if (bmFolderId) {
 		return browser.bookmarks.get(bmFolderId).then(async function(data) {
 			console.assert(data.length === 1);
+			selectedFolderID = bmFolderId;
+			oldSelectedFolderID = bmFolderId;
 
 			let f = data[0];
 
