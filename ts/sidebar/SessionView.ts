@@ -1,7 +1,8 @@
 import * as TabViewFactory from "./TabViewFactory";
 import {clean} from "../util/HTMLUtilities";
 import TabView from "./TabViews/TabView";
-import { SessionCommand } from "../messages/Messages";
+import { SessionCommand, SessionEvent } from "../messages/Messages";
+import * as EditText from "../util/EditText";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -47,7 +48,11 @@ export default class SessionView {
 	}
 
 	public async update() {
+		// cancel title editmode
+		EditText.cancel(this.titleElement);
+
 		let sessionBookmark:Bookmark = (await browser.bookmarks.getSubTree(this.bookmarkId))[0];
+		
 		this.titleElement.textContent = sessionBookmark.title;
 		this.tabCounter.textContent = browser.i18n.getMessage(
 			"sidebar_session_number_of_tabs",
@@ -86,6 +91,24 @@ export default class SessionView {
 		header.querySelector(".aside").addEventListener(
 			"click", () => SessionCommand.send("set-aside", [bookmark.id])
 		);
+
+		// editable title
+		this.titleElement.addEventListener("click", e => {
+			e.stopImmediatePropagation();
+			e.stopPropagation();
+
+			EditText.edit(
+				this.titleElement,
+				"edit title",
+				1
+			).then(async (newTitle:string) => {
+				await browser.bookmarks.update(this.bookmarkId, {
+					title: newTitle
+				});
+
+				SessionEvent.send(this.bookmarkId, "meta-update");
+			}, () => {});
+		});
 	}
 
 	public toggle() {

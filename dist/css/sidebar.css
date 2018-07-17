@@ -104,6 +104,12 @@ a, a:visited {
 	white-space: nowrap;
 	font-size: 1.2rem;
 	word-spacing: -.075rem;
+	cursor: text;
+	transition: background .2s;
+}
+
+.session > .header .title:hover {
+	background-color: rgba(255,255,255,0.75);
 }
 
 .session > .header .number-of-tabs {

@@ -100,6 +100,8 @@ function messageHandler(message:Message) {
 			sessionView.setActiveState(true);
 		} else if(msg.event === "set-aside") {
 			sessionView.setActiveState(false);
+		} else if(msg.event === "meta-update") {
+			sessionView.update();
 		}
 	}
 }

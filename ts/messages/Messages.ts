@@ -47,7 +47,7 @@ export class DataRequest extends Message {
 	}
 }
 
-type SessionEventType = "activated" | "set-aside";
+type SessionEventType = "activated" | "set-aside" | "meta-update";
 
 export class SessionEvent extends Message {
 	public readonly sessionId:string;
