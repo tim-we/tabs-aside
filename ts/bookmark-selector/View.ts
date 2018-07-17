@@ -21,16 +21,7 @@ export function init():void {
 	newFolderButton.innerText = browser.i18n.getMessage("bookmarkFolderSelector_newFolderTooltip");
 
 	// set up event listeners
-	selectButton.addEventListener("click", () => {
-		if (Model.selectedFolderID) {
-			Controller.selectRootFolder(Model.selectedFolderID);
-
-			//window.close(); // does not work !
-			// the creator of this window is now expected to close it
-		} else {
-			alert(browser.i18n.getMessage("bookmarkFolderSelector_noSelection"));
-		}
-	});
+	selectButton.addEventListener("click", Controller.select);
 
 	newFolderButton.addEventListener("click", () => {
 		if(Model.isRoot(Model.getCurrentFolder())) {

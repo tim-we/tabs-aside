@@ -1,19 +1,8 @@
 import { Option } from "../OptionTypeDefinition";
 import * as OptionsManager from "../OptionsManager";
-import { OptionUpdateEvent, Message } from "../../core/Messages";
-
-// list of bookmark selector window ids (created by this page)
-let bmsWindowIds:number[] = [];
+import { OptionUpdateEvent, Message } from "../../messages/Messages";
 
 let optionIdFolderViewMap:Map<string, HTMLDivElement> = new Map<string, HTMLDivElement>();
-
-browser.windows.onRemoved.addListener((windowId:number) => {
-	let i:number = bmsWindowIds.indexOf(windowId);
-
-	if(i >= 0) {
-		bmsWindowIds.splice(i, 1);
-	}
-});
 
 browser.runtime.onMessage.addListener((message:Message) => {
 	if(message.type === "OptionUpdate") {
@@ -23,8 +12,6 @@ browser.runtime.onMessage.addListener((message:Message) => {
 			let view:HTMLDivElement = optionIdFolderViewMap.get(msg.key);
 
 			updateFolderView(view, msg.newValue);
-
-			closeAllBMSWindows();
 		}
 	}
 });
@@ -63,8 +50,6 @@ export function create(
 			type: "popup",
 			url: url
 		});
-
-		bmsWindowIds.push(bmsWindow.id);
 	});
 
 	let label:HTMLLabelElement = document.createElement("label");
@@ -87,12 +72,4 @@ async function updateFolderView(view:HTMLDivElement, bookmarkId:string) {
 	}
 
 	view.setAttribute("data-bmId", bookmarkId);
-}
-
-function closeAllBMSWindows() {
-	return Promise.all(
-		bmsWindowIds.map(
-			windowId => browser.windows.remove(windowId)
-		)
-	);
 }

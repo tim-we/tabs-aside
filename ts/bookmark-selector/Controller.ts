@@ -31,6 +31,17 @@ Promise.all([
 	})
 ]).then(_ => View.update());
 
-export function selectRootFolder(folderId:string) {
-	OptionsManager.setValue(Model.OptionId, folderId);
+export async function select() {
+	if (Model.selectedFolderID) {
+		await OptionsManager.setValue(
+			Model.OptionId,
+			Model.selectedFolderID
+		);
+
+		// close this window
+		let wnd:browser.windows.Window = await browser.windows.getCurrent();
+		browser.windows.remove(wnd.id);
+	} else {
+		alert(browser.i18n.getMessage("bookmarkFolderSelector_noSelection"));
+	}
 }
