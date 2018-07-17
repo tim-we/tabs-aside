@@ -34,16 +34,7 @@ export async function setValue<T>(key:string, value:T, skipGuard:boolean = false
 		await storage.set({"options": storedOptions});
 		console.log(`[TA] Option ${key} updated.`);
 
-		// notify other scripts about the update
-		let updateEvent:OptionUpdateEvent = {
-			type: "OptionUpdate",
-			destination: "all",
-			key: key,
-			newValue: value
-		};
-
-		browser.runtime.sendMessage(updateEvent)
-		// ignore no receiver error
-		.catch(() => {});
+		// notify other scripts about the update && ignore no receiver error
+		OptionUpdateEvent.send(key, value).catch(() => {});
 	}
 }

@@ -72,36 +72,20 @@ export default class SessionView {
 		let header:HTMLElement = this.html.querySelector(".header");
 
 		// click on session header -> toggle tab visibility
-		header.addEventListener("click", () => {
-			this.toggle();
-		});
+		header.addEventListener("click", () => this.toggle());
 
 		// do not toggle tab visibility when clicking controls
-		header.querySelector(".controls").addEventListener("click", e => {
-			e.stopPropagation();
-		});
+		header.querySelector(".controls").addEventListener(
+			"click", e => e.stopPropagation()
+		);
 
-		header.querySelector(".restore").addEventListener("click", () => {
-			let cmd:SessionCommand = {
-				type: "SessionCommand",
-				destination: "background",
-				cmd: "restore",
-				args: [bookmark.id]
-			};
-			
-			browser.runtime.sendMessage(cmd);
-		});
+		header.querySelector(".restore").addEventListener(
+			"click", () => SessionCommand.send("restore", [bookmark.id])
+		);
 
-		header.querySelector(".aside").addEventListener("click", () => {
-			let cmd:SessionCommand = {
-				type: "SessionCommand",
-				destination: "background",
-				cmd: "set-aside",
-				args: [bookmark.id]
-			}
-
-			browser.runtime.sendMessage(cmd);
-		});
+		header.querySelector(".aside").addEventListener(
+			"click", () => SessionCommand.send("set-aside", [bookmark.id])
+		);
 	}
 
 	public toggle() {

@@ -75,13 +75,7 @@ Promise.all([
  * Populates the activeSessions Map
  */
 async function getActiveSessions() {
-	let req:DataRequest = {
-		type: "DataRequest",
-		destination: "background",
-		data: "active-sessions"
-	};
-
-	let response:ActiveSessionData[] = await browser.runtime.sendMessage(req);
+	let response:ActiveSessionData[] = await DataRequest.send<ActiveSessionData[]>("active-sessions");
 
 	activeSessions.clear();
 	response.map(data => activeSessions.set(data.bookmarkId, data));
