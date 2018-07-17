@@ -1,5 +1,6 @@
 import * as OptionManager from "../options/OptionsManager";
-import { Message, OptionUpdateEvent } from "../core/Messages";
+import { Message, OptionUpdateEvent } from "../messages/Messages";
+import * as MessageListener from "../messages/MessageListener";
 
 let badgeColor:string = "#0A84FF";
 let showBadge:boolean = true;
@@ -15,17 +16,14 @@ export async function init() {
 	showBadge = await OptionManager.getValue<boolean>("badgeCounter");
 	updateBadge();
 
-	browser.runtime.onMessage.addListener((message:Message) => {
-		if(message.type === "OptionUpdate") {
-			let msg:OptionUpdateEvent = message as OptionUpdateEvent;
-
-			if(msg.key === "browserActionIcon") {
-				let newIcon:string = msg.newValue + ".svg";
-				updateIcon(newIcon);
-			} else if(msg.key === "badgeCounter") {
-				showBadge = msg.newValue as boolean;
-				updateBadge();
-			}
+	MessageListener.setDestination("background");
+	MessageListener.add("OptionUpdate", (msg:OptionUpdateEvent) => {
+		if(msg.key === "browserActionIcon") {
+			let newIcon:string = msg.newValue + ".svg";
+			updateIcon(newIcon);
+		} else if(msg.key === "badgeCounter") {
+			showBadge = msg.newValue as boolean;
+			updateBadge();
 		}
 	});
 }

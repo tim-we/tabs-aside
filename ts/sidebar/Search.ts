@@ -1,4 +1,7 @@
-import { Message } from "../core/Messages";
+import { Message, SessionEvent } from "../messages/Messages";
+import * as MessageListener from "../messages/MessageListener";
+
+MessageListener.setDestination("sidebar");
 
 document.addEventListener("DOMContentLoaded", () => {
 	let searchInput:HTMLInputElement = document.getElementById("search-input") as HTMLInputElement;
@@ -106,6 +109,6 @@ function showAll() {
 	});
 }
 
-browser.runtime.onMessage.addListener((message:Message) => {
+MessageListener.add("SessionEvent", (e:SessionEvent) => {
 	// TODO: listen for session updates and update sessionIds
 });

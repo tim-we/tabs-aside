@@ -1,7 +1,7 @@
 import * as TabViewFactory from "./TabViewFactory";
 import {clean} from "../util/HTMLUtilities";
 import TabView from "./TabViews/TabView";
-import { SessionCommand } from "../core/Messages";
+import { SessionCommand } from "../messages/Messages";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 

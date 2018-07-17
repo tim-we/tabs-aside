@@ -1,6 +1,6 @@
 import Options from "./Options";
 import { Option } from "./OptionTypeDefinition";
-import { OptionUpdateEvent } from "../core/Messages";
+import { OptionUpdateEvent } from "../messages/Messages";
 
 let storage:browser.storage.StorageArea = browser.storage.local;
 

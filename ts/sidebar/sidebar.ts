@@ -1,9 +1,10 @@
 import * as TabViewFactory from "./TabViewFactory";
 import * as OptionsManager from "../options/OptionsManager";
-import { OptionUpdateEvent, Message, SessionEvent, DataRequest } from "../core/Messages";
+import { OptionUpdateEvent, Message, SessionEvent, DataRequest } from "../messages/Messages";
 import SessionView from "./SessionView";
 import * as Search from "./Search";
 import { ActiveSessionData } from "../core/ActiveSession";
+import * as MessageListener from "../messages/MessageListener";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -18,6 +19,7 @@ let sessionContainer:HTMLElement;
 let noSessionsInfo:HTMLElement;
 
 // initialize...
+MessageListener.setDestination("sidebar");
 Promise.all([
 	OptionsManager.getValue<string>("rootFolder").then(v => {
 		if(v) {
@@ -62,7 +64,7 @@ Promise.all([
 		noSessionsInfo.classList.remove("show");
 	}
 }).then(() => {
-	browser.runtime.onMessage.addListener(messageHandler);
+	MessageListener.add("*", messageHandler);
 
 	Search.init(rootId, sessionContainer);
 }).catch(e => {

@@ -1,6 +1,6 @@
 import ActiveSession, { ActiveSessionData } from "./ActiveSession";
 import TabData from "./TabData";
-import { SessionCommand, SessionEvent, Message } from "./Messages";
+import { SessionCommand, SessionEvent, Message, DataRequest } from "../messages/Messages";
 
 type SessionId = string;
 
@@ -16,6 +16,12 @@ export async function execCommand(cmd:SessionCommand):Promise<any> {
 		//TODO (ActiveSession.restoreSingleTab)
 	} else if(c === "set-aside") {
 		return await setAside(sessionId);
+	}
+}
+
+export async function dataRequest(req:DataRequest):Promise<any> {
+	if(req.data === "active-sessions") {
+		return getActiveSessions();
 	}
 }
 

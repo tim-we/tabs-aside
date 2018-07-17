@@ -1,5 +1,5 @@
-type MessageType = "SessionCommand" | "SessionEvent" | "DataRequest" | "OptionUpdate";
-type MessageDestination = "all" | "sidebar" | "background" | "menu";
+export type MessageType = "SessionCommand" | "SessionEvent" | "DataRequest" | "OptionUpdate";
+export type MessageDestination = "all" | "sidebar" | "background" | "menu";
 
 export class Message {
 	public readonly type: MessageType;
