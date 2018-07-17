@@ -1,4 +1,28 @@
-{
+{	
+	"bookmarkFolderSelector_tooltip": {
+		"message": "open bookmark folder selector"
+	},
+
+	"bookmarkFolderSelector_rootError": {
+		"message": "You can not create folders in the root folder."
+	},
+
+	"bookmarkFolderSelector_newFolderDialog": {
+		"message": "Enter a name for the new folder"
+	},
+
+	"bookmarkFolderSelector_noSelection": {
+		"message": "You need to select a folder."
+	},
+
+	"bookmarkFolderSelector_select": {
+		"message": "Select"
+	},
+
+	"bookmarkFolderSelector_newFolderTooltip": {
+		"message": "create folder"
+	},
+
 	"menu_tabs-aside_label": {
 		"message": "Tabs aside"
 	},
@@ -122,6 +146,7 @@
 
 	"sidebar_session_number_of_tabs": {
 		"message": "$N$ tabs",
+		"description": "number of tabs (in session)",
 		"placeholders": {
 			"n" : {
 				"content" : "$1",
@@ -130,27 +155,7 @@
 		  }
 	},
 
-	"bookmarkFolderSelector_tooltip": {
-		"message": "open bookmark folder selector"
-	},
-
-	"bookmarkFolderSelector_rootError": {
-		"message": "You can not create folders in the root folder."
-	},
-
-	"bookmarkFolderSelector_newFolderDialog": {
-		"message": "Enter a name for the new folder"
-	},
-
-	"bookmarkFolderSelector_noSelection": {
-		"message": "You need to select a folder."
-	},
-
-	"bookmarkFolderSelector_select": {
-		"message": "Select"
-	},
-
-	"bookmarkFolderSelector_newFolderTooltip": {
-		"message": "create folder"
+	"tab_selector_title": {
+		"message": "Tabs Aside :: Tab selector"
 	}
 }
