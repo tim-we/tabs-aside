@@ -17,7 +17,7 @@ export function edit(element:HTMLElement, placeholder:string = "", minLength:num
 	input.placeholder = placeholder;
 	input.value = element.textContent;
 	input.title = "";
-	input.style.width = (element.offsetWidth + 2) + "px";
+	input.style.width = (element.offsetWidth + 1) + "px";
 	// catch clicks
 	input.addEventListener("click", e => e.stopPropagation());
 

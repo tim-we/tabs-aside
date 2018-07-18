@@ -45,16 +45,21 @@ a, a:visited {
 	position: relative;
 	margin-bottom: 5px;
 	--header-height: 32px;
-	--bg-color: white;
+	--bg-color: rgb(232,232,232);
 	--hover-trans-dur: .25s;
-	transition: background var(--hover-trans-dur);
+	transition: background var(--hover-trans-dur), box-shadow var(--hover-trans-dur);
 	background-color: var(--bg-color);
 	z-index: 1;
 	animation: session-in .25s ease-out;
 }
 
 .session:hover {
-	--bg-color: #F0F0F0;
+	--bg-color: rgb(245,245,245);
+	box-shadow: 0px 1px 2px rgba(8,8,8,0.15);
+}
+
+.session.expanded:hover {
+	box-shadow: 0px 1px 1px 0px rgba(16,16,16,0.1);
 }
 
 @keyframes session-in {
@@ -76,7 +81,7 @@ a, a:visited {
 	transition: box-shadow 0.5s;
 }
 
-.session:hover > .header:active {
+.session:not(.expanded):hover > .header:active {
 	box-shadow: 0px 1px 0px 0px rgba(16,16,16,0.1);
 }
 
@@ -106,6 +111,20 @@ a, a:visited {
 	word-spacing: -.075rem;
 	cursor: text;
 	transition: background .2s;
+}
+
+.session > .header .title.editmode > input {
+	border: none;
+	padding: 0px;
+	font-family: inherit;
+	font-size: inherit;
+	word-spacing: inherit;
+	min-width: 80px;
+	box-shadow: 0px 0px 0px 1px rgba(32, 32, 32, 0.1);
+}
+
+.session:not(:hover) > .header .title.editmode > input:focus {
+	box-shadow: 0px 0px 0px 1px rgba(16,16,16,0.1);
 }
 
 .session > .header .title:hover {
