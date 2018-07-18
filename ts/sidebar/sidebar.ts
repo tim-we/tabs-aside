@@ -42,27 +42,17 @@ Promise.all([
 	})
 
 ]).then(async () => {
-	let sessions:Bookmark[] = await browser.bookmarks.getChildren(rootId);
-	await getActiveSessions();
+	let sessions:Bookmark[];
 
-	sessions.forEach(sessionBookmark => {
-		let view = new SessionView(sessionBookmark);
-		
-		// by default session are not active
-		if(activeSessions.has(view.bookmarkId)) {
-			view.setActiveState(true);
-		}
+	// requesting the data simulaneously
+	[sessions] = await Promise.all([
+		browser.bookmarks.getChildren(rootId),
+		getActiveSessions()
+	]);
 
-		sessionContainer.appendChild(view.getHTML());
+	// creating views
+	sessions.forEach(sessionBookmark => addView(sessionBookmark));
 
-		sessionViews.set(sessionBookmark.id, view);
-	});
-
-	if(sessions.length === 0) {
-		noSessionsInfo.classList.add("show");
-	} else {
-		noSessionsInfo.classList.remove("show");
-	}
 }).then(() => {
 	MessageListener.add("*", messageHandler);
 
@@ -71,7 +61,45 @@ Promise.all([
 	console.error("[TA] " + e);
 
 	document.body.innerHTML = "Error";
+
+	MessageListener.add("*", () => window.location.reload());
 });
+
+function addView(sessionBookmark:Bookmark):void {
+	if(sessionViews.has(sessionBookmark.id)) {
+		return updateView(sessionBookmark.id, sessionBookmark);
+	}
+
+	// create new session view
+	let view = new SessionView(sessionBookmark);
+		
+	// by default session are not active
+	if(activeSessions.has(view.bookmarkId)) {
+		view.setActiveState(true);
+	}
+
+	// add to document and internal DS
+	sessionViews.set(sessionBookmark.id, view);
+	sessionContainer.appendChild(view.getHTML());
+
+	emptyCheck();
+}
+
+function updateView(sessionId:string, sessionBookmark:Bookmark):void {
+	//TODO
+}
+
+function removeView():void {
+	emptyCheck();
+}
+
+function emptyCheck():void {
+	if(sessionViews.size === 0) {
+		noSessionsInfo.classList.add("show");
+	} else {
+		noSessionsInfo.classList.remove("show");
+	}
+}
 
 /**
  * Populates the activeSessions Map
