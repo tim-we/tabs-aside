@@ -172,5 +172,19 @@
 
 	"tab_selector_title": {
 		"message": "Tabs Aside :: Tab selector"
+	},
+
+	"tab_selector_select_all": {
+		"message": "select all"
+	},
+
+	"tab_selector_clear": {
+		"message": "clear",
+		"description": "clear tab selection"
+	},
+
+	"tab_selector_invert": {
+		"message": "invert",
+		"description": "invert selection"
 	}
 }
