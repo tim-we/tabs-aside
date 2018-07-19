@@ -1,47 +1,3 @@
-@import url("../fonts/open-sans.css");
-@import url("overlay-menu.css");
-
-body {
-	font-family: 'Open Sans', Segoe UI, sans-serif;
-	--search-height: 32px;
-}
-
-a, a:visited {
-	cursor: pointer;
-	color: rgb(0, 0, 238);
-}
-
-.state-info {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	padding: 5px;
-	font-size: 1.2rem;
-}
-
-.state-info:not(.show) {
-	display: none;
-}
-
-#no-sessions {
-	bottom: 0px;
-	background-color: white;
-}
-
-#sessions {
-	position: absolute;
-	top: 5px;
-	bottom: calc(var(--search-height) + 2px);
-	left: 0px;
-	right: 0px;
-
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	overflow-x: hidden;
-}
-
 .session {
 	position: relative;
 	margin-bottom: 5px;
@@ -94,7 +50,7 @@ a, a:visited {
 	height: 12px;
 	background-repeat: no-repeat;
 	background-position-y: center;
-	background-image: url("../img/sidebar/arrowhead-down-12.svg");
+	background-image: url("../../img/sidebar/arrowhead-down-12.svg");
 	width: 12px;
 
 	transition: transform 0.25s;
@@ -175,7 +131,7 @@ a, a:visited {
 	height: var(--header-height);
 	background-repeat: no-repeat;
 	background-position: center 9px;
-	background-image: url("../img/sidebar/more-16.svg");
+	background-image: url("../../img/sidebar/more-16.svg");
 	margin-left: 2px;
 	cursor: pointer;
 }
@@ -203,44 +159,4 @@ a, a:visited {
 
 .session.hidden {
 	display: none;
-}
-
-#search {
-	position: absolute;
-	bottom: 1px;
-	left: 0px;
-	right: 0px;
-	height: var(--search-height);
-	border-top: 1px solid #E3E3E3;
-}
-
-#search-input {
-	box-sizing: border-box;
-	border: none;
-	position: absolute;
-	top: 0px;
-	left: var(--search-height);
-	height: var(--search-height);
-	width: calc(100% - var(--search-height) - 1px);
-}
-
-#search-icon {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	height: var(--search-height);
-	width: var(--search-height);
-	padding-left: 2px;
-
-	background-repeat: no-repeat;
-	background-position: center;
-	background-image: url("../img/sidebar/Search.svg");
-}
-
-#options-menu-remove-session::before {
-	background-image: url("../img/sidebar/delete-light-16.svg");
-}
-
-#options-menu-session-details::before {
-	background-image: url("../img/sidebar/info-light-16.svg");
 }

@@ -1,0 +1,31 @@
+#search {
+	position: absolute;
+	bottom: 1px;
+	left: 0px;
+	right: 0px;
+	height: var(--search-height);
+	border-top: 1px solid #E3E3E3;
+}
+
+#search-input {
+	box-sizing: border-box;
+	border: none;
+	position: absolute;
+	top: 0px;
+	left: var(--search-height);
+	height: var(--search-height);
+	width: calc(100% - var(--search-height) - 1px);
+}
+
+#search-icon {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: var(--search-height);
+	width: var(--search-height);
+	padding-left: 2px;
+
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url("../../img/sidebar/Search.svg");
+}

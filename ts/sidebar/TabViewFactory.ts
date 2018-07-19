@@ -13,7 +13,7 @@ export async function init() {
 	let css:HTMLLinkElement = document.createElement("link");
 	css.rel = "stylesheet";
 	css.type = "text/css";
-	css.href = "../css/tab-views/" + tabLayout + ".css";
+	css.href = "../css/sidebar/tab-views/" + tabLayout + ".css";
 
 	document.head.appendChild(css);
 }
