@@ -3,6 +3,7 @@ import {clean} from "../util/HTMLUtilities";
 import TabView from "./TabViews/TabView";
 import { SessionCommand, SessionEvent } from "../messages/Messages";
 import * as EditText from "../util/EditText";
+import SessionOptionsMenu from "./SessionOptionsMenu";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -75,12 +76,14 @@ export default class SessionView {
 		this.tabViewContainer = this.html.querySelector(".tab-view");
 
 		let header:HTMLElement = this.html.querySelector(".header");
+		let controls:HTMLElement = header.querySelector(".controls");
+		let moreButton:HTMLElement = controls.querySelector(".more");
 
 		// click on session header -> toggle tab visibility
 		header.addEventListener("click", () => this.toggle());
 
 		// do not toggle tab visibility when clicking controls
-		header.querySelector(".controls").addEventListener(
+		controls.addEventListener(
 			"click", e => e.stopPropagation()
 		);
 
@@ -92,22 +95,16 @@ export default class SessionView {
 			"click", () => SessionCommand.send("set-aside", [bookmark.id])
 		);
 
-		// editable title
 		this.titleElement.addEventListener("click", e => {
 			e.stopImmediatePropagation();
 			e.stopPropagation();
 
-			EditText.edit(
-				this.titleElement,
-				"edit title",
-				1
-			).then(async (newTitle:string) => {
-				await browser.bookmarks.update(this.bookmarkId, {
-					title: newTitle
-				});
+			this.editTitle();
+		});
 
-				SessionEvent.send(this.bookmarkId, "meta-update");
-			}, () => {});
+		moreButton.addEventListener("click", () => {
+			let menu = new SessionOptionsMenu(this);
+			menu.showOn(moreButton);
 		});
 	}
 
@@ -153,5 +150,19 @@ export default class SessionView {
 		} else {
 			this.html.classList.remove("active");
 		}
+	}
+
+	public editTitle() {
+		EditText.edit(
+			this.titleElement,
+			"edit title",
+			1
+		).then(async (newTitle:string) => {
+			await browser.bookmarks.update(this.bookmarkId, {
+				title: newTitle
+			});
+
+			SessionEvent.send(this.bookmarkId, "meta-update");
+		}, () => {});
 	}
 }

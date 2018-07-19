@@ -155,6 +155,21 @@
 		  }
 	},
 
+	"sidebar_session_remove": {
+		"message": "remove session",
+		"description": "Session options (...) menu item to remove session"
+	},
+
+	"sidebar_session_rename": {
+		"message": "rename session",
+		"description": "Session options (...) menu item to rename session"
+	},
+
+	"sidebar_session_details": {
+		"message": "details",
+		"description": "Session options (...) menu item to show session details"
+	},
+
 	"tab_selector_title": {
 		"message": "Tabs Aside :: Tab selector"
 	}

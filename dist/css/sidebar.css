@@ -1,4 +1,5 @@
 @import url("../fonts/open-sans.css");
+@import url("overlay-menu.css");
 
 body {
 	font-family: 'Open Sans', Segoe UI, sans-serif;
@@ -234,4 +235,12 @@ a, a:visited {
 	background-repeat: no-repeat;
 	background-position: center;
 	background-image: url("../img/sidebar/Search.svg");
+}
+
+#options-menu-remove-session::before {
+	background-image: url("../img/sidebar/delete-light-16.svg");
+}
+
+#options-menu-session-details::before {
+	background-image: url("../img/sidebar/info-light-16.svg");
 }
