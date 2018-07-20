@@ -43,6 +43,24 @@ async function init() {
 			View.remove(tab);
 		}
 	});
+
+	window.addEventListener("keydown", e => {
+		if(e.keyCode == 65 && e.ctrlKey) { // CTRL + A
+			e.preventDefault();
+
+			// select all tabs unless all tabs are already selected
+			let selectionChanged:boolean = selectAll();
+
+			// if all tabs are already selected unselect all
+			if(!selectionChanged) {
+				unSelectAll();
+			}
+		} else if(e.keyCode == 73 && e.ctrlKey) { // CTRL + I
+			e.preventDefault();
+
+			invertSelection();
+		}
+	});
 }
 
 export function toggleTab(tabId:TabId, updateView:boolean = false):boolean {
@@ -56,13 +74,23 @@ export function toggleTab(tabId:TabId, updateView:boolean = false):boolean {
 	return tab.selected;
 }
 
-export function selectAll():void {
+/**
+ * Selects all tabs.
+ * @returns A boolean flag that indicates whether new tabs where selected
+ */
+export function selectAll():boolean {
+	// number of previously unselected tabs
+	let n = 0;
+
 	tabs.forEach(tab => {
 		if(!tab.selected) {
+			n++;
 			tab.selected = true;
 			View.update(tab);
 		}
 	});
+
+	return n > 0;
 }
 
 export function unSelectAll():void {
