@@ -1,6 +1,7 @@
 import ActiveSession, { ActiveSessionData } from "./ActiveSession";
 import TabData from "./TabData";
-import { SessionCommand, SessionEvent, Message, DataRequest } from "../messages/Messages";
+import { SessionCommand, SessionEvent, DataRequest } from "../messages/Messages";
+import * as OptionsManager from "../options/OptionsManager";
 
 type SessionId = string;
 
@@ -29,16 +30,22 @@ export function getActiveSessions():ActiveSessionData[] {
 	return Array.from(activeSessions.values(), session => session.getData());
 }
 
-export async function restore(sessionId:SessionId):Promise<void> {
+export async function restore(sessionId:SessionId, keepBookmarks:boolean = true):Promise<void> {
 	// sanity-check
 	if (activeSessions.has(sessionId)) {
 		throw new Error(`Session ${sessionId} is already active.`);
 	}
 
-	let session:ActiveSession = await ActiveSession.restoreAll(sessionId);
-	activeSessions.set(sessionId, session);
+	let activeSessionEnabled:boolean = await OptionsManager.getValue<boolean>("activeSessions");
 
-	SessionEvent.send(sessionId, "activated");
+	if(activeSessionEnabled) {
+		let session:ActiveSession = await ActiveSession.restoreAll(sessionId);
+		activeSessions.set(sessionId, session);
+
+		SessionEvent.send(sessionId, "activated");
+	} else {
+		//TODO
+	}
 }
 
 export async function createSessionFromTabs(

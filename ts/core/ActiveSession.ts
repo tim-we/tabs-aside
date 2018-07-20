@@ -170,12 +170,15 @@ export default class ActiveSession {
 	}
 
 	public async setAside():Promise<void> {
-		// this is just temporary
 		this.tabs = new Map();
 		this.unloadedTabs = new Set();
 
+		//TODO: remove event listeners
+
 		if(this.windowId) {
 			await browser.windows.remove(this.windowId);
+		} else {
+			await browser.tabs.remove(this.getTabsIds());
 		}
 	}
 

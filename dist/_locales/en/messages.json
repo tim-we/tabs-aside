@@ -155,6 +155,11 @@
 		  }
 	},
 
+	"sidebar_session_restore_keep": {
+		"message": "restore & keep",
+		"description": "Session options (...) menu item to restore a session (non-active) but keep the bookmarks"
+	},
+
 	"sidebar_session_remove": {
 		"message": "remove session",
 		"description": "Session options (...) menu item to remove session"

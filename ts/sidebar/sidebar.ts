@@ -9,7 +9,11 @@ import * as MessageListener from "../messages/MessageListener";
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 // if one of these options changes reload the window
-let optionsThatRequireReload:Set<string> = new Set<string>(["rootFolder", "sidebarTabLayout"]);
+let optionsThatRequireReload:Set<string> = new Set<string>([
+	"activeSessions",
+	"rootFolder",
+	"sidebarTabLayout"
+]);
 
 let rootId:string;
 
