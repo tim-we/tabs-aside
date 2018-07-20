@@ -191,5 +191,15 @@
 	"tab_selector_invert": {
 		"message": "invert",
 		"description": "invert selection"
+	},
+
+	"tab_selector_set-aside": {
+		"message": "set aside",
+		"description": "Set selected tabs aside (close tabs & create bookmarks)"
+	},
+
+	"tab_selector_close": {
+		"message": "close tabs",
+		"description": "Close selected tabs"
 	}
 }

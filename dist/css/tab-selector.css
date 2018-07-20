@@ -5,12 +5,16 @@ body {
 	padding: 0px;
 	margin: 0px;
 	--ui-border-color: rgb(222,222,222);
+	--header-height: 43px;
+	--footer-height: 40px;
 }
 
 header {
-	--header-height: 43px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
 
-	position: relative;
 	border-bottom: 1px solid var(--ui-border-color);
 	padding-left: 5px;
 	padding-right: 5px;
@@ -18,6 +22,14 @@ header {
 	line-height: var(--header-height);
 	text-align: center;
 	font-size: 1.25em;
+}
+
+main {
+	position: absolute;
+	top: calc(var(--header-height) + 1px);
+	left: 0px;
+	right: 0px;
+	bottom: var(--footer-height);
 }
 
 #tabs {
@@ -56,7 +68,7 @@ header {
 .favicon {
 	position: absolute;
 	top: 8px;
-	left: 4px;
+	left: 6px;
 	width: 16px;
 	height: 16px;
 }
@@ -64,7 +76,7 @@ header {
 .tab-title {
 	position: absolute;
 	top: 0px;
-	left: 23px;
+	left: 27px;
 	right: 1px;
 	bottom: 0px;
 	padding: 0px;
@@ -73,10 +85,6 @@ header {
 	white-space: nowrap;
 	line-height: var(--tab-height);
 	-moz-user-select: none;
-}
-
-.tab.no-favicon .tab-title {
-	left: 6px;
 }
 
 .tab.selected {
@@ -97,4 +105,55 @@ header {
 @keyframes tab-in {
 	0% { background-color: rgb(240,240,240); }
 	100% { background-color: rgb(232,232,232); }
+}
+
+#select-controls {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+
+	height: 32px;
+	line-height: 32px;
+
+	text-align: center;
+	padding: 0px 5px;
+
+	background-color: rgb(50, 50, 52);
+}
+
+#select-controls > button {
+	border: none;
+	font-family: inherit;
+	height: 20px;
+}
+
+footer {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	height: var(--footer-height);
+
+	padding: 0px 5px;
+	text-align: center;
+	line-height: var(--footer-height);
+
+	background-color: rgb(0,120,215);
+}
+
+footer > button {
+	background-color: white;
+	border: none;
+	height: 32px;
+	font-family: inherit;
+}
+
+footer > button:hover {
+	box-shadow: 1px 1px 4px rgba(16, 16, 16, 0.2);
+}
+
+footer > button:active {
+	background-color: rgb(240,240,240);
+	box-shadow: inset 0px 0px 2px rgba(16,16,16,0.5);
 }

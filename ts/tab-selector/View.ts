@@ -54,23 +54,22 @@ function createTabView(tab:Tab):HTMLElement {
 	}
 
 	// favicon
-	if (tab.favIconUrl) {
-		let img = new Image();
+	let img = new Image();
+	img.classList.add("favicon");
 
+	if (tab.favIconUrl) {
 		// if image can not be loaded (e.g. broken or not found)
 		img.onerror = () => {
-			img.remove();
-			html.classList.add("no-favicon");
+			// show tab icon as favicon
+			img.src = browser.runtime.getURL("img/tab-dark-16.svg");
 		};
 
 		img.src = tab.favIconUrl;
-		img.classList.add("favicon");
-		img.alt = "icon";
-
-		html.appendChild(img);
 	} else {
-		html.classList.add("no-favicon");
+		img.src = browser.runtime.getURL("img/tab-dark-16.svg");
 	}
+
+	html.appendChild(img);
 
 	// tab title
 	let title:HTMLElement = document.createElement("div");
