@@ -1,4 +1,5 @@
 import * as View from "./View";
+import FuncIterator from "../util/FuncIterator";
 
 export type Tab = browser.tabs.Tab;
 export type SelectableTab = Tab & {selected?:boolean};
@@ -107,6 +108,11 @@ export function invertSelection():void {
 		tab.selected = !tab.selected;
 		View.update(tab);
 	});
+}
+
+export function getSelectedIds():number[] {
+	let fi:FuncIterator<SelectableTab> = new FuncIterator(tabs.values());
+	return fi.filter(tab => tab.selected).mapToArray(tab => tab.id);
 }
 
 init();
