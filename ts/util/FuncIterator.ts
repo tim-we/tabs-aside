@@ -13,6 +13,12 @@ export default class FuncIterator<T> {
 		return new FuncIterator(_filter(this.iterator, p));
 	}
 
+	public append(i:FuncIterator<T>|IterableIterator<T>):FuncIterator<T> {
+		let iterator2:IterableIterator<T> = (i instanceof FuncIterator) ? i.iterator : i;
+
+		return new FuncIterator(_append(this.iterator, iterator2));
+	}
+
 	public toArray():T[] {
 		return Array.from(this.iterator);
 	}
@@ -37,5 +43,15 @@ function * _filter<T>(iterable:IterableIterator<T>, p: (value:T, index:number) =
 		if(p(x, i++)) {
 			yield x;
 		}
+	}
+}
+
+function * _append<T>(iterable1:IterableIterator<T>, iterable2:IterableIterator<T>) {
+	for(let x of iterable1) {
+		yield x;
+	}
+
+	for(let x of iterable2) {
+		yield x;
 	}
 }

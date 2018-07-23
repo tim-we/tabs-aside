@@ -1,6 +1,7 @@
 import TabData from "./TabData";
 import * as UnloadedTabs from "./UnloadedTabs";
 import * as OptionsManager from "../options/OptionsManager";
+import FuncIterator from "../util/FuncIterator";
 
 type Tab = browser.tabs.Tab;
 type Window = browser.windows.Window;
@@ -183,13 +184,8 @@ export default class ActiveSession {
 	}
 
 	private getTabsIds():number[] {
-		return Array.from(
-			this.tabs.keys()
-		).concat(
-			Array.from(
-				this.unloadedTabs.values()
-			)
-		);
+		let fi:FuncIterator<number> = new FuncIterator(this.tabs.keys());
+		return fi.append(this.unloadedTabs.values()).toArray();
 	}
 
 	public getData():ActiveSessionData {
