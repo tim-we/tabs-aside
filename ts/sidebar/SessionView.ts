@@ -155,7 +155,7 @@ export default class SessionView {
 	public editTitle() {
 		EditText.edit(
 			this.titleElement,
-			"edit title",
+			browser.i18n.getMessage("sidebar_session_title_edit_placeholder"),
 			1
 		).then(async (newTitle:string) => {
 			await browser.bookmarks.update(this.bookmarkId, {

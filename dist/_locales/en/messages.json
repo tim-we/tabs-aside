@@ -152,7 +152,11 @@
 				"content" : "$1",
 				"example" : "42"
 			}
-		  }
+		}
+	},
+
+	"sidebar_session_title_edit_placeholder": {
+		"message": "enter a title"
 	},
 
 	"sidebar_session_restore_keep": {
