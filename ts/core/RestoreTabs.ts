@@ -19,11 +19,13 @@ export async function restore(sessionId:string):Promise<void> {
 	]);
 
 	let windowId:number;
+	let newTabId:number;
 
 	if(openInNewWindow) {
 		// create window for the tabs
 		let wnd:Window = await browser.windows.create();
 		windowId = wnd.id;
+		newTabId = wnd.tabs[0].id;
 	}
 
 	// create tabs
@@ -36,4 +38,9 @@ export async function restore(sessionId:string):Promise<void> {
 			);
 		})
 	);
+
+	// remove "new tab" tab that gets created automatically when creating a new window
+	if(newTabId) {
+		browser.tabs.remove(newTabId);
+	}
 }

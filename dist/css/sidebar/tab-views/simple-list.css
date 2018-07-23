@@ -25,6 +25,10 @@
 	font-size: 1rem;
 }
 
+.tab-view > ol a.tab {
+	white-space: nowrap;
+}
+
 .tab-view > ol a.tab:not(:hover) {
 	color: #222426;
 	text-decoration: none;

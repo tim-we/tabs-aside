@@ -134,6 +134,9 @@ function messageHandler(message:Message) {
 			sessionView.setActiveState(false);
 		} else if(msg.event === "meta-update") {
 			sessionView.update();
+		} else if(msg.event === "removed") {
+			sessionView.getHTML().remove();
+			sessionViews.delete(msg.sessionId);
 		}
 	}
 }

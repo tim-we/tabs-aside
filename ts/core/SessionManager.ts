@@ -2,6 +2,7 @@ import ActiveSession, { ActiveSessionData } from "./ActiveSession";
 import TabData from "./TabData";
 import { SessionCommand, SessionEvent, DataRequest } from "../messages/Messages";
 import * as OptionsManager from "../options/OptionsManager";
+import * as RestoreTabs from "./RestoreTabs";
 
 type SessionId = string;
 
@@ -44,7 +45,11 @@ export async function restore(sessionId:SessionId, keepBookmarks:boolean = true)
 
 		SessionEvent.send(sessionId, "activated");
 	} else {
-		//TODO
+		await RestoreTabs.restore(sessionId);
+		if(!keepBookmarks) {
+			await browser.bookmarks.removeTree(sessionId);
+			SessionEvent.send(sessionId, "removed");
+		}
 	}
 }
 

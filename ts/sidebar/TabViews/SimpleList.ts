@@ -1,5 +1,6 @@
 import TabView from "./TabView";
 import TabData from "../../core/TabData";
+import * as StringUtils from "../../util/StringUtils";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -31,7 +32,7 @@ export default class SimpleList extends TabView {
 
 		let a:HTMLAnchorElement = document.createElement("a");
 		a.classList.add("tab");
-		a.textContent = data.title;
+		a.textContent = StringUtils.limit(data.title, 80);
 		a.dataset.id = tabBookmark.id;
 		a.href = data.url;
 		a.title = data.getHostname();
