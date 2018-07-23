@@ -36,9 +36,9 @@ export async function restore(sessionId:SessionId, keepBookmarks:boolean = true)
 		throw new Error(`Session ${sessionId} is already active.`);
 	}
 
-	let activeSessionEnabled:boolean = await OptionsManager.getValue<boolean>("activeSessions");
+	let activeSessionsEnabled:boolean = await OptionsManager.getValue<boolean>("activeSessions");
 
-	if(activeSessionEnabled) {
+	if(activeSessionsEnabled) {
 		let session:ActiveSession = await ActiveSession.restoreAll(sessionId);
 		activeSessions.set(sessionId, session);
 
