@@ -20,8 +20,14 @@ export function init() {
 	});
 }
 
-export function add(tab:SelectableTab) {
-	let view:HTMLElement = createTabView(tab);
+export function add(tab:SelectableTab, inSession:boolean = false) {
+	let view:HTMLElement = createTabView(tab, !inSession);
+
+	if(inSession) {
+		view.classList.add("in-session");
+		view.title = browser.i18n.getMessage("tab_selector_in_session");
+	}
+
 	tabsContainer.appendChild(view);
 	tabs.set(tab.id, view);
 }
@@ -43,7 +49,7 @@ export function remove(tab:SelectableTab) {
 	}
 }
 
-function createTabView(tab:Tab):HTMLElement {
+function createTabView(tab:Tab, selectable:boolean = true):HTMLElement {
 	let html:HTMLElement = document.createElement("div");
 	html.classList.add("tab");
 	html.title = tab.title;

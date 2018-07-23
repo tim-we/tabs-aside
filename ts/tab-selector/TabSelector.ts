@@ -1,5 +1,8 @@
 import * as View from "./View";
 import FuncIterator from "../util/FuncIterator";
+import { ActiveSessionData } from "../core/ActiveSession";
+import { DataRequest, SessionEvent } from "../messages/Messages";
+import * as MessageListener from "../messages/MessageListener";
 
 export type Tab = browser.tabs.Tab;
 export type SelectableTab = Tab & {selected?:boolean};
@@ -13,12 +16,26 @@ async function init() {
 
 	// get all browser tabs
 	let browserTabs = await browser.tabs.query({});
+	let activeSessions:ActiveSessionData[] = await DataRequest.send<ActiveSessionData[]>("active-sessions");
+	let tabsInSession:Set<TabId> = new Set();
 
-	browserTabs.forEach(tab => {
-		tabs.set(tab.id, tab);
-		View.add(tab);
+	// get all tabs in active sessions
+	activeSessions.forEach(data => {
+		data.tabs.forEach(tabId => tabsInSession.add(tabId));
 	});
 
+	// generate tab views
+	browserTabs.forEach(tab => {
+		let inSession:boolean = tabsInSession.has(tab.id);
+
+		if(!inSession) {
+			tabs.set(tab.id, tab);
+		}
+
+		View.add(tab, inSession);
+	});
+
+	// event listeners for tab changes
 	browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 		let oldTab = tabs.get(tabId);
 
@@ -42,9 +59,12 @@ async function init() {
 		if(tab) {
 			tabs.delete(tabId);
 			View.remove(tab);
+		} else {
+			window.location.reload();
 		}
 	});
 
+	// keyboard input listener
 	window.addEventListener("keydown", e => {
 		if(e.keyCode == 65 && e.ctrlKey) { // CTRL + A
 			e.preventDefault();
@@ -60,6 +80,15 @@ async function init() {
 			e.preventDefault();
 
 			invertSelection();
+		}
+	});
+
+	MessageListener.setDestination("all");
+
+	MessageListener.add("OptionUpdate", (e:SessionEvent) => {
+		// if new session tabs have been created -> reload
+		if(e.event === "activated") {
+			window.location.reload();
 		}
 	});
 }

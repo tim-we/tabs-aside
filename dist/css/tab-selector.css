@@ -42,7 +42,6 @@ main {
 
 .tab {
 	--tab-height: 32px;
-	--tab-selected-color: rgb(10,132,255);
 	--tab-border-color: rgb(202,202,202);
 	--tab-bg-color: rgb(232,232,232);
 
@@ -57,7 +56,7 @@ main {
 	background-color: var(--tab-bg-color);
 	border: 1px solid var(--tab-border-color);
 
-	animation: .75s tab-in;
+	animation: .2s tab-in ease-out;
 	cursor: default;
 }
 
@@ -102,9 +101,29 @@ main {
 	--tab-border-color: rgb(0,120,215);
 }
 
+.tab.in-session {
+	--tab-border-color: rgb(222,222,222);
+	--tab-bg-color: rgb(250,250,250);
+	color: rgba(16,16,16,0.5);
+}
+
+.tab.in-session:active {
+	box-shadow: none;
+}
+
+.tab.in-session .favicon {
+	opacity: 0.5;
+}
+
 @keyframes tab-in {
-	0% { background-color: rgb(240,240,240); }
-	100% { background-color: rgb(232,232,232); }
+	0% {
+		opacity: 0;
+		transform: scale(0.9,0.9);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1,1);
+	}
 }
 
 #select-controls {
