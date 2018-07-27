@@ -32,8 +32,21 @@ export function add(tab:SelectableTab, inSession:boolean = false) {
 	tabs.set(tab.id, view);
 }
 
+export function updateSelectState(tab:SelectableTab) {
+	let view:HTMLElement = tabs.get(tab.id);
+	if(!view) { return; }
+
+	if(tab.selected) {
+		view.classList.add("selected");
+	} else {
+		view.classList.remove("selected");
+	}
+}
+
 export function update(tab:SelectableTab) {
 	let view:HTMLElement = tabs.get(tab.id);
+	if(!view) { return; }
+
 	let newView:HTMLElement = createTabView(tab);
 
 	view.parentElement.replaceChild(newView, view);

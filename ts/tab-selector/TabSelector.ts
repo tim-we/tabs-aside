@@ -16,7 +16,11 @@ async function init() {
 
 	// get all browser tabs
 	let browserTabs = await browser.tabs.query({});
+	let currentTab:Tab = await browser.tabs.getCurrent();
+
+	// get tabs to ignore
 	let activeSessions:ActiveSessionData[] = await DataRequest.send<ActiveSessionData[]>("active-sessions");
+	
 	let tabsInSession:Set<TabId> = new Set();
 
 	// get all tabs in active sessions
@@ -28,8 +32,14 @@ async function init() {
 	browserTabs.forEach(tab => {
 		let inSession:boolean = tabsInSession.has(tab.id);
 
+		// only add tabs that are not in an active session
 		if(!inSession) {
 			tabs.set(tab.id, tab);
+		}
+
+		// ignore the tab selector tab
+		if(tab.id === currentTab.id) {
+			return;
 		}
 
 		View.add(tab, inSession);
@@ -83,7 +93,7 @@ async function init() {
 		}
 	});
 
-	MessageListener.setDestination("all");
+	MessageListener.setDestination("tab-selector");
 
 	MessageListener.add("OptionUpdate", (e:SessionEvent) => {
 		// if new session tabs have been created -> reload
@@ -116,7 +126,7 @@ export function selectAll():boolean {
 		if(!tab.selected) {
 			n++;
 			tab.selected = true;
-			View.update(tab);
+			View.updateSelectState(tab);
 		}
 	});
 
@@ -127,7 +137,7 @@ export function unSelectAll():void {
 	tabs.forEach(tab => {
 		if(tab.selected) {
 			tab.selected = false;
-			View.update(tab);
+			View.updateSelectState(tab);
 		}
 	});
 }
@@ -135,7 +145,7 @@ export function unSelectAll():void {
 export function invertSelection():void {
 	tabs.forEach(tab => {
 		tab.selected = !tab.selected;
-		View.update(tab);
+		View.updateSelectState(tab);
 	});
 }
 

@@ -1,5 +1,16 @@
-export type MessageType = "SessionCommand" | "SessionEvent" | "DataRequest" | "OptionUpdate";
-export type MessageDestination = "all" | "sidebar" | "background" | "menu";
+export type MessageType = 
+	  "SessionCommand"
+	| "SessionEvent"
+	| "DataRequest"
+	| "OptionUpdate";
+
+export type MessageDestination = 
+	  "all"
+	| "sidebar"
+	| "background"
+	| "menu"
+	| "options-page"
+	| "tab-selector";
 
 export class Message {
 	public readonly type: MessageType;
