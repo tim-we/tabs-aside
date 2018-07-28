@@ -1,3 +1,5 @@
+a:link, a:visited { color: #0000FF; }
+
 .section {
 	display: grid;
 	grid-template-columns: 1fr;
@@ -36,24 +38,13 @@ label {
 }
 
 .info {
-	display: inline-block;
-	position: relative;
-	background-color: rgba(10, 132, 255, 0.5);
-	padding: 5px;
-	padding-left: 24px;
 	margin-top: 5px;
-	border-radius: 2px;
+	font-size: 1rem;
+	color: rgb(16,16,16,0.75);
 }
 
-.info::before {
-	position: absolute;
-	top: 50%;
-	margin-top: -8px;
-	left: 4px;
-	content: " ";
-	width: 16px;
-	height: 16px;
-	background-image: url('../img/info-16.svg');
+.info:last-child {
+	margin-bottom: 0px;
 }
 
 div.bookmarkFolderView {
