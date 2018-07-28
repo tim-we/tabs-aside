@@ -76,6 +76,22 @@
 		"description": "Should sessions be opened in a new window?"
 	},
 
+	"option_tabClosingBehavior": {
+		"message": "Tab closing behavior"
+	},
+
+	"option_tabClosingBehavior_info": {
+		"message": "Controls what happens when you close tabs from active sessions."
+	},
+
+	"option_tabClosingBehavior__remove-tab": {
+		"message": "Remove from session"
+	},
+
+	"option_tabClosingBehavior__set-aside": {
+		"message": "Set aside"
+	},
+
 	"option_ignorePinned": {
 		"message": "Ignore pinned tabs"
 	},

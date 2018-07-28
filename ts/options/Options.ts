@@ -24,6 +24,13 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			default: true
 		},
 		{
+			id: "tabClosingBehavior",
+			type: "select",
+			options: ["remove-tab", "set-aside"],
+			default: "remove-tab",
+			info: true
+		},
+		{
 			id: "ignorePinned",
 			type: "boolean",
 			default: true,
