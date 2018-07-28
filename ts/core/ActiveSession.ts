@@ -101,13 +101,12 @@ export default class ActiveSession {
 		return session;
 	}
 
-	public static async restoreSingleTab(tabBookmarkId:string):Promise<ActiveSession> {
-		let tabBookmark:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
-		console.assert(tabBookmark);
-
+	public static async restoreSingleTab(tabBookmark:Bookmark):Promise<ActiveSession> {
 		let sessionId:string = tabBookmark.parentId;
 		let sessionBookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
 		let activeSession:ActiveSession = new ActiveSession(sessionId, sessionBookmark.title);
+
+		let emptyTab:Tab = null;
 
 		if(await OptionsManager.getValue<boolean>("windowedSession")) {
 			let sessionBookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
@@ -115,9 +114,16 @@ export default class ActiveSession {
 			// create session window
 			let wnd:Window = await createWindow(sessionBookmark.title);
 			activeSession.windowId = wnd.id;
+			// new window contains a "newtab" tab
+			emptyTab = wnd.tabs[0];
 		}
 
 		activeSession.addTab(tabBookmark);
+
+		if(emptyTab) {
+			// close "newtab" tab after sessions tabs are restored
+			browser.tabs.remove(emptyTab.id);
+		}
 
 		return activeSession;
 	}
@@ -162,12 +168,10 @@ export default class ActiveSession {
 		return browserTab;
 	}
 
-	public async openSingleTab(tabBookmarkId:string):Promise<void> {
-		let bm:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
+	public async openSingleTab(tabBookmark:Bookmark):Promise<void> {
+		console.assert(tabBookmark && tabBookmark.parentId === this.bookmarkId);
 
-		console.assert(bm && bm.parentId === this.bookmarkId);
-
-		await this.addTab(bm);
+		await this.addTab(tabBookmark);
 	}
 
 	public async setAside():Promise<void> {

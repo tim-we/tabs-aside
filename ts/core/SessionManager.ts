@@ -5,6 +5,7 @@ import * as OptionsManager from "../options/OptionsManager";
 import * as RestoreTabs from "./RestoreTabs";
 
 type SessionId = string;
+type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
@@ -13,11 +14,12 @@ export async function execCommand(cmd:SessionCommand):Promise<any> {
 	let sessionId:SessionId = cmd.args[0];
 
 	if(c === "restore") {
-		return await restore(sessionId);
-	} else if(c === "restoreSingle") {
-		//TODO (ActiveSession.restoreSingleTab)
+		restore(sessionId);
+	} else if(c === "restore-single") {
+		let tabBookmarkId:string = cmd.args[1];
+		restoreSingle(tabBookmarkId);
 	} else if(c === "set-aside") {
-		return await setAside(sessionId);
+		setAside(sessionId);
 	}
 }
 
@@ -50,6 +52,29 @@ export async function restore(sessionId:SessionId, keepBookmarks:boolean = true)
 			await browser.bookmarks.removeTree(sessionId);
 			SessionEvent.send(sessionId, "removed");
 		}
+	}
+}
+
+export async function restoreSingle(tabBookmarkId:string) {
+	let activeSessionsEnabled:boolean = await OptionsManager.getValue<boolean>("activeSessions");
+
+	let tabBookmark:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
+	let sessionId:SessionId = tabBookmark.parentId;
+
+	if(activeSessionsEnabled) {
+		let session:ActiveSession = activeSessions.get(sessionId);
+
+		if(session) {
+			session.openSingleTab(tabBookmark);
+		} else {
+			session = await ActiveSession.restoreSingleTab(tabBookmark);
+			activeSessions.set(sessionId, session);
+
+			SessionEvent.send(sessionId, "activated");
+		}
+	} else {
+		let data:TabData = TabData.createFromBookmark(tabBookmark);
+		browser.tabs.create(data.getTabCreateProperties());
 	}
 }
 

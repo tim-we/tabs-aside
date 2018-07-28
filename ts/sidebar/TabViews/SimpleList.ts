@@ -1,6 +1,7 @@
 import TabView from "./TabView";
 import TabData from "../../core/TabData";
 import * as StringUtils from "../../util/StringUtils";
+import { SessionCommand } from "../../messages/Messages";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -39,8 +40,7 @@ export default class SimpleList extends TabView {
 		a.onclick = e => {
 			e.preventDefault();
 
-			// temporary
-			browser.tabs.create(data.getTabCreateProperties());
+			SessionCommand.send("restore-single", [tabBookmark.parentId, tabBookmark.id]);
 		};
 
 		if(data.isInReaderMode) {

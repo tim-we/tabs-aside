@@ -23,7 +23,7 @@ export class Message {
 	}
 }
 
-type SessionCMD = "restore" | "restoreSingle" | "set-aside";
+type SessionCMD = "restore" | "restore-single" | "set-aside";
 
 export class SessionCommand extends Message {
 	public readonly cmd:SessionCMD;

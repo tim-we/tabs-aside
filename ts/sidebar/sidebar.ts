@@ -90,11 +90,11 @@ function addView(sessionBookmark:Bookmark):void {
 }
 
 function updateView(sessionId:string, sessionBookmark:Bookmark):void {
-	//TODO
-}
+	let view = sessionViews.get(sessionId);
 
-function removeView():void {
-	emptyCheck();
+	if(view) {
+		view.update();
+	}
 }
 
 function emptyCheck():void {
@@ -137,6 +137,7 @@ function messageHandler(message:Message) {
 		} else if(msg.event === "removed") {
 			sessionView.getHTML().remove();
 			sessionViews.delete(msg.sessionId);
+			emptyCheck();
 		}
 	}
 }
