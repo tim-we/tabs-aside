@@ -16,9 +16,11 @@ type BookmarkCreateDetails = browser.bookmarks.CreateDetails;
  * Regular expression that parses tab options and title from a bookmark title.
  * Example bookmark title: "[pinned,rm] Actual title"
  */
-const bmTitleParser:RegExp = /^(\[(rm,|pinned,)*(rm|pinned)?\]\s)?(.*)$/;
-const validURL:RegExp = /^(https?:|view-source:)/i;
+const bmTitleParser:RegExp = /^(\[(rm,|pinned,|src)*(rm|pinned|src)?\]\s)?(.*)$/;
+const validURL:RegExp = /^https?:\/\//i;
+
 const readerPrefix:string = "about:reader?url=";
+const viewSourcePrefix:string = "view-source:";
 
 export default class TabData {
 	public readonly pinned:boolean;
@@ -26,6 +28,7 @@ export default class TabData {
 	public readonly title:string;
 	public readonly url:string;
 	public readonly favIconUrl:string;
+	public readonly viewSource:boolean;
 
 	public static createFromTab(tab:Tab):TabData {
 		return new TabData(tab, null);
@@ -67,16 +70,21 @@ export default class TabData {
 			this.title = tab.title;
 			this.url = tab.url;
 			this.favIconUrl = tab.favIconUrl;
+			this.viewSource = tab.url.startsWith(viewSourcePrefix);
 			
 			if(tab.isInReaderMode) {
 				this.isInReaderMode = true;
-				// URL format (example by ingvar-lynn)
-				// "about:reader?url=https%3A%2F%2Fwww.ualberta.ca%2Fmedicine%2Fnews%2F2018%2Fjune%2Fputting-the-brakes-on-metastatic-cancer"
+				// URL format
+				// "about:reader?url=https%3A%2F%2Fexample.com%2Freader-compatible-page"
 				this.url = decodeURIComponent(
 					tab.url.substr(readerPrefix.length)
 				);
 			} else {
 				this.isInReaderMode = false;
+			}
+
+			if(this.viewSource) {
+				this.url = this.url.substr(viewSourcePrefix.length);
 			}
 		} else if(bookmark) { // create from bookmark
 			let data:TitleData = this.decodeTitle(bookmark.title);
@@ -85,9 +93,14 @@ export default class TabData {
 			this.title = data.title;
 			this.pinned = data.options.has("pinned");
 			this.isInReaderMode = data.options.has("rm");
+			this.viewSource = data.options.has("src");
 
 			// guess the favicon path
 			this.favIconUrl = (new URL(bookmark.url)).origin + "/favicon.ico";
+
+			if(this.viewSource) {
+				this.url = viewSourcePrefix + this.url;
+			}
 		}
 
 		if(this.title.trim() === "") {
@@ -104,6 +117,10 @@ export default class TabData {
 
 		if(this.pinned) {
 			tabOptions.push("pinned");
+		}
+
+		if(this.viewSource) {
+			tabOptions.push("src");
 		}
 
 		let prefix:string = (tabOptions.length > 0) ? 
