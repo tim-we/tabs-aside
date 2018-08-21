@@ -54,7 +54,7 @@ export default class TabData {
 	}
 
 	public isPrivileged():boolean {
-		return validURL.test(this.url);
+		return !validURL.test(this.url);
 	}
 
 	public getHostname():string {
