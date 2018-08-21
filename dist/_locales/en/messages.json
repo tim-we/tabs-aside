@@ -213,9 +213,14 @@
 		"description": "invert selection"
 	},
 
-	"tab_selector_set-aside": {
+	"tab_selector_set_aside": {
 		"message": "set aside",
 		"description": "Set selected tabs aside (close tabs & create bookmarks)"
+	},
+
+	"tab_selector_create_session": {
+		"message": "create session",
+		"description": "Create a session from the selected tabs"
 	},
 
 	"tab_selector_close": {
