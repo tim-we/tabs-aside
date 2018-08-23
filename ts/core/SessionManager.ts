@@ -1,4 +1,5 @@
 import ActiveSession, { ActiveSessionData } from "./ActiveSession";
+import * as ActiveSessionFactory from "./ActiveSessionFactory";
 import TabData from "./TabData";
 import { SessionCommand, SessionEvent, DataRequest } from "../messages/Messages";
 import * as OptionsManager from "../options/OptionsManager";
@@ -75,7 +76,7 @@ export async function restoreSingle(tabBookmarkId:string) {
 		let session:ActiveSession = activeSessions.get(sessionId);
 
 		if(session) {
-			session.openSingleTab(tabBookmark);
+			session.openBookmarkTab(tabBookmark);
 		} else {
 			session = await ActiveSession.restoreSingleTab(tabBookmark);
 			activeSessions.set(sessionId, session);
@@ -104,7 +105,7 @@ export async function createSessionFromTabs(
 	let sessionId:string;
 
 	if(activeSessionsEnabled) {
-		let session:ActiveSession = await ActiveSession.createFromTabs(tabs, title, windowId);
+		let session:ActiveSession = await ActiveSessionFactory.createFromTabs(tabs, title, windowId);
 		sessionId = session.bookmarkId;
 		activeSessions.set(sessionId, session);
 	} else {

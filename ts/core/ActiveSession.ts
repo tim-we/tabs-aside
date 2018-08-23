@@ -23,7 +23,7 @@ export default class ActiveSession {
 	private tabs:Map<number, string> = new Map();
 	private unloadedTabs:Set<number> = new Set();
 
-	private constructor(sessionId:string, title?:string) {
+	constructor(sessionId:string, title?:string) {
 		this.bookmarkId = sessionId;
 		this.title = title;
 	}
@@ -53,7 +53,7 @@ export default class ActiveSession {
 		await Promise.all(
 			sessionData.children.map(
 				tabBookmark => {
-					activeSession.addTab(tabBookmark, load);
+					activeSession.openBookmarkTab(tabBookmark, load);
 				}
 			)
 		);
@@ -65,40 +65,6 @@ export default class ActiveSession {
 		}
 
 		return activeSession;
-	}
-
-	public static async createFromTabs(tabs:Tab[], title:string, windowsId?:number):Promise<ActiveSession> {
-		// check if there are any tabs to create a session from
-		if(tabs.length === 0) {
-			throw new Error("No tabs to create a session from. Sessions cannot be empty.");
-		}
-
-		// create bookmark folder
-		let folder:Bookmark = await browser.bookmarks.create({
-			parentId: await OptionsManager.getValue<string>("rootFolder"),
-			title: title
-		});
-
-		// ActiveSession instance
-		let session:ActiveSession = new ActiveSession(folder.id, title);
-
-		// setup tabs
-		await Promise.all(
-			tabs.map(
-				async tab => {
-					let data:TabData = TabData.createFromTab(tab);
-
-					// create a bookmark for the tab
-					let bm:Bookmark = await browser.bookmarks.create(
-						data.getBookmarkCreateDetails(session.bookmarkId)
-					);
-
-					await session.setupTab(tab, bm.id);
-				}
-			)
-		);
-
-		return session;
 	}
 
 	public static async restoreSingleTab(tabBookmark:Bookmark):Promise<ActiveSession> {
@@ -118,7 +84,7 @@ export default class ActiveSession {
 			emptyTab = wnd.tabs[0];
 		}
 
-		activeSession.addTab(tabBookmark);
+		activeSession.openBookmarkTab(tabBookmark);
 
 		if(emptyTab) {
 			// close "newtab" tab after sessions tabs are restored
@@ -133,7 +99,7 @@ export default class ActiveSession {
 	 * @param tab a browser tab
 	 * @param tabBookmarkId the id of the bookmark representing this tab
 	 */
-	private async setupTab(tab:Tab, tabBookmarkId:string):Promise<void> {
+	public async addExistingTab(tab:Tab, tabBookmarkId:string):Promise<void> {
 		// store session info via the sessions API
 		await Promise.all([
 			browser.sessions.setTabValue(tab.id, "sessionID", this.bookmarkId),
@@ -143,7 +109,14 @@ export default class ActiveSession {
 		this.tabs.set(tab.id, tabBookmarkId);
 	}
 
-	private async addTab(tabBookmark:Bookmark, load:boolean = true):Promise<Tab> {
+	/**
+	 * Open a tab from a bookmark and add it to this session
+	 * @param tabBookmark a bookmark from this session
+	 * @param load load instantly (true) or create unloaded tab (false)
+	 */
+	public async openBookmarkTab(tabBookmark:Bookmark, load:boolean = true):Promise<Tab> {
+		console.assert(tabBookmark && tabBookmark.parentId === this.bookmarkId);
+
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
 		let createProperties = data.getTabCreateProperties();
 
@@ -163,15 +136,9 @@ export default class ActiveSession {
 			UnloadedTabs.create(createProperties, data)
 		);
 
-		this.setupTab(browserTab, tabBookmark.id);
+		this.addExistingTab(browserTab, tabBookmark.id);
 
 		return browserTab;
-	}
-
-	public async openSingleTab(tabBookmark:Bookmark):Promise<void> {
-		console.assert(tabBookmark && tabBookmark.parentId === this.bookmarkId);
-
-		await this.addTab(tabBookmark);
 	}
 
 	public async setAside():Promise<void> {
