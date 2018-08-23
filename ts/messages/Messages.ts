@@ -23,7 +23,7 @@ export class Message {
 	}
 }
 
-type SessionCMD = "restore" | "restore-single" | "set-aside";
+type SessionCMD = "restore" | "restore-single" | "set-aside" | "create";
 
 export class SessionCommand extends Message {
 	public readonly cmd:SessionCMD;
@@ -58,7 +58,7 @@ export class DataRequest extends Message {
 	}
 }
 
-type SessionEventType = "activated" | "set-aside" | "meta-update" | "removed";
+type SessionEventType = "activated" | "set-aside" | "meta-update" | "removed" | "created";
 
 export class SessionEvent extends Message {
 	public readonly sessionId:string;

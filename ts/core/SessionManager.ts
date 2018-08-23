@@ -6,6 +6,7 @@ import * as RestoreTabs from "./RestoreTabs";
 
 type SessionId = string;
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
+type Tab = browser.tabs.Tab;
 
 let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
@@ -20,6 +21,15 @@ export async function execCommand(cmd:SessionCommand):Promise<any> {
 		restoreSingle(tabBookmarkId);
 	} else if(c === "set-aside") {
 		setAside(sessionId);
+	} else if(c === "create") {
+		let title:string = cmd.args[0];
+		let tabIds:number[] = cmd.args[1];
+
+		let tabs:Tab[] = await Promise.all(
+			tabIds.map(tabId => browser.tabs.get(tabId))
+		);
+
+		createSessionFromTabs(tabs, title);
 	}
 }
 
@@ -89,11 +99,25 @@ export async function createSessionFromTabs(
 	// filter tabs that cannot be restored
 	tabs = tabs.filter(tab => !TabData.createFromTab(tab).isPrivileged());
 
-	let session:ActiveSession = await ActiveSession.createFromTabs(tabs, title, windowId);
+	let activeSessionsEnabled:boolean = await OptionsManager.getValue<boolean>("activeSessions");
 
-	SessionEvent.send(session.bookmarkId, "activated");
+	let sessionId:string;
 
-	return session.bookmarkId;
+	if(activeSessionsEnabled) {
+		let session:ActiveSession = await ActiveSession.createFromTabs(tabs, title, windowId);
+		sessionId = session.bookmarkId;
+		activeSessions.set(sessionId, session);
+	} else {
+		//TODO
+	}
+
+	await SessionEvent.send(sessionId, "created");
+
+	if(activeSessionsEnabled) {
+		SessionEvent.send(sessionId, "activated");
+	}
+
+	return sessionId;
 }
 
 export async function createSessionFromWindow(title?:string, windowId?:number):Promise<SessionId> {

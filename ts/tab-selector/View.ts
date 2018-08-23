@@ -1,5 +1,6 @@
 import * as HTMLUtils from "../util/HTMLUtilities";
-import { Tab, TabId, SelectableTab, toggleTab, selectAll, unSelectAll, invertSelection } from "./TabSelector";
+import { Tab, TabId, SelectableTab, toggleTab, selectAll, unSelectAll, invertSelection, getSelectedIds } from "./TabSelector";
+import { SessionCommand } from "../messages/Messages";
 
 let tabs:Map<TabId, HTMLElement> = new Map();
 
@@ -17,6 +18,18 @@ export function init() {
 		selectControls.querySelector("#select-all").addEventListener("click", selectAll);
 		selectControls.querySelector("#clear").addEventListener("click", unSelectAll);
 		selectControls.querySelector("#invert").addEventListener("click", invertSelection);
+
+		// action buttons
+		let footerControls:HTMLElement = document.querySelector("footer");
+		footerControls.querySelector("#create-session").addEventListener("click", () => {
+			browser.sidebarAction.open();
+			SessionCommand.send("create", [null, getSelectedIds()]);
+			unSelectAll();
+		});
+
+		footerControls.querySelector("#close").addEventListener("click", () => {
+			browser.tabs.remove(getSelectedIds());
+		});
 	});
 }
 
