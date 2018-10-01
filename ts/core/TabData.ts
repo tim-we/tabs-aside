@@ -9,6 +9,7 @@ type TabCreateProperties = {
 	pinned?:boolean;
 	openInReaderMode?:boolean;
 	windowId?:number;
+	discarded?: boolean;
 };
 type BookmarkCreateDetails = browser.bookmarks.CreateDetails;
 
@@ -42,7 +43,8 @@ export default class TabData {
 		let createProperties:TabCreateProperties = {
 			url: this.url,
 			openInReaderMode: this.isInReaderMode,
-			pinned: this.pinned
+			pinned: this.pinned,
+			discarded: !this.pinned // Pinned tabs cannot be created and discarded.
 		};
 		
 		return createProperties;
@@ -97,6 +99,8 @@ export default class TabData {
 
 			// guess the favicon path
 			this.favIconUrl = (new URL(bookmark.url)).origin + "/favicon.ico";
+			// alternative:
+			// link.href = "http://s2.googleusercontent.com/s2/favicons?domain=" + url.hostname;
 
 			if(this.viewSource) {
 				this.url = viewSourcePrefix + this.url;

@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "tab/session manager",
   "scripts": {
-    "build": "webpack && tsc -p tsconfig.single.json",
+    "build": "webpack",
     "firefox": "web-ext build -s dist -a releases -i=\"**/*.pdn\" \"**/*.js.map\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

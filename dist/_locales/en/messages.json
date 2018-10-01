@@ -54,14 +54,6 @@
 	"menu_more_tooltip": {
 		"message": "expand menu and show all options"
 	},
-
-	"option_smartTabLoading": {
-		"message": "Smart tab loading"
-	},
-
-	"option_smartTabLoading_hint": {
-		"message": "does not load all tabs at once when restoring a session"
-	},
 	
 	"option_activeSessions": {
 		"message": "Active Sessions"

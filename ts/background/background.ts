@@ -2,12 +2,10 @@ import * as SessionManager from "../core/SessionManager";
 import { Message, SessionCommand, DataRequest } from "../messages/Messages";
 import * as BrowserActionManager from "../browserAction/BrowserActionManager";
 import * as KeyboardCommands from "./KeyboardCommands";
-import * as UnloadedTabs from "../core/UnloadedTabs";
 import * as MessageListener from "../messages/MessageListener";
 
 MessageListener.setDestination("background");
 BrowserActionManager.init();
-UnloadedTabs.init();
 KeyboardCommands.init();
 
 MessageListener.add("*", async (message:Message) => {

@@ -1,5 +1,4 @@
 import TabData from "./TabData";
-import * as UnloadedTabs from "./UnloadedTabs";
 import * as OptionsManager from "../options/OptionsManager";
 import FuncIterator from "../util/FuncIterator";
 
@@ -47,14 +46,10 @@ export default class ActiveSession {
 			await browser.sessions.setWindowValue(wnd.id, "sessionID", sessionId);
 		}
 
-		let load:boolean = !(await OptionsManager.getValue<boolean>("smartTabLoading"));
-
 		// add tabs
 		await Promise.all(
 			sessionData.children.map(
-				tabBookmark => {
-					activeSession.openBookmarkTab(tabBookmark, load);
-				}
+				tabBookmark => activeSession.openBookmarkTab(tabBookmark)
 			)
 		);
 
@@ -112,9 +107,8 @@ export default class ActiveSession {
 	/**
 	 * Open a tab from a bookmark and add it to this session
 	 * @param tabBookmark a bookmark from this session
-	 * @param load load instantly (true) or create unloaded tab (false)
 	 */
-	public async openBookmarkTab(tabBookmark:Bookmark, load:boolean = true):Promise<Tab> {
+	public async openBookmarkTab(tabBookmark:Bookmark):Promise<Tab> {
 		console.assert(tabBookmark && tabBookmark.parentId === this.bookmarkId);
 
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
@@ -124,17 +118,7 @@ export default class ActiveSession {
 			createProperties.windowId = this.windowId;
 		}
 
-		if(createProperties.openInReaderMode) {
-			// tab loader does not currently support reader mode
-			// since tabs.toggleReaderMode() does not work while
-			// the tab is still loading :(
-			load = true;
-		}
-
-		let browserTab:Tab = await (load ?
-			browser.tabs.create(createProperties) :
-			UnloadedTabs.create(createProperties, data)
-		);
+		let browserTab:Tab = await browser.tabs.create(createProperties);
 
 		this.addExistingTab(browserTab, tabBookmark.id);
 
@@ -165,6 +149,12 @@ export default class ActiveSession {
 			windowId: this.windowId,
 			tabs: this.getTabsIds()
 		};
+	}
+
+	public async hightlight():Promise<void> {
+		await browser.tabs.highlight({
+			tabs: this.getTabsIds()
+		});
 	}
 }
 

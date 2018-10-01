@@ -7,12 +7,6 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 (() => {
 	let options:Option[] = [
 		{
-			id: "smartTabLoading",
-			type: "boolean",
-			default: true,
-			hint: true
-		},
-		{
 			id: "activeSessions",
 			type: "boolean",
 			default: true,
