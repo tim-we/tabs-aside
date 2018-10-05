@@ -18,7 +18,7 @@ export async function createFromTabs(tabs:Tab[], title:string, windowsId?:number
 	});
 
 	// ActiveSession instance
-	let session:ActiveSession = new ActiveSession(folder.id, title);
+	let session:ActiveSession = new ActiveSession(folder);
 
 	// setup tabs
 	await Promise.all(

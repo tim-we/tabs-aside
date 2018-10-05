@@ -22,33 +22,31 @@ export default class ActiveSession {
 	private tabs:Map<number, string> = new Map();
 	private unloadedTabs:Set<number> = new Set();
 
-	constructor(sessionId:string, title?:string) {
-		this.bookmarkId = sessionId;
-		this.title = title;
+	constructor(sessionBookmark:Bookmark) {
+		this.bookmarkId = sessionBookmark.id;
+		this.title = sessionBookmark.title;
 	}
 
-	public static async restoreAll(sessionId:string):Promise<ActiveSession> {
-		// get session bookmark & children
-		let sessionData:Bookmark = (await browser.bookmarks.getSubTree(sessionId))[0];
-		console.assert(sessionData && sessionData.children.length > 0);
-
+	private static async restore(sessionBookmark:Bookmark, tabBookmark?:Bookmark):Promise<ActiveSession> {
 		// create ActiveSession instance
-		let activeSession:ActiveSession = new ActiveSession(sessionId, sessionData.title);
+		let activeSession:ActiveSession = new ActiveSession(sessionBookmark);
 
 		let windowedSession:boolean = await OptionsManager.getValue<boolean>("windowedSession");
 		let emptyTab:Tab = null;
 
 		if(windowedSession) {
-			// create session window
-			let wnd:Window = await createWindow(sessionData.title);
-			activeSession.windowId = wnd.id;
+			// windowed mode
+			let wnd:Window = await activeSession.createSessionWindow(sessionBookmark);
+			// new window contains a "newtab" tab
 			emptyTab = wnd.tabs[0];
-			await browser.sessions.setWindowValue(wnd.id, "sessionID", sessionId);
 		}
+
+		// open a single tab or all tabs
+		let tabsToOpen:Bookmark[] = tabBookmark ? [tabBookmark] : sessionBookmark.children;
 
 		// add tabs
 		await Promise.all(
-			sessionData.children.map(
+			tabsToOpen.map(
 				tabBookmark => activeSession.openBookmarkTab(tabBookmark)
 			)
 		);
@@ -62,31 +60,28 @@ export default class ActiveSession {
 		return activeSession;
 	}
 
+	/**
+	 * Creates an active session and restores all tabs.
+	 * @param sessionId The bookmark id of the session to be restored
+	 */
+	public static async restoreAll(sessionId:string):Promise<ActiveSession> {
+		// get session bookmark & children
+		let sessionBookmark:Bookmark = (await browser.bookmarks.getSubTree(sessionId))[0];
+		console.assert(sessionBookmark && sessionBookmark.children.length > 0);
+
+		return await ActiveSession.restore(sessionBookmark);
+	}
+
+	/**
+	 * Creates an active session but restores only a single tab.
+	 * @param tabBookmark The bookmark of the tab to restore
+	 */
 	public static async restoreSingleTab(tabBookmark:Bookmark):Promise<ActiveSession> {
+		// parent bookmark = session bookmark
 		let sessionId:string = tabBookmark.parentId;
 		let sessionBookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
-		let activeSession:ActiveSession = new ActiveSession(sessionId, sessionBookmark.title);
 
-		let emptyTab:Tab = null;
-
-		if(await OptionsManager.getValue<boolean>("windowedSession")) {
-			let sessionBookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
-
-			// create session window
-			let wnd:Window = await createWindow(sessionBookmark.title);
-			activeSession.windowId = wnd.id;
-			// new window contains a "newtab" tab
-			emptyTab = wnd.tabs[0];
-		}
-
-		activeSession.openBookmarkTab(tabBookmark);
-
-		if(emptyTab) {
-			// close "newtab" tab after sessions tabs are restored
-			browser.tabs.remove(emptyTab.id);
-		}
-
-		return activeSession;
+		return await ActiveSession.restore(sessionBookmark, tabBookmark);
 	}
 
 	/**
@@ -142,6 +137,20 @@ export default class ActiveSession {
 		return fi.append(this.unloadedTabs.values()).toArray();
 	}
 
+	private async createSessionWindow(sessionBookmark?:Bookmark):Promise<Window> {
+		// create session window
+		let wnd:Window = await browser.windows.create(
+			sessionBookmark ? {
+				titlePreface: sessionBookmark.title + " | "
+			} : {}
+		);
+
+		this.windowId = wnd.id;
+		await browser.sessions.setWindowValue(wnd.id, "sessionID", this.bookmarkId);
+
+		return wnd;
+	}
+
 	public getData():ActiveSessionData {
 		return {
 			bookmarkId: this.bookmarkId,
@@ -156,12 +165,4 @@ export default class ActiveSession {
 			tabs: this.getTabsIds()
 		});
 	}
-}
-
-function createWindow(sessionTitle?:string):Promise<Window> {
-	let prefix:string = sessionTitle + " | ";
-	
-	return browser.windows.create(
-		sessionTitle ? {titlePreface: prefix} : {}
-	);
 }

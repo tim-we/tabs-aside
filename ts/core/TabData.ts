@@ -97,10 +97,7 @@ export default class TabData {
 			this.isInReaderMode = data.options.has("rm");
 			this.viewSource = data.options.has("src");
 
-			// guess the favicon path
-			this.favIconUrl = (new URL(bookmark.url)).origin + "/favicon.ico";
-			// alternative:
-			// link.href = "http://s2.googleusercontent.com/s2/favicons?domain=" + url.hostname;
+			this.favIconUrl = this.getFavIconURL(bookmark.url);
 
 			if(this.viewSource) {
 				this.url = viewSourcePrefix + this.url;
@@ -145,5 +142,13 @@ export default class TabData {
 			title: matches[matches.length - 1],
 			options: options
 		};
+	}
+
+	private getFavIconURL(url:string):string {
+		// guess the favicon path
+		return (new URL(url)).origin + "/favicon.ico";
+
+		// alternative:
+		// link.href = "http://s2.googleusercontent.com/s2/favicons?domain=" + url.hostname;
 	}
 }
