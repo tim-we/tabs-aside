@@ -1,14 +1,12 @@
 import * as OptionsManager from "../options/OptionsManager";
 import TabData from "./TabData";
-
-type Bookmark = browser.bookmarks.BookmarkTreeNode;
-type Window = browser.windows.Window;
+import { Window, Bookmark, SessionId } from "../util/CommonTypes";
 
 /**
  * Classic restore function (just opens tabs, no active session)
  * @param sessionId
  */
-export async function restore(sessionId:string):Promise<void> {
+export async function restore(sessionId:SessionId):Promise<void> {
 	let tabBookmarks:Bookmark[],
 		openInNewWindow:boolean;
 

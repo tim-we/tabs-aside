@@ -1,8 +1,6 @@
 import * as OptionsManager from "../options/OptionsManager";
 import TabData from "./TabData";
-
-type Tab = browser.tabs.Tab;
-type Bookmark = browser.bookmarks.BookmarkTreeNode;
+import { Tab, Bookmark } from "../util/CommonTypes";
 
 export async function tabsAside(
 	tabs:Tab[],

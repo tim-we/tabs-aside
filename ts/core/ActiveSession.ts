@@ -1,10 +1,7 @@
 import TabData from "./TabData";
 import * as OptionsManager from "../options/OptionsManager";
 import FuncIterator from "../util/FuncIterator";
-
-type Tab = browser.tabs.Tab;
-type Window = browser.windows.Window;
-type Bookmark = browser.bookmarks.BookmarkTreeNode;
+import { Tab, Bookmark, Window } from "../util/CommonTypes";
 
 export interface ActiveSessionData {
 	readonly bookmarkId;
@@ -85,7 +82,9 @@ export default class ActiveSession {
 	}
 
 	/**
-	 * Sets tab values (sessions API) and stores tab in the local data structure
+	 * Adds an existing tab to the active session.
+	 * This method does not create a bookmark for the given tab, instead it
+	 * sets tab values (sessions API) and stores tab in the local data structure.
 	 * @param tab a browser tab
 	 * @param tabBookmarkId the id of the bookmark representing this tab
 	 */

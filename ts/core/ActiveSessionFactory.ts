@@ -1,9 +1,7 @@
 import ActiveSession from "./ActiveSession";
 import * as OptionsManager from "../options/OptionsManager";
 import TabData from "./TabData";
-
-type Tab = browser.tabs.Tab;
-type Bookmark = browser.bookmarks.BookmarkTreeNode;
+import { Tab, Bookmark } from "../util/CommonTypes";
 
 export async function createFromTabs(tabs:Tab[], title:string, windowsId?:number):Promise<ActiveSession> {
 	// check if there are any tabs to create a session from

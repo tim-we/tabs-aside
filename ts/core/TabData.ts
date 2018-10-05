@@ -1,17 +1,14 @@
-type Tab = browser.tabs.Tab;
-type Bookmark = browser.bookmarks.BookmarkTreeNode;
+import {
+	Tab,
+	Bookmark,
+	TabCreateProperties,
+	BookmarkCreateDetails
+} from "../util/CommonTypes";
+
 type TitleData = {
 	title:string,
 	options:Set<string>
 };
-type TabCreateProperties = {
-	url: string;
-	pinned?:boolean;
-	openInReaderMode?:boolean;
-	windowId?:number;
-	discarded?: boolean;
-};
-type BookmarkCreateDetails = browser.bookmarks.CreateDetails;
 
 /**
  * Regular expression that parses tab options and title from a bookmark title.
