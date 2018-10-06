@@ -17,7 +17,6 @@ export default class ActiveSession {
 	
 	// maps tab ids to bookmark ids
 	private tabs:Map<number, string> = new Map();
-	private unloadedTabs:Set<number> = new Set();
 
 	constructor(sessionBookmark:Bookmark) {
 		this.bookmarkId = sessionBookmark.id;
@@ -124,7 +123,7 @@ export default class ActiveSession {
 
 		if(this.windowId) {
 			this.tabs = new Map();
-			this.unloadedTabs = new Set();
+
 			await browser.windows.remove(this.windowId);
 		} else {
 			await browser.tabs.remove(this.getTabsIds());
@@ -132,8 +131,7 @@ export default class ActiveSession {
 	}
 
 	private getTabsIds():number[] {
-		let fi:FuncIterator<number> = new FuncIterator(this.tabs.keys());
-		return fi.append(this.unloadedTabs.values()).toArray();
+		return Array.from(this.tabs.keys());
 	}
 
 	private async createSessionWindow(sessionBookmark?:Bookmark):Promise<Window> {
