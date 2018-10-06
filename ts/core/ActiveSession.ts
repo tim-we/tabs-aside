@@ -53,6 +53,11 @@ export default class ActiveSession {
 			browser.tabs.remove(emptyTab.id);
 		}
 
+		if(!windowedSession) {
+			// the session does not have its own window -> highlight tabs
+			activeSession.hightlight();
+		}
+
 		return activeSession;
 	}
 
@@ -113,7 +118,7 @@ export default class ActiveSession {
 
 		let browserTab:Tab = await browser.tabs.create(createProperties);
 
-		this.addExistingTab(browserTab, tabBookmark.id);
+		await this.addExistingTab(browserTab, tabBookmark.id);
 
 		return browserTab;
 	}
@@ -158,8 +163,20 @@ export default class ActiveSession {
 	}
 
 	public async hightlight():Promise<void> {
-		await browser.tabs.highlight({
-			tabs: this.getTabsIds()
+		let tabIds:number[] = this.getTabsIds();
+		// avoid browser errors
+		if(tabIds.length === 0) { return; }
+
+		let tabs:Tab[] = await Promise.all(
+			tabIds.map(
+				tabId => browser.tabs.get(tabId)
+			)
+		);
+
+		browser.tabs.highlight({
+			tabs: tabs.map(tab => tab.index)
+		}).catch(() => {
+			console.log("[TA] Tab highlighting failed. This is most likely due to browser.tabs.multiselect not being enabled.");
 		});
 	}
 }
