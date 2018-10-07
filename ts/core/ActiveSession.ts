@@ -1,7 +1,14 @@
 import TabData from "./TabData";
 import * as OptionsManager from "../options/OptionsManager";
 import FuncIterator from "../util/FuncIterator";
-import { Tab, Bookmark, Window } from "../util/CommonTypes";
+import {
+	Tab, Bookmark, Window,
+	TabCreatedListener,
+	TabRemoveListener,
+	TabUpdatedListener,
+	TabAttachedListener,
+	TabDetachedListener
+} from "../util/Types";
 
 export interface ActiveSessionData {
 	readonly bookmarkId;
@@ -17,6 +24,13 @@ export default class ActiveSession {
 	
 	// maps tab ids to bookmark ids
 	private tabs:Map<number, string> = new Map();
+
+	// event listeners
+	private tabAttachedListener:TabAttachedListener;
+	private tabDetachedListener:TabDetachedListener;
+	private tabCreatedListener:TabCreatedListener;
+	private tabRemovedListener:TabRemoveListener;
+	private tabUpdatedListener:TabUpdatedListener;
 
 	constructor(sessionBookmark:Bookmark) {
 		this.bookmarkId = sessionBookmark.id;
@@ -58,12 +72,14 @@ export default class ActiveSession {
 			activeSession.hightlight();
 		}
 
+		activeSession.setEventListeners();
+
 		return activeSession;
 	}
 
 	/**
 	 * Creates an active session and restores all tabs.
-	 * @param sessionId The bookmark id of the session to be restored
+	 * @param sessionId - The bookmark id of the session to be restored
 	 */
 	public static async restoreAll(sessionId:string):Promise<ActiveSession> {
 		// get session bookmark & children
@@ -75,7 +91,7 @@ export default class ActiveSession {
 
 	/**
 	 * Creates an active session but restores only a single tab.
-	 * @param tabBookmark The bookmark of the tab to restore
+	 * @param tabBookmark - The bookmark of the tab to restore
 	 */
 	public static async restoreSingleTab(tabBookmark:Bookmark):Promise<ActiveSession> {
 		// parent bookmark = session bookmark
@@ -87,12 +103,20 @@ export default class ActiveSession {
 
 	/**
 	 * Adds an existing tab to the active session.
-	 * This method does not create a bookmark for the given tab, instead it
-	 * sets tab values (sessions API) and stores tab in the local data structure.
-	 * @param tab a browser tab
-	 * @param tabBookmarkId the id of the bookmark representing this tab
+	 * If no bookmark id is passed as a second argument a new bookmark will be created.
+	 * @param tab - A browser tab
+	 * @param tabBookmarkId - (Optional) The id of the bookmark representing this tab
 	 */
-	public async addExistingTab(tab:Tab, tabBookmarkId:string):Promise<void> {
+	public async addExistingTab(tab:Tab, tabBookmarkId?:string):Promise<void> {
+		if(!tabBookmarkId) {
+			// create a bookmark for this tab
+			let tabBookmark:Bookmark = await browser.bookmarks.create(
+				TabData.createFromTab(tab).getBookmarkCreateDetails(this.bookmarkId)
+			);
+
+			tabBookmarkId = tabBookmark.id;
+		}
+
 		// store session info via the sessions API
 		await Promise.all([
 			browser.sessions.setTabValue(tab.id, "sessionID", this.bookmarkId),
@@ -104,7 +128,7 @@ export default class ActiveSession {
 
 	/**
 	 * Open a tab from a bookmark and add it to this session
-	 * @param tabBookmark a bookmark from this session
+	 * @param tabBookmark - A bookmark from this session
 	 */
 	public async openBookmarkTab(tabBookmark:Bookmark):Promise<Tab> {
 		console.assert(tabBookmark && tabBookmark.parentId === this.bookmarkId);
@@ -178,5 +202,93 @@ export default class ActiveSession {
 		}).catch(() => {
 			console.log("[TA] Tab highlighting failed. This is most likely due to browser.tabs.multiselect not being enabled.");
 		});
+	}
+
+	private async setEventListeners() {
+		let removeTabs:boolean = (await OptionsManager.getValue<string>("tabClosingBehavior")) === "remove-tab";
+
+		let tabRemovedFromSession = async (tabId:number) => {
+			let tabBookmarkId:string = this.tabs.get(tabId);
+
+			// check if tab is part of this session
+			if(tabBookmarkId) {
+				// remove tab
+				this.tabs.delete(tabId);
+
+				if(removeTabs) {
+					await browser.bookmarks.remove(tabBookmarkId);
+
+					if(this.tabs.size === 0) {
+						let tabBookmarks:Bookmark[] = await browser.bookmarks.getChildren(this.bookmarkId);
+
+						if(tabBookmarks.length === 0) {
+							await browser.bookmarks.remove(this.bookmarkId);
+						}
+
+						//TODO: "close" active session
+					}
+				}
+			}
+		};
+
+		this.tabRemovedListener  = tabRemovedFromSession;
+		this.tabDetachedListener = tabRemovedFromSession;
+
+		this.tabAttachedListener = async (tabId, attachInfo) => {
+			if(attachInfo.newWindowId === this.windowId) {
+				let tab:Tab = await browser.tabs.get(tabId);
+				this.addExistingTab(tab);
+			}
+		};
+
+		this.tabUpdatedListener = async (tabId, changeInfo, tab) => {
+			let tabBookmarkId:string = this.tabs.get(tabId);
+
+			// check if tab loaded & part of this session
+			if(tabBookmarkId && changeInfo.status === "complete") {
+				// ignore some changes
+				let ignore:boolean = changeInfo.hasOwnProperty("discarded")
+					|| changeInfo.hasOwnProperty("audible")
+					|| changeInfo.hasOwnProperty("attention");
+
+				if(!ignore) {
+					// update this Tabs bookmark
+					await browser.bookmarks.update(
+						tabBookmarkId,
+						TabData.createFromTab(tab).getBookmarkUpdate()
+					);
+				}
+			}
+		};
+
+		this.tabCreatedListener = async (tab) => {
+			/* determine if tab should be added to the session
+			 * the tab should be added if:
+			 * - tab is part of the sessions window (windowed mode)
+			 * - tab was opened by/from a tab from this session
+			*/
+			let addToSession:boolean = tab.windowId === this.windowId
+				|| (tab.hasOwnProperty("openerTabId") && this.tabs.has(tab.openerTabId));
+
+			if(addToSession) {
+				this.addExistingTab(tab);
+			}
+		};
+
+		// add event listeners
+		browser.tabs.onAttached.addListener(this.tabAttachedListener);
+		browser.tabs.onDetached.addListener(this.tabDetachedListener);
+		browser.tabs.onCreated.addListener(this.tabCreatedListener);
+		browser.tabs.onRemoved.addListener(this.tabRemovedListener);
+		browser.tabs.onUpdated.addListener(this.tabUpdatedListener);
+	}
+
+	private removeEventListeners() {
+		browser.tabs.onAttached.removeListener(this.tabAttachedListener);
+		browser.tabs.onDetached.removeListener(this.tabDetachedListener);
+
+		browser.tabs.onCreated.removeListener(this.tabCreatedListener);
+		browser.tabs.onRemoved.removeListener(this.tabRemovedListener);
+		browser.tabs.onUpdated.removeListener(this.tabUpdatedListener);
 	}
 }

@@ -1,6 +1,6 @@
 import * as OptionsManager from "../options/OptionsManager";
 import TabData from "./TabData";
-import { Window, Bookmark, SessionId } from "../util/CommonTypes";
+import { Window, Bookmark, SessionId } from "../util/Types";
 
 /**
  * Classic restore function (just opens tabs, no active session)

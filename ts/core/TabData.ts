@@ -2,8 +2,9 @@ import {
 	Tab,
 	Bookmark,
 	TabCreateProperties,
-	BookmarkCreateDetails
-} from "../util/CommonTypes";
+	BookmarkCreateDetails,
+	BookmarkChanges
+} from "../util/Types";
 
 type TitleData = {
 	title:string,
@@ -50,6 +51,13 @@ export default class TabData {
 	public getBookmarkCreateDetails(parentId:string):BookmarkCreateDetails {
 		return {
 			parentId: parentId,
+			title: this.encodeTitle(),
+			url: this.url
+		};
+	}
+
+	public getBookmarkUpdate():BookmarkChanges {
+		return {
 			title: this.encodeTitle(),
 			url: this.url
 		};

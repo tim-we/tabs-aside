@@ -4,7 +4,7 @@ import TabData from "./TabData";
 import { SessionCommand, SessionEvent, DataRequest } from "../messages/Messages";
 import * as OptionsManager from "../options/OptionsManager";
 import * as RestoreTabs from "./RestoreTabs";
-import { Tab, Bookmark, SessionId } from "../util/CommonTypes";
+import { Tab, Bookmark, SessionId } from "../util/Types";
 
 let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
