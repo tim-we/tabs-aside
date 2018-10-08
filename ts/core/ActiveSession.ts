@@ -9,6 +9,7 @@ import {
 	TabAttachedListener,
 	TabDetachedListener
 } from "../util/Types";
+import { SessionContentUpdate } from "../messages/Messages";
 
 export interface ActiveSessionData {
 	readonly bookmarkId;
@@ -148,7 +149,7 @@ export default class ActiveSession {
 	}
 
 	public async setAside():Promise<void> {
-		//TODO: remove event listeners
+		this.removeEventListeners();
 
 		if(this.windowId) {
 			this.tabs = new Map();
@@ -217,17 +218,22 @@ export default class ActiveSession {
 
 				if(removeTabs) {
 					await browser.bookmarks.remove(tabBookmarkId);
+				}
 
-					if(this.tabs.size === 0) {
+				if(this.tabs.size === 0) {
+					if(removeTabs) {
 						let tabBookmarks:Bookmark[] = await browser.bookmarks.getChildren(this.bookmarkId);
 
 						if(tabBookmarks.length === 0) {
 							await browser.bookmarks.remove(this.bookmarkId);
 						}
-
-						//TODO: "close" active session
 					}
+
+					//TODO: "close" active session
 				}
+
+				// update sidebar
+				SessionContentUpdate.send(this.bookmarkId);
 			}
 		};
 
@@ -238,6 +244,9 @@ export default class ActiveSession {
 			if(attachInfo.newWindowId === this.windowId) {
 				let tab:Tab = await browser.tabs.get(tabId);
 				this.addExistingTab(tab);
+
+				// update sidebar
+				SessionContentUpdate.send(this.bookmarkId);
 			}
 		};
 
@@ -245,18 +254,23 @@ export default class ActiveSession {
 			let tabBookmarkId:string = this.tabs.get(tabId);
 
 			// check if tab loaded & part of this session
-			if(tabBookmarkId && changeInfo.status === "complete") {
-				// ignore some changes
-				let ignore:boolean = changeInfo.hasOwnProperty("discarded")
-					|| changeInfo.hasOwnProperty("audible")
-					|| changeInfo.hasOwnProperty("attention");
+			if(tabBookmarkId) {
+				// only update session for certain changes
+				let update:boolean = changeInfo.hasOwnProperty("url")
+					|| changeInfo.hasOwnProperty("title")
+					|| changeInfo.hasOwnProperty("mutedInfo")
+					|| changeInfo.hasOwnProperty("pinned");
 
-				if(!ignore) {
+				if(update) {
+					console.log(changeInfo);
 					// update this Tabs bookmark
 					await browser.bookmarks.update(
 						tabBookmarkId,
 						TabData.createFromTab(tab).getBookmarkUpdate()
 					);
+
+					// update sidebar
+					SessionContentUpdate.send(this.bookmarkId);
 				}
 			}
 		};
@@ -272,6 +286,9 @@ export default class ActiveSession {
 
 			if(addToSession) {
 				this.addExistingTab(tab);
+
+				// update sidebar
+				SessionContentUpdate.send(this.bookmarkId);
 			}
 		};
 

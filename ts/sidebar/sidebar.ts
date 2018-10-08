@@ -93,7 +93,7 @@ function updateView(sessionId:string, sessionBookmark:Bookmark):void {
 	let view = sessionViews.get(sessionId);
 
 	if(view) {
-		view.update();
+		view.updateMeta();
 	}
 }
 
@@ -137,12 +137,14 @@ async function messageHandler(message:Message) {
 			}
 		}
 
-		if(msg.event === "activated") {
+		if(msg.event === "content-update") {
+			sessionView.updateTabs();
+		} else if(msg.event === "activated") {
 			sessionView.setActiveState(true);
 		} else if(msg.event === "set-aside") {
 			sessionView.setActiveState(false);
 		} else if(msg.event === "meta-update") {
-			sessionView.update();
+			sessionView.updateMeta();
 		} else if(msg.event === "removed") {
 			sessionView.getHTML().remove();
 			sessionViews.delete(msg.sessionId);

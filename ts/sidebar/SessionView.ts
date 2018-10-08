@@ -41,27 +41,33 @@ export default class SessionView {
 		this.bookmarkId = bookmark.id;
 
 		this.createHTML(bookmark);
-		this.update();
+		this.updateMeta();
+		this.updateTabs();
 	}
 
 	public getHTML() {
 		return this.html;
 	}
 
-	public async update() {
+	public async updateMeta() {
 		// cancel title editmode
 		EditText.cancel(this.titleElement);
 
-		let sessionBookmark:Bookmark = (await browser.bookmarks.getSubTree(this.bookmarkId))[0];
+		let sessionBookmark:Bookmark = (await browser.bookmarks.get(this.bookmarkId))[0];
 		
 		this.titleElement.textContent = sessionBookmark.title;
+	}
+
+	public async updateTabs() {
+		let tabs:Bookmark[] = await browser.bookmarks.getChildren(this.bookmarkId);
+
 		this.tabCounter.textContent = browser.i18n.getMessage(
 			"sidebar_session_number_of_tabs",
-			sessionBookmark.children.length+""
+			tabs.length+""
 		);
 
 		if(this.tabView) {
-			this.tabView.update(sessionBookmark.children);
+			this.tabView.update(tabs);
 		}
 	}
 

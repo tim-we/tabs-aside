@@ -58,7 +58,7 @@ export class DataRequest extends Message {
 	}
 }
 
-type SessionEventType = "activated" | "set-aside" | "meta-update" | "removed" | "created";
+type SessionEventType = "activated" | "set-aside" | "meta-update" | "content-update" | "removed" | "created";
 
 export class SessionEvent extends Message {
 	public readonly sessionId:string;
@@ -73,6 +73,21 @@ export class SessionEvent extends Message {
 
 	public static async send(sessionId:string, event:SessionEventType) {
 		let m:Message = new SessionEvent(sessionId, event);
+		await browser.runtime.sendMessage(m);
+	}
+}
+
+export class SessionContentUpdate extends SessionEvent {
+	public readonly changedTabs:string[] = [];
+	public readonly addedTabs:string[] = [];
+	public readonly removedTabs:string[] = [];
+
+	public constructor(sessionId:string) {
+		super(sessionId, "content-update");
+	}
+
+	public static async send(sessionId:string) {
+		let m:Message = new SessionContentUpdate(sessionId);
 		await browser.runtime.sendMessage(m);
 	}
 }

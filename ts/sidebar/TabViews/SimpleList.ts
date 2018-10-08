@@ -7,29 +7,34 @@ type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 export default class SimpleList extends TabView {
 
-	private list:HTMLOListElement = null;
+	private list:HTMLOListElement = document.createElement("ol");
 
 	constructor(sessionId:string) {
 		super(sessionId);
-		
 	}
 
 	public createHTML(tabBookmarks:Bookmark[]): HTMLOListElement {
-		let ol = document.createElement("ol");
-		this.list = ol;
+		let ol = this.list;
+		this.populateList(tabBookmarks);
+		return this.list;
+	}
+
+	private populateList(tabBookmarks:Bookmark[]) {
 		this.setTabCountClass(tabBookmarks.length);
+
+		let ol = this.list;
+		ol.innerHTML = "";
 
 		tabBookmarks.forEach(
 			bm => ol.appendChild(this.createTabView(bm))
 		);
-
-		return this.list;
 	}
 
 	private createTabView(tabBookmark:Bookmark):HTMLLIElement {
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
 
 		let li:HTMLLIElement = document.createElement("li");
+		li.id = "tab" + tabBookmark.id;
 
 		let a:HTMLAnchorElement = document.createElement("a");
 		a.classList.add("tab");
@@ -69,7 +74,8 @@ export default class SimpleList extends TabView {
 	}
 
 	public update(tabBookmarks:Bookmark[]) {
-		// TODO
+		// temporary solution
+		this.populateList(tabBookmarks);
 	}
 
 	private createStateIcon(type:"pinned"|"rm"):HTMLElement {
