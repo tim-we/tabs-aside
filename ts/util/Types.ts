@@ -30,7 +30,6 @@ export type TabUpdatedListener = (
 ) => void;
 
 type TabChangeInfo = {
-	attention:boolean, // bug in @types/firefox-webext-browser
 	isArticle?:boolean,
 	mutedInfo?:browser.tabs.MutedInfo,
 	pinned?:boolean,

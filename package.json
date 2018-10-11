@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/tim-we/tabs-aside#readme",
   "dependencies": {
-    "@types/firefox-webext-browser": "^63.0.0",
+    "@types/firefox-webext-browser": "^63.0.1",
     "ts-loader": "^5.2.1",
     "typescript": "^3.1.1",
     "web-ext": "^2.9.1",
