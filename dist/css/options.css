@@ -9,6 +9,7 @@ a:link, a:visited { color: #0000FF; }
 }
 
 .row {
+	position: relative;
 	padding-top: 6px;
 	padding-left: 6px;
 	padding-right: 5px;
@@ -66,4 +67,16 @@ div.bookmarkFolderView {
 
 div.bookmarkFolderView:hover {
 	opacity: 0.75;
+}
+
+body:not(.active-sessions) .row.active-only::after {
+	content:"";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(200,200,200,0.42);
+	padding-bottom: 2px;
+	padding-top: 6px;
 }

@@ -15,6 +15,7 @@ interface DisplayOptions {
 	info?:boolean; // html
 	hidden?:boolean;
 	group?:OptionsGroup;
+	activeOnly?:boolean; // requires active sessions to be on/off (true/false)
 }
 
 export type BooleanOption = GenericOption<"boolean", boolean>;

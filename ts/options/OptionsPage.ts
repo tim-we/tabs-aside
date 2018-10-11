@@ -6,7 +6,20 @@ import * as BooleanControl from "./Controls/BooleanControl";
 import * as BookmarkControl from "./Controls/BookmarkControl";
 import * as SelectControl from "./Controls/SelectControl";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+	// Multiple options depend on the active session option
+	if(await OptionsManager.getValue<boolean>("activeSessions")) {
+		document.body.classList.add("active-sessions");
+	}
+	// react to changes
+	OptionsManager.addChangeListener("activeSessions", (newValue:boolean) => {
+		if(newValue) {
+			document.body.classList.add("active-sessions");
+		} else {
+			document.body.classList.remove("active-sessions");
+		}
+	});
+
 	let section = document.getElementById("main-section");
 	// option index, this is needed to create unique ids
 	let i = 0;
@@ -62,6 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			info.innerHTML = browser.i18n.getMessage(i18nMessageName + "_info");
 			info.classList.add("info");
 			row.appendChild(info);
+		}
+
+		if(option.activeOnly) {
+			row.classList.add("active-only");
 		}
 
 		// append row

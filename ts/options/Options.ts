@@ -22,7 +22,8 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			type: "select",
 			options: ["remove-tab", "set-aside"],
 			default: "remove-tab",
-			info: true
+			info: true,
+			activeOnly: true
 		},
 		{
 			id: "ignorePinned",
@@ -50,7 +51,8 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			id: "badgeCounter",
 			type: "boolean",
 			default: true,
-			group: "appearance"
+			group: "appearance",
+			activeOnly: true,
 		},
 		{
 			id: "menuShowAll",
