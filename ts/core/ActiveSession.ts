@@ -262,7 +262,6 @@ export default class ActiveSession {
 					|| changeInfo.hasOwnProperty("pinned");
 
 				if(update) {
-					console.log(changeInfo);
 					// update this Tabs bookmark
 					await browser.bookmarks.update(
 						tabBookmarkId,
