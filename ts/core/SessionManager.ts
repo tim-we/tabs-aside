@@ -68,21 +68,15 @@ export async function restoreSingle(tabBookmarkId:string) {
 
 	let tabBookmark:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
 	let sessionId:SessionId = tabBookmark.parentId;
+	let session:ActiveSession;
 
-	if(activeSessionsEnabled) {
-		let session:ActiveSession = activeSessions.get(sessionId);
-
-		if(session) {
-			session.openBookmarkTab(tabBookmark);
-		} else {
-			session = await ActiveSession.restoreSingleTab(tabBookmark);
-			activeSessions.set(sessionId, session);
-
-			SessionEvent.send(sessionId, "activated");
-		}
+	if(activeSessionsEnabled && (session = activeSessions.get(sessionId))) {
+		// if session is already partially active add tab to active session
+		session.openBookmarkTab(tabBookmark);
 	} else {
+		// create a new tab (no active session) otherwise
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
-		browser.tabs.create(data.getTabCreateProperties());
+		browser.tabs.create(data.getTabCreateProperties(true));
 	}
 }
 

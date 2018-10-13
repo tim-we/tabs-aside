@@ -4,7 +4,8 @@ export type Window = browser.windows.Window;
 export type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 export type TabCreateProperties = {
-	url: string;
+	active?:boolean;
+	url?: string;
 	pinned?:boolean;
 	openInReaderMode?:boolean;
 	windowId?:number;

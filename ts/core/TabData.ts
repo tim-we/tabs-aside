@@ -37,13 +37,15 @@ export default class TabData {
 		return new TabData(null, bookmark);
 	}
 
-	public getTabCreateProperties():TabCreateProperties {
-		 // pinned tabs, reader mode tabs, 'new tab' and "about" urls cannot be created and discarded
-		let discardTab:boolean = !this.pinned 
+	public getTabCreateProperties(active:boolean = false):TabCreateProperties {
+		 // active, pinned and reader mode tabs, 'new tab' and "about" urls cannot be created and discarded
+		let discardTab:boolean = !active
+			&& !this.pinned
 			&& !this.isInReaderMode
 			&& !(!this.url || this.url.startsWith("about:"));
 
 		let createProperties:TabCreateProperties = {
+			active: active,
 			url: this.url,
 			openInReaderMode: this.isInReaderMode,
 			pinned: this.pinned,
