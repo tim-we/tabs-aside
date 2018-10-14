@@ -4,6 +4,8 @@ import * as OptionsManager from "../options/OptionsManager";
 import { SessionCommand } from "../messages/Messages";
 import { Bookmark } from "../util/Types";
 
+let _i18n = browser.i18n.getMessage;
+
 let activeSessions:boolean = true;
 
 // needs to be loaded just once because sidebar will reload if this is changed
@@ -24,8 +26,17 @@ export default class SessionOptionsMenu extends OverlayMenu {
 		});
 
 		this.addItem("sidebar_session_remove", () => {
-			//TODO
-			alert("TODO: remove session ;)");
+			if(!confirm(_i18n("sidebar_session_remove_confirm"))) {
+				return;
+			}
+
+			if(activeSessions && session.isActive()) {
+				let keep:boolean = confirm(_i18n("sidebar_session_remove_keep_tabs"));
+
+				SessionCommand.send("remove", [session.bookmarkId, keep]);
+			} else {
+				SessionCommand.send("remove", [session.bookmarkId, false]);
+			}
 		}, "options-menu-remove-session");
 
 		this.addItem("sidebar_session_details", async () => {

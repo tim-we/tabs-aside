@@ -158,6 +158,10 @@ export default class SessionView {
 		}
 	}
 
+	public isActive():boolean {
+		return this.html.classList.contains("active");
+	}
+
 	public editTitle() {
 		EditText.edit(
 			this.titleElement,

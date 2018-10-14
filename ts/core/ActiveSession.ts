@@ -1,6 +1,5 @@
 import TabData from "./TabData";
 import * as OptionsManager from "../options/OptionsManager";
-import FuncIterator from "../util/FuncIterator";
 import {
 	Tab, Bookmark, Window,
 	TabCreatedListener,
@@ -10,6 +9,7 @@ import {
 	TabDetachedListener
 } from "../util/Types";
 import { SessionContentUpdate } from "../messages/Messages";
+import * as SessionManager from "./SessionManager";
 
 export interface ActiveSessionData {
 	readonly bookmarkId;
@@ -158,6 +158,28 @@ export default class ActiveSession {
 		} else {
 			await browser.tabs.remove(this.getTabsIds());
 		}
+	}
+
+	/**
+	 * Removes association from currently open tabs to this session.
+	 */
+	public async free():Promise<void> {
+		this.removeEventListeners();
+
+		// do not remove window when setAside() gets called
+		this.windowId = null;
+
+		// remove session values
+		await Promise.all(
+			Array.from(this.tabs.keys()).map(
+				tabId => Promise.all([
+					browser.sessions.removeTabValue(tabId, "sessionID"),
+					browser.sessions.removeTabValue(tabId, "bookmarkID")
+				])
+			)
+		);
+
+		this.tabs = new Map();
 	}
 
 	private getTabsIds():number[] {

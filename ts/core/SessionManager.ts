@@ -29,6 +29,8 @@ export async function execCommand(cmd:SessionCommand):Promise<any> {
 		);
 
 		createSessionFromTabs(tabs, title);
+	} else if(c === "remove") {
+		removeSession(sessionId, cmd.args[1] || false);
 	}
 }
 
@@ -129,6 +131,10 @@ export async function createSessionFromWindow(title?:string, windowId?:number):P
 	return await createSessionFromTabs(tabs, title, windowId);
 }
 
+/**
+ * Sets an active session aside.
+ * @param sessionId Bookmark id of the session folder.
+ */
 export async function setAside(sessionId:SessionId):Promise<void> {
 	let session:ActiveSession = activeSessions.get(sessionId);
 
@@ -140,4 +146,27 @@ export async function setAside(sessionId:SessionId):Promise<void> {
 	await session.setAside();
 
 	SessionEvent.send(session.bookmarkId, "set-aside");
+}
+
+/**
+ * Removes a session.
+ * @param sessionId Bookmark id of the session folder.
+ * @param keepTabs Whether to keep the tabs if the session is active.
+ */
+export async function removeSession(sessionId:SessionId, keepTabs:boolean = false):Promise<void> {
+	let session:ActiveSession = activeSessions.get(sessionId);
+
+	if(session) {
+		if(keepTabs) {
+			await session.free();
+		}
+
+		await setAside(sessionId);
+	}
+
+	// remove bookmarks
+	await browser.bookmarks.removeTree(sessionId);
+
+	// update views
+	SessionEvent.send(sessionId, "removed");
 }

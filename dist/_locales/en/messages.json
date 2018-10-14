@@ -177,6 +177,14 @@
 		"description": "Session options (...) menu item to remove session"
 	},
 
+	"sidebar_session_remove_confirm": {
+		"message": "Do you really want to delete this session?"
+	},
+
+	"sidebar_session_remove_keep_tabs": {
+		"message": "This session is currently active.\nDo you want to keep the open tabs?"
+	},
+
 	"sidebar_session_rename": {
 		"message": "rename session",
 		"description": "Session options (...) menu item to rename session"
