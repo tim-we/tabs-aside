@@ -2,6 +2,7 @@ import TabView from "./TabView";
 import TabData from "../../core/TabData";
 import * as StringUtils from "../../util/StringUtils";
 import { SessionCommand } from "../../messages/Messages";
+import TabContextMenu from "../TabContextMenu";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -47,6 +48,13 @@ export default class SimpleList extends TabView {
 
 			SessionCommand.send("restore-single", [tabBookmark.parentId, tabBookmark.id]);
 		};
+		a.addEventListener("contextmenu", e => {
+			e.stopImmediatePropagation();
+			e.preventDefault();
+
+			let menu = new TabContextMenu(tabBookmark);
+			menu.showAt(e.clientX, e.clientY);
+		});
 
 		if(data.isInReaderMode) {
 			li.appendChild(this.createStateIcon("rm"));

@@ -195,6 +195,14 @@
 		"description": "Session options (...) menu item to show session details"
 	},
 
+	"sidebar_tab_copy_url": {
+		"message": "copy URL to clipboard"
+	},
+
+	"sidebar_tab_remove_from_session": {
+		"message": "remove from session"
+	},
+
 	"tab_selector_title": {
 		"message": "Tabs Aside :: Tab selector"
 	},
