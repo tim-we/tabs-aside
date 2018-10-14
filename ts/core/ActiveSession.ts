@@ -151,13 +151,20 @@ export default class ActiveSession {
 	public async setAside():Promise<void> {
 		this.removeEventListeners();
 
-		if(this.windowId) {
+		if(this.windowId && this.tabs.size > 0) {
 			this.tabs = new Map();
 
 			await browser.windows.remove(this.windowId);
 		} else {
 			await browser.tabs.remove(this.getTabsIds());
 		}
+	}
+
+	private async removeTabValues(tabId:number):Promise<void> {
+		await Promise.all([
+			browser.sessions.removeTabValue(tabId, "sessionID"),
+			browser.sessions.removeTabValue(tabId, "bookmarkID")
+		]);
 	}
 
 	/**
@@ -169,13 +176,10 @@ export default class ActiveSession {
 		// do not remove window when setAside() gets called
 		this.windowId = null;
 
-		// remove session values
+		// remove session/tab values
 		await Promise.all(
 			Array.from(this.tabs.keys()).map(
-				tabId => Promise.all([
-					browser.sessions.removeTabValue(tabId, "sessionID"),
-					browser.sessions.removeTabValue(tabId, "bookmarkID")
-				])
+				tabId => this.removeTabValues(tabId)
 			)
 		);
 
@@ -230,7 +234,30 @@ export default class ActiveSession {
 	private async setEventListeners() {
 		let removeTabs:boolean = (await OptionsManager.getValue<string>("tabClosingBehavior")) === "remove-tab";
 
-		let tabRemovedFromSession = async (tabId:number) => {
+		// shared code for tabs removed/detached from a session
+		let tabRemovedFromSession = async (tabBookmarkId:string) => {
+			if(removeTabs) {
+				await browser.bookmarks.remove(tabBookmarkId);
+			}
+
+			if(this.tabs.size === 0) {
+				if(removeTabs) {
+					let tabBookmarks:Bookmark[] = await browser.bookmarks.getChildren(this.bookmarkId);
+
+					if(tabBookmarks.length === 0) {
+						SessionManager.removeSession(this.bookmarkId);
+						return;
+					}
+				}
+
+				SessionManager.setAside(this.bookmarkId);
+			}
+
+			// update sidebar
+			SessionContentUpdate.send(this.bookmarkId);
+		};
+
+		this.tabRemovedListener  = async (tabId, removeInfo) => {
 			let tabBookmarkId:string = this.tabs.get(tabId);
 
 			// check if tab is part of this session
@@ -238,29 +265,24 @@ export default class ActiveSession {
 				// remove tab
 				this.tabs.delete(tabId);
 
-				if(removeTabs) {
-					await browser.bookmarks.remove(tabBookmarkId);
-				}
-
-				if(this.tabs.size === 0) {
-					if(removeTabs) {
-						let tabBookmarks:Bookmark[] = await browser.bookmarks.getChildren(this.bookmarkId);
-
-						if(tabBookmarks.length === 0) {
-							await browser.bookmarks.remove(this.bookmarkId);
-						}
-					}
-
-					//TODO: "close" active session
-				}
-
-				// update sidebar
-				SessionContentUpdate.send(this.bookmarkId);
+				tabRemovedFromSession(tabBookmarkId);
 			}
 		};
 
-		this.tabRemovedListener  = tabRemovedFromSession;
-		this.tabDetachedListener = tabRemovedFromSession;
+		this.tabDetachedListener = async (tabId, removeInfo) => {
+			let tabBookmarkId:string = this.tabs.get(tabId);
+
+			// check if tab is part of this session
+			if(tabBookmarkId) {
+				// remove tab
+				this.tabs.delete(tabId);
+
+				// tab still exists -> remove tab values
+				this.removeTabValues(tabId);
+
+				tabRemovedFromSession(tabBookmarkId);
+			}
+		};
 
 		this.tabAttachedListener = async (tabId, attachInfo) => {
 			if(attachInfo.newWindowId === this.windowId) {
@@ -314,19 +336,23 @@ export default class ActiveSession {
 		};
 
 		// add event listeners
-		browser.tabs.onAttached.addListener(this.tabAttachedListener);
-		browser.tabs.onDetached.addListener(this.tabDetachedListener);
 		browser.tabs.onCreated.addListener(this.tabCreatedListener);
 		browser.tabs.onRemoved.addListener(this.tabRemovedListener);
 		browser.tabs.onUpdated.addListener(this.tabUpdatedListener);
+		if(this.windowId) {
+			browser.tabs.onAttached.addListener(this.tabAttachedListener);
+			browser.tabs.onDetached.addListener(this.tabDetachedListener);
+		}
 	}
 
 	private removeEventListeners() {
-		browser.tabs.onAttached.removeListener(this.tabAttachedListener);
-		browser.tabs.onDetached.removeListener(this.tabDetachedListener);
-
 		browser.tabs.onCreated.removeListener(this.tabCreatedListener);
 		browser.tabs.onRemoved.removeListener(this.tabRemovedListener);
 		browser.tabs.onUpdated.removeListener(this.tabUpdatedListener);
+
+		if(browser.tabs.onAttached.hasListener(this.tabAttachedListener)) {
+			browser.tabs.onAttached.removeListener(this.tabAttachedListener);
+			browser.tabs.onDetached.removeListener(this.tabDetachedListener);
+		}
 	}
 }
