@@ -1,3 +1,7 @@
+#options-menu-restore-keep::before {
+	background-image: url("../../img/sidebar/restore-light-16.svg");
+}
+
 #options-menu-remove-session::before {
 	background-image: url("../../img/sidebar/delete-light-16.svg");
 }

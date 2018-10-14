@@ -1,8 +1,8 @@
 import OverlayMenu from "../util/OverlayMenu";
 import SessionView from "./SessionView";
 import * as OptionsManager from "../options/OptionsManager";
-
-type Bookmark = browser.bookmarks.BookmarkTreeNode;
+import { SessionCommand } from "../messages/Messages";
+import { Bookmark } from "../util/Types";
 
 let activeSessions:boolean = true;
 
@@ -15,9 +15,8 @@ export default class SessionOptionsMenu extends OverlayMenu {
 
 		if(!activeSessions) {
 			this.addItem("sidebar_session_restore_keep", () => {
-				//TODO
-				alert("Not yet implemented :/");
-			});
+				SessionCommand.send("restore", [session.bookmarkId, true]);
+			}, "options-menu-restore-keep");
 		}
 
 		this.addItem("sidebar_session_rename", () => {

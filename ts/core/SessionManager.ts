@@ -13,7 +13,8 @@ export async function execCommand(cmd:SessionCommand):Promise<any> {
 	let sessionId:SessionId = cmd.args[0];
 
 	if(c === "restore") {
-		restore(sessionId);
+		let keepBookmarks:boolean = cmd.args.length > 1 ? cmd.args[1] : false;
+		restore(sessionId, keepBookmarks);
 	} else if(c === "restore-single") {
 		let tabBookmarkId:string = cmd.args[1];
 		restoreSingle(tabBookmarkId);
@@ -41,7 +42,7 @@ export function getActiveSessions():ActiveSessionData[] {
 	return Array.from(activeSessions.values(), session => session.getData());
 }
 
-export async function restore(sessionId:SessionId, keepBookmarks:boolean = true):Promise<void> {
+export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promise<void> {
 	// sanity-check
 	if (activeSessions.has(sessionId)) {
 		throw new Error(`Session ${sessionId} is already active.`);
