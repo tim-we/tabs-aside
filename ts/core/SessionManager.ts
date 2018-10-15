@@ -1,7 +1,7 @@
 import ActiveSession, { ActiveSessionData } from "./ActiveSession";
 import * as ActiveSessionFactory from "./ActiveSessionFactory";
 import TabData from "./TabData";
-import { SessionCommand, SessionEvent, DataRequest } from "../messages/Messages";
+import { SessionCommand, SessionEvent, DataRequest, SessionContentUpdate } from "../messages/Messages";
 import * as OptionsManager from "../options/OptionsManager";
 import * as RestoreTabs from "./RestoreTabs";
 import { Tab, Bookmark, SessionId } from "../util/Types";
@@ -31,6 +31,9 @@ export async function execCommand(cmd:SessionCommand):Promise<any> {
 		createSessionFromTabs(tabs, title);
 	} else if(c === "remove") {
 		removeSession(sessionId, cmd.args[1] || false);
+	} else if(c === "remove-tab") {
+		let tabBookmarkId:string = cmd.args[0];
+		removeTabFromSession(tabBookmarkId);
 	}
 }
 
@@ -169,4 +172,26 @@ export async function removeSession(sessionId:SessionId, keepTabs:boolean = fals
 
 	// update views
 	SessionEvent.send(sessionId, "removed");
+}
+
+export async function removeTabFromSession(tabBookmarkId:string):Promise<void> {
+	let tabBookmark:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
+	let sessionId:string = tabBookmark.parentId;
+	let session:ActiveSession = activeSessions.get(sessionId);
+	
+	if(session) {
+		console.error("[TA] Removing a tab from an active session is currently not supported.");
+		return;
+	}
+
+	await browser.bookmarks.remove(tabBookmark.id);
+
+	let tabs:Bookmark[] = await browser.bookmarks.getChildren(sessionId);
+
+	if(tabs.length === 0) {
+		removeSession(sessionId, false);
+	} else {
+		// update views
+		SessionContentUpdate.send(sessionId);
+	}
 }

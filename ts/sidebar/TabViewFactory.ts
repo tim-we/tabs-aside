@@ -2,6 +2,7 @@ import TabView from "./TabViews/TabView";
 import * as OptionsManager from "../options/OptionsManager";
 
 import SimpleList from "./TabViews/SimpleList";
+import SessionView from "./SessionView";
 
 let tabLayout:string = "simple-list";
 
@@ -18,9 +19,9 @@ export async function init() {
 	document.head.appendChild(css);
 }
 
-export function createTabView(bookmarkId:string):TabView {
+export function createTabView(sessionView:SessionView):TabView {
 	if(tabLayout === "simple-list") {
-		return new SimpleList(bookmarkId);
+		return new SimpleList(sessionView);
 	}
 
 	return null;

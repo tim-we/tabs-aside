@@ -3,6 +3,7 @@ import TabData from "../../core/TabData";
 import * as StringUtils from "../../util/StringUtils";
 import { SessionCommand } from "../../messages/Messages";
 import TabContextMenu from "../TabContextMenu";
+import SessionView from "../SessionView";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -10,8 +11,8 @@ export default class SimpleList extends TabView {
 
 	private list:HTMLOListElement = document.createElement("ol");
 
-	constructor(sessionId:string) {
-		super(sessionId);
+	constructor(session:SessionView) {
+		super(session);
 	}
 
 	public createHTML(tabBookmarks:Bookmark[]): HTMLOListElement {
@@ -52,7 +53,7 @@ export default class SimpleList extends TabView {
 			e.stopImmediatePropagation();
 			e.preventDefault();
 
-			let menu = new TabContextMenu(tabBookmark);
+			let menu = new TabContextMenu(this.sessionView, this, tabBookmark);
 			menu.showAt(e.clientX, e.clientY);
 		});
 

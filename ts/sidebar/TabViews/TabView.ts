@@ -1,10 +1,16 @@
+import SessionView from "../SessionView";
+
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
 export default abstract class TabView {
-	protected bookmarkId:string;
+	protected sessionView:SessionView;
 
-	constructor(sessionId:string) {
-		this.bookmarkId = sessionId;
+	constructor(session:SessionView) {
+		this.sessionView = session;
+	}
+
+	public getSessionId():string {
+		return this.sessionView.bookmarkId;
 	}
 
 	public abstract createHTML(tabBookmarks:Bookmark[]):HTMLElement;

@@ -128,7 +128,7 @@ export default class SessionView {
 
 	public async expand(data?:Bookmark[]) {
 		// create TabView
-		let tabView:TabView = TabViewFactory.createTabView(this.bookmarkId);
+		let tabView:TabView = TabViewFactory.createTabView(this);
 		this.tabView = tabView;
 
 		// optimization: if data is already available do not hit API again
