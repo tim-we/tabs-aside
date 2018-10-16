@@ -257,6 +257,7 @@ export default class ActiveSession {
 			SessionContentUpdate.send(this.bookmarkId);
 		};
 
+		// removed tabs
 		this.tabRemovedListener  = async (tabId, removeInfo) => {
 			let tabBookmarkId:string = this.tabs.get(tabId);
 
@@ -278,22 +279,41 @@ export default class ActiveSession {
 				this.tabs.delete(tabId);
 
 				// tab still exists -> remove tab values
-				this.removeTabValues(tabId);
+				await this.removeTabValues(tabId);
 
 				tabRemovedFromSession(tabBookmarkId);
 			}
 		};
 
+		// added tabs
 		this.tabAttachedListener = async (tabId, attachInfo) => {
 			if(attachInfo.newWindowId === this.windowId) {
 				let tab:Tab = await browser.tabs.get(tabId);
-				this.addExistingTab(tab);
+				await this.addExistingTab(tab);
 
 				// update sidebar
 				SessionContentUpdate.send(this.bookmarkId);
 			}
 		};
 
+		this.tabCreatedListener = async (tab) => {
+			/* determine if tab should be added to the session
+			 * the tab should be added if:
+			 * - tab is part of the sessions window (windowed mode)
+			 * - tab was opened by/from a tab from this session
+			*/
+			let addToSession:boolean = tab.windowId === this.windowId
+				|| (tab.hasOwnProperty("openerTabId") && this.tabs.has(tab.openerTabId));
+
+			if(addToSession) {
+				await this.addExistingTab(tab);
+
+				// update sidebar
+				SessionContentUpdate.send(this.bookmarkId);
+			}
+		};
+
+		// modified tabs
 		this.tabUpdatedListener = async (tabId, changeInfo, tab) => {
 			let tabBookmarkId:string = this.tabs.get(tabId);
 
@@ -315,23 +335,6 @@ export default class ActiveSession {
 					// update sidebar
 					SessionContentUpdate.send(this.bookmarkId);
 				}
-			}
-		};
-
-		this.tabCreatedListener = async (tab) => {
-			/* determine if tab should be added to the session
-			 * the tab should be added if:
-			 * - tab is part of the sessions window (windowed mode)
-			 * - tab was opened by/from a tab from this session
-			*/
-			let addToSession:boolean = tab.windowId === this.windowId
-				|| (tab.hasOwnProperty("openerTabId") && this.tabs.has(tab.openerTabId));
-
-			if(addToSession) {
-				this.addExistingTab(tab);
-
-				// update sidebar
-				SessionContentUpdate.send(this.bookmarkId);
 			}
 		};
 

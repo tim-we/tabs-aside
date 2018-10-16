@@ -46,7 +46,7 @@ export default class TabData {
 
 		let createProperties:TabCreateProperties = {
 			active: active,
-			url: this.url,
+			url: this.url === "about:newtab" ? undefined : this.url,
 			openInReaderMode: this.isInReaderMode,
 			pinned: this.pinned,
 			discarded: discardTab
@@ -71,7 +71,7 @@ export default class TabData {
 	}
 
 	public isPrivileged():boolean {
-		return !validURL.test(this.url);
+		return !(validURL.test(this.url) || this.url === "about:newtab");
 	}
 
 	public getHostname():string {
