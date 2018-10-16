@@ -203,6 +203,11 @@
 		"message": "remove from session"
 	},
 
+	"sidebar_tab_open_remove": {
+		"message": "open and remove",
+		"description": "opens the tab and removes it from the session"
+	},
+
 	"tab_selector_title": {
 		"message": "Tabs Aside :: Tab selector"
 	},
