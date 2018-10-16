@@ -29,6 +29,7 @@ a, a:visited { cursor: pointer; color: rgb(0, 0, 238); }
 	background-repeat: no-repeat;
 	background-position-x: 2px;
 	background-position-y: center;
+	background-color: inherit;
 
 	user-select: none;
 	word-spacing: -1px;
