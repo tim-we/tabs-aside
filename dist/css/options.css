@@ -26,6 +26,8 @@ a:link, a:visited { color: #0000FF; }
 }
 
 label {
+	position: relative;
+	top: 3px;
 	font-size: 1.25rem;
 }
 

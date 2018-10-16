@@ -64,7 +64,7 @@
 	},
 
 	"option_windowedSession": {
-		"message": "One window for each (active) session",
+		"message": "Open sessions in a new window.",
 		"description": "Should sessions be opened in a new window?"
 	},
 
@@ -85,7 +85,7 @@
 	},
 
 	"option_ignorePinned": {
-		"message": "Ignore pinned tabs"
+		"message": "Do not set aside pinned tabs"
 	},
 
 	"option_ignorePinned_hint": {
