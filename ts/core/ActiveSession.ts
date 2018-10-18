@@ -65,12 +65,12 @@ export default class ActiveSession {
 		// new window contains a "newtab" tab
 		// -> close it after sessions tabs are restored
 		if(emptyTab) {
-			browser.tabs.remove(emptyTab.id);
+			await browser.tabs.remove(emptyTab.id);
 		}
 
 		if(!windowedSession) {
 			// the session does not have its own window -> highlight tabs
-			activeSession.hightlight();
+			await activeSession.hightlight();
 		}
 
 		activeSession.setEventListeners();

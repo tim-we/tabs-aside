@@ -7,10 +7,14 @@ export function copy(text:string):void {
 	document.body.appendChild(input);
 
 	// copy
-	input.focus();
-	input.select();
-	document.execCommand("copy");
+	copyTextFromInput(input);
 
 	// remove the input element
 	input.remove();
+}
+
+export function copyTextFromInput(input:HTMLInputElement):void {
+	input.focus();
+	input.select();
+	document.execCommand("copy");
 }

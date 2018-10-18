@@ -44,9 +44,22 @@ export default class TabData {
 			&& !this.isInReaderMode
 			&& !(!this.url || this.url.startsWith("about:"));
 
+		let url:string = this.url;
+
+		if(url === "about:newtab") {
+			url = undefined;
+		} else if(this.isPrivileged()) {			
+			url = browser.runtime.getURL(
+				`html/privileged.html?url=${encodeURIComponent(url)}&title=${this.title}`
+			);
+
+			// load this simple website to show the custom title
+			discardTab = false;
+		}
+
 		let createProperties:TabCreateProperties = {
 			active: active,
-			url: this.url === "about:newtab" ? undefined : this.url,
+			url: url,
 			openInReaderMode: this.isInReaderMode,
 			pinned: this.pinned,
 			discarded: discardTab

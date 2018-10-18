@@ -1,0 +1,14 @@
+@import url("../fonts/open-sans.css");
+
+body {
+	font-family: 'Open Sans', Segoe UI, sans-serif;
+}
+
+#url {
+	width: 100%;
+	border: none;
+	background-color: rgb(235,235,235);
+	font-size: 20px;
+	margin-top: 10px;
+	padding: 3px 3px;
+}

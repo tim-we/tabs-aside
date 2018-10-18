@@ -127,6 +127,10 @@
 		"message": "Pick the folder where sessions are stored."
 	},
 
+	"privileged_tab_text": {
+		"message": "Tabs Aside could not restore this tab with the following URL:"
+	},
+
 	"sidebar_search_placeholder": {
 		"message": "search sessions..."
 	},
