@@ -30,7 +30,15 @@ const prefix:string = browser.runtime.getURL("html/privileged.html");
 	urlInput.focus();
 	urlInput.select();
 
+	// title
 	if(params.has("title")) {
 		document.title = params.get("title");
 	}
+
+	// copy button
+	let copyButton:HTMLElement = document.getElementById("copy");
+	copyButton.onclick = () => {
+		Clipboard.copyTextFromInput(urlInput);
+	};
+
 })();
