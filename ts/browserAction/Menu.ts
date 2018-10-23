@@ -65,13 +65,19 @@ function createButton(item:MenuItem):HTMLAnchorElement {
 		button.title = browser.i18n.getMessage("menu_" + item.id + "_tooltip")
 	}
 
-	button.addEventListener("click", e => {
-		item.onclick(e);
+	if(item.href) {
+		button.href = item.href;
+	}
 
-		if(item.closeMenu !== false) {
-			window.close();
-		}
-	});
+	if(item.onclick) {
+		button.addEventListener("click", e => {
+			item.onclick(e);
+
+			if(item.closeMenu !== false) {
+				window.close();
+			}
+		});
+	}
 
 	return button;
 }

@@ -27,10 +27,7 @@ let menuItems:MenuItem[] = [
 	{
 		id: "tab-selector",
 		optional: true,
-		onclick: () => browser.tabs.create({
-			active: true,
-			url: browser.runtime.getURL("html/tab-selector.html")
-		})
+		href: browser.runtime.getURL("html/menu/tab-selector.html")
 	},
 	{
 		id: "options",

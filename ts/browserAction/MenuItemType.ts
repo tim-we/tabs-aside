@@ -4,7 +4,8 @@ export interface MenuItem {
 	shortcut?:string; 
 	icon?:string;
 	wideIcon?:boolean; // default: false
-	onclick: (e:MouseEvent) => void;
+	onclick?: (e:MouseEvent) => void;
 	closeMenu?:boolean; // default: true
 	tooltip?:boolean; // default: false
+	href?:string;
 }

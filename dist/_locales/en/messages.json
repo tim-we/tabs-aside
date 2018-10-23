@@ -216,6 +216,20 @@
 		"message": "Tabs Aside :: Tab selector"
 	},
 
+	"tab_selector_selection": {
+		"message": "$N$/$M$ tabs selected",
+		"placeholders": {
+			"n" : {
+				"content" : "$1",
+				"example" : "3"
+			},
+			"m" : {
+				"content" : "$2",
+				"example" : "5"
+			}
+		}
+	},
+
 	"tab_selector_select_all": {
 		"message": "select all"
 	},

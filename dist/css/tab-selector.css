@@ -4,8 +4,10 @@ body {
 	font-family: 'Open Sans', Segoe UI, sans-serif;
 	padding: 0px;
 	margin: 0px;
+	width: 400px;
+	height: 150px;
 	--ui-border-color: rgb(222,222,222);
-	--header-height: 43px;
+	--header-height: 32px;
 	--footer-height: 40px;
 }
 
@@ -22,6 +24,8 @@ header {
 	line-height: var(--header-height);
 	text-align: center;
 	font-size: 1.25em;
+
+	background-color: white;
 }
 
 main {
@@ -30,100 +34,14 @@ main {
 	left: 0px;
 	right: 0px;
 	bottom: var(--footer-height);
+	background-color: white;
 }
 
-#tabs {
-	position: relative;
-	display: flex;
-	flex-wrap: wrap;
+#selection {
+	background-color: inherit;
 	padding: 5px;
-	padding-right: 0px;
-}
-
-.tab {
-	--tab-height: 32px;
-	--tab-border-color: rgb(202,202,202);
-	--tab-bg-color: rgb(232,232,232);
-
-	position: relative;
-	flex-grow: 1;
-	flex-basis: 200px;
-	height: var(--tab-height);
-	max-width: 300px;
-	margin-right: 5px;
-	margin-bottom: 5px;
-
-	background-color: var(--tab-bg-color);
-	border: 1px solid var(--tab-border-color);
-
-	animation: .2s tab-in ease-out;
-	cursor: default;
-}
-
-.tab:hover {
-	--tab-bg-color: rgb(240,240,240);
-}
-
-.favicon {
-	position: absolute;
-	top: 8px;
-	left: 6px;
-	width: 16px;
-	height: 16px;
-}
-
-.tab-title {
-	position: absolute;
-	top: 0px;
-	left: 27px;
-	right: 1px;
-	bottom: 0px;
-	padding: 0px;
-	margin: 0px;
-	overflow: hidden;
-	white-space: nowrap;
-	line-height: var(--tab-height);
-	-moz-user-select: none;
-}
-
-.tab.selected {
-	--tab-border-color: rgb(10,132,255);
-	--tab-bg-color: rgb(240,240,240);
-}
-
-.tab:active {
-	--tab-bg-color: rgb(232,232,232);
-	--tab-border-color: rgb(150,150,150);
-	box-shadow: 0px 0px 0px 1px var(--tab-border-color);
-}
-
-.tab.selected:active {
-	--tab-border-color: rgb(0,120,215);
-}
-
-.tab.in-session {
-	--tab-border-color: rgb(222,222,222);
-	--tab-bg-color: rgb(250,250,250);
-	color: rgba(16,16,16,0.5);
-}
-
-.tab.in-session:active {
-	box-shadow: none;
-}
-
-.tab.in-session .favicon {
-	opacity: 0.5;
-}
-
-@keyframes tab-in {
-	0% {
-		opacity: 0;
-		transform: scale(0.9,0.9);
-	}
-	100% {
-		opacity: 1;
-		transform: scale(1,1);
-	}
+	font-size: 14px;
+	text-align: center;
 }
 
 #select-controls {

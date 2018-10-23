@@ -8,7 +8,7 @@ module.exports = {
 		menu: "./ts/browserAction/menu.ts",
 		options: "./ts/options/OptionsPage.ts",
 		sidebar: "./ts/sidebar/sidebar.ts",
-		tabSelector: "./ts/tab-selector/TabSelector.ts",
+		tabSelector: "./ts/browserAction/TabSelector.ts",
 		privileged: "./ts/extension-pages/privileged.ts"
 	},
 
