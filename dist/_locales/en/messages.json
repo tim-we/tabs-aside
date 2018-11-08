@@ -262,5 +262,10 @@
 	"tab_selector_in_session": {
 		"message": "This tab is already part of a session.",
 		"description": "Tabs selector tooltip for tabs in active sessions"
+	},
+
+	"tab_selector_multiselect_error": {
+		"message": "To select multiple tabs please enable browser.tabs.multiselect in about:config.",
+		"description":"As of FF64 browser.tabs.multiselect is enabled by default."
 	}
 }

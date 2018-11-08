@@ -22,7 +22,7 @@ async function invertSelection() {
 		)
 	);
 
-	updateSelectionView();
+	updateView();
 }
 
 async function unSelectAll() {
@@ -33,7 +33,7 @@ async function unSelectAll() {
 			tabs.map(tab => browser.tabs.update(tab.id, {highlighted:false}))
 		);
 
-		updateSelectionView();
+		updateView();
 	}
 }
 
@@ -48,12 +48,12 @@ async function selectAll() {
 			}))
 		);
 
-		updateSelectionView();
+		updateView();
 	}
 }
 
-async function updateSelectionView() {
-	let tabs = await browser.tabs.query({currentWindow: true});
+async function updateView() {
+	let tabs = await getTabs();
 
 	let n:number = tabs.reduce(
 		(acc:number, tab:Tab) => tab.highlighted ? acc+1 : acc,
@@ -66,12 +66,13 @@ async function updateSelectionView() {
 }
 
 async function getSelectedIds():Promise<number[]> {
-	let tabs = await browser.tabs.query({
-		currentWindow: true,
-		highlighted: true
-	});
+	let tabs = await getTabs(true);
 
 	return tabs.map(tab => tab.id);
+}
+
+function showMultiSelectWarning() {
+	document.getElementById("ms_error").classList.add("show");
 }
 
 (async function() {
@@ -81,7 +82,7 @@ async function getSelectedIds():Promise<number[]> {
 	HTMLUtils.i18n();
 
 	selectionHTML = document.getElementById("selection");
-	updateSelectionView();
+	updateView();
 
 	// selection control buttons
 	let selectControls:HTMLElement = document.getElementById("select-controls");
@@ -93,6 +94,7 @@ async function getSelectedIds():Promise<number[]> {
 	window.addEventListener("keydown", async (e) => {
 		if(e.keyCode == 65 && e.ctrlKey) { // CTRL + A
 			e.preventDefault();
+			e.stopPropagation();
 
 			if((await getTabs(false)).length) {
 				selectAll();
@@ -101,8 +103,24 @@ async function getSelectedIds():Promise<number[]> {
 			}
 		} else if(e.keyCode == 73 && e.ctrlKey) { // CTRL + I
 			e.preventDefault();
+			e.stopPropagation();
 
 			invertSelection();
 		}
 	});
+
+	// test if multiselect is available
+	let tabs = await getTabs(false);
+	if(tabs.length > 0) {
+		let testTab = tabs[0];
+		browser.tabs.update(testTab.id, {
+			active:false, highlighted:true
+		}).then(() => {
+			// undo
+			browser.tabs.update(testTab.id, {highlighted:false});
+		}, e => {
+			showMultiSelectWarning();
+		});
+	}
+
 })();

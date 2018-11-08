@@ -39,6 +39,22 @@ main {
 	padding-top: 10px;
 }
 
+#ms_error {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	z-index: 42;
+	background-color: rgb(255, 79, 62);
+	min-height: 30px;
+	padding: 10px;
+}
+
+#ms_error:not(.show) {
+	display: none;
+}
+
 #selection {
 	background-color: inherit;
 	padding: 5px;

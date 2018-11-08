@@ -89,9 +89,7 @@ export default class SessionView {
 		header.addEventListener("click", () => this.toggle());
 
 		// do not toggle tab visibility when clicking controls
-		controls.addEventListener(
-			"click", e => e.stopPropagation()
-		);
+		controls.addEventListener("click", e => e.stopPropagation());
 
 		header.querySelector(".restore").addEventListener(
 			"click", () => SessionCommand.send("restore", [bookmark.id])
