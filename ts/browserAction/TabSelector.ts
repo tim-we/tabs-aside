@@ -3,39 +3,53 @@ import { Tab } from "../util/Types";
 
 var selectionHTML:HTMLElement;
 
-async function invertSelection() {
-	let tabs = await browser.tabs.query({currentWindow: true});
-	let tabIndices:number[] = tabs.filter(tab => !tab.highlighted).map(tab => tab.index);
-	await browser.tabs.highlight({
-		tabs: tabIndices
+function getTabs(selected?:boolean):Promise<Tab[]> {
+	return browser.tabs.query({
+		currentWindow: true,
+		highlighted: selected
 	});
-
-	updateSelectionView();
 }
 
-async function unSelectAll() {
-	let tabs = await browser.tabs.query({
-		currentWindow: true,
-		highlighted: true
-	});
-
+async function invertSelection() {
+	let tabs = await getTabs();
+	
 	await Promise.all(
-		tabs.map(tab => browser.tabs.update(tab.id, {highlighted:false}))
+		tabs.map(tab =>
+			browser.tabs.update(tab.id, {
+				active: tab.active,
+				highlighted: tab.active || !tab.highlighted
+			})
+		)
 	);
 
 	updateSelectionView();
 }
 
-async function selectAll() {
-	let tabs = await browser.tabs.query({currentWindow: true});
-	let tabIndices:number[] = tabs.map(tab => tab.index);
-	if(tabIndices.length > 0) {
-		await browser.tabs.highlight({
-			tabs: tabIndices
-		});
-	}
+async function unSelectAll() {
+	let tabs = await getTabs(true);
 
-	updateSelectionView();
+	if(tabs.length > 0) {
+		await Promise.all(
+			tabs.map(tab => browser.tabs.update(tab.id, {highlighted:false}))
+		);
+
+		updateSelectionView();
+	}
+}
+
+async function selectAll() {
+	let tabs = await getTabs(false);
+
+	if(tabs.length > 0) {
+		await Promise.all(
+			tabs.map(tab => browser.tabs.update(tab.id, {
+				active: tab.active,
+				highlighted: true
+			}))
+		);
+
+		updateSelectionView();
+	}
 }
 
 async function updateSelectionView() {
@@ -76,18 +90,15 @@ async function getSelectedIds():Promise<number[]> {
 	selectControls.querySelector("#invert").addEventListener("click", invertSelection);
 
 	// keyboard input listener
-	window.addEventListener("keydown", e => {
+	window.addEventListener("keydown", async (e) => {
 		if(e.keyCode == 65 && e.ctrlKey) { // CTRL + A
 			e.preventDefault();
 
-			selectAll();
-
-			//TODO:
-			// select all tabs unless all tabs are already selected
-			// if all tabs are already selected unselect all
-			//if(!selectionChanged) {
-			//	unSelectAll();
-			//}
+			if((await getTabs(false)).length) {
+				selectAll();
+			} else {
+				unSelectAll();
+			}
 		} else if(e.keyCode == 73 && e.ctrlKey) { // CTRL + I
 			e.preventDefault();
 
