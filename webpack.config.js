@@ -5,7 +5,7 @@ module.exports = {
 	entry: {
 		background: "./ts/background/background.ts",
 		bmSelector: "./ts/bookmark-selector/Controller.ts",
-		menu: "./ts/browserAction/menu.ts",
+		menu: "./ts/browserAction/Menu.ts",
 		options: "./ts/options/OptionsPage.ts",
 		sidebar: "./ts/sidebar/sidebar.ts",
 		tabSelector: "./ts/browserAction/TabSelector.ts",
