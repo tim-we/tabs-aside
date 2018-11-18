@@ -4,7 +4,7 @@ const path = require('path');
 
 module.exports = {
 	mode: 'development',
-	devtool: 'source-map',
+	//devtool: 'source-map',
 
 	entry: {
 		background: './src/ts/background/background.ts',
@@ -61,14 +61,15 @@ module.exports = {
 
 	plugins: [
 		new CopyWebpackPlugin([
-    	'img/**/*',
+			'manifest.json',
+			'img/**/*',
 			'html/**/*',
 			'fonts/**/*',
 			'_locales/**/*'
 		], { context: './src/' }),
 
 		new MiniCssExtractPlugin({
-      filename: "css/[name].css"
-    })
+			filename: "css/[name].css"
+		})
 	]
 }
