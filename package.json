@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack",
     "watch": "webpack --watch",
-    "firefox": "web-ext build -s dist -a releases -i=\"**/*.pdn\" \"**/*.js.map\"",
+    "firefox": "web-ext build -s dist -a releases -i=\"**/*.pdn\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
