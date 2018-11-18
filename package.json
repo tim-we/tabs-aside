@@ -4,6 +4,7 @@
   "description": "tab/session manager",
   "scripts": {
     "build": "webpack",
+    "watch": "webpack --watch",
     "firefox": "web-ext build -s dist -a releases -i=\"**/*.pdn\" \"**/*.js.map\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +20,11 @@
   "homepage": "https://github.com/tim-we/tabs-aside#readme",
   "dependencies": {
     "@types/firefox-webext-browser": "^63.0.1",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^1.0.1",
+    "mini-css-extract-plugin": "^0.4.4",
+    "node-sass": "^4.10.0",
+    "sass-loader": "^7.1.0",
     "ts-loader": "^5.2.1",
     "typescript": "^3.1.1",
     "web-ext": "^2.9.1",
