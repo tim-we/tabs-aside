@@ -1,114 +1,113 @@
-@import url("../fonts/open-sans.css");
+/* https://google-webfonts-helper.herokuapp.com */
+/* open-sans-regular - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Open Sans Regular"), local("OpenSans-Regular"), url("../fonts/open-sans-v15-latin-regular.woff2") format("woff2");
+  /* Chrome 26+, Opera 23+, Firefox 39+ */ }
+
+/* open-sans-condensed-300 - latin */
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: normal;
+  font-weight: 300;
+  src: local("Open Sans Condensed Light"), local("OpenSansCondensed-Light"), url("../fonts/open-sans-condensed-v12-latin-300.woff2") format("woff2");
+  /* Chrome 26+, Opera 23+, Firefox 39+ */ }
 
 body {
-	font-family: 'Open Sans', Segoe UI, sans-serif;
-	padding: 0px;
-	margin: 0px;
-	width: 400px;
-	height: 150px;
-	--ui-border-color: rgb(222,222,222);
-	--header-height: 32px;
-	--footer-height: 32px;
-	--button-height: 20px;
-}
+  font-family: 'Open Sans', Segoe UI, sans-serif;
+  padding: 0px;
+  margin: 0px;
+  width: 400px;
+  height: 150px;
+  --ui-border-color: rgb(222,222,222);
+  --header-height: 32px;
+  --footer-height: 32px;
+  --button-height: 20px; }
 
 header {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-
-	border-bottom: 1px solid var(--ui-border-color);
-	padding-left: 5px;
-	padding-right: 5px;
-	height: var(--header-height);
-	line-height: var(--header-height);
-	text-align: center;
-	font-size: 1.25em;
-
-	background-color: white;
-}
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  border-bottom: 1px solid var(--ui-border-color);
+  padding-left: 5px;
+  padding-right: 5px;
+  height: var(--header-height);
+  line-height: var(--header-height);
+  text-align: center;
+  font-size: 1.25em;
+  background-color: white; }
 
 main {
-	position: absolute;
-	top: calc(var(--header-height) + 1px);
-	left: 0px;
-	right: 0px;
-	bottom: var(--footer-height);
-	background-color: white;
-	padding-top: 10px;
-}
+  position: absolute;
+  top: calc(var(--header-height) + 1px);
+  left: 0px;
+  right: 0px;
+  bottom: var(--footer-height);
+  background-color: white;
+  padding-top: 10px; }
 
 #ms_error {
-	position: fixed;
-	top: 0px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	z-index: 42;
-	background-color: rgb(255, 79, 62);
-	min-height: 30px;
-	padding: 10px;
-}
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 42;
+  background-color: #ff4f3e;
+  min-height: 30px;
+  padding: 10px; }
 
 #ms_error:not(.show) {
-	display: none;
-}
+  display: none; }
 
 #selection {
-	background-color: inherit;
-	padding: 5px;
-	font-size: 14px;
-	text-align: center;
-}
+  background-color: inherit;
+  padding: 5px;
+  font-size: 14px;
+  text-align: center; }
 
 #select-controls {
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-
-	height: 32px;
-	line-height: 32px;
-
-	text-align: center;
-	padding: 0px 5px;
-
-	background-color: rgb(50, 50, 52);
-}
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  padding: 0px 5px;
+  background-color: #323234; }
 
 #select-controls > button {
-	border: none;
-	font-family: inherit;
-	height: var(--button-height);
-}
+  border: none;
+  font-family: inherit;
+  height: var(--button-height); }
 
 footer {
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	height: var(--footer-height);
-
-	padding: 0px 5px;
-	text-align: center;
-	line-height: var(--footer-height);
-
-	background-color: rgb(0,120,215);
-}
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  height: var(--footer-height);
+  padding: 0px 5px;
+  text-align: center;
+  line-height: var(--footer-height);
+  background-color: #0078d7; }
 
 footer > button {
-	background-color: white;
-	border: none;
-	height: var(--button-height);
-	font-family: inherit;
-}
+  background-color: white;
+  border: none;
+  height: var(--button-height);
+  font-family: inherit; }
 
 footer > button:hover {
-	box-shadow: 1px 1px 4px rgba(16, 16, 16, 0.2);
-}
+  box-shadow: 1px 1px 4px rgba(16, 16, 16, 0.2); }
 
 footer > button:active {
-	background-color: rgb(240,240,240);
-	box-shadow: inset 0px 0px 2px rgba(16,16,16,0.5);
-}
+  background-color: #f0f0f0;
+  box-shadow: inset 0px 0px 2px rgba(16, 16, 16, 0.5); }
+
+
+/*# sourceMappingURL=tab-selector.css.map*/

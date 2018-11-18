@@ -1,68 +1,60 @@
 body {
-	width: 268px;
-	--button-height: 25px;
-	--icon-size: 16px;
-	min-height: calc(3 * var(--button-height));
-}
+  width: 268px;
+  --button-height: 25px;
+  --icon-size: 16px;
+  min-height: calc(3 * var(--button-height)); }
 
 .button {
-	position: relative;
-	display: block;
-	height: var(--button-height);
-	line-height: var(--button-height);
-	color: black;
-	padding-left: 36px;
-	padding-right: 12px;
-	text-decoration: none;
-	white-space: nowrap;
-
-	background-color: white;
-}
+  position: relative;
+  display: block;
+  height: var(--button-height);
+  line-height: var(--button-height);
+  color: black;
+  padding-left: 36px;
+  padding-right: 12px;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: white; }
 
 .mini-button {
-	width: 24px;
-	height: 24px;
-	background-color: inherit;
-	background-position: center;
-	background-repeat: no-repeat;
-}
+  width: 24px;
+  height: 24px;
+  background-color: inherit;
+  background-position: center;
+  background-repeat: no-repeat; }
 
 .button.icon::before {
-	content: " ";
-	display: block;
-	position: absolute;
-	left: calc(36px - var(--icon-size) - 8px);
-	top: calc(0.5 * (var(--button-height) - var(--icon-size)));
-	height: var(--icon-size);
-	width: var(--icon-size);
-
-	background-color: inherit;
-	background-image: var(--iconURL, none);
-	background-repeat: no-repeat;
-	background-position: center;
-}
+  content: " ";
+  display: block;
+  position: absolute;
+  left: calc(36px - var(--icon-size) - 8px);
+  top: calc(0.5 * (var(--button-height) - var(--icon-size)));
+  height: var(--icon-size);
+  width: var(--icon-size);
+  background-color: inherit;
+  background-image: var(--iconURL, none);
+  background-repeat: no-repeat;
+  background-position: center; }
 
 .button.icon.wide::before {
-	left: calc(36px - 24px - 8px);
-	width: 24px;
-}
+  left: calc(36px - 24px - 8px);
+  width: 24px; }
 
 #buttons:not(.showAll) > .button.optional {
-	display: none;
-}
+  display: none; }
 
 .button:hover, .mini-button:hover {
-	background-color: #F0F0F0;
-}
+  background-color: #F0F0F0; }
 
 .button:active, .mini-button:active {
-	background-color: #E8E8E8;
-}
+  background-color: #E8E8E8; }
 
 .button[data-shortcut]::after {
-	content: attr(data-shortcut);
-	position:absolute;
-	color: #6D6D6D;
-	right: 12px;
-	text-align: right;
-}
+  content: attr(data-shortcut);
+  position: absolute;
+  color: #6D6D6D;
+  right: 12px;
+  text-align: right; }
+
+
+/*# sourceMappingURL=menu.css.map*/
