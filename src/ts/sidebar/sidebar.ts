@@ -5,6 +5,8 @@ import SessionView from "./SessionView";
 import * as Search from "./Search";
 import { ActiveSessionData } from "../core/ActiveSession";
 import * as MessageListener from "../messages/MessageListener";
+import { SolvableError, TabsAsideError } from "../util/Errors";
+import * as HTMLUtilities from "../util/HTMLUtilities";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -26,33 +28,30 @@ let noSessionsInfo:HTMLElement;
 MessageListener.setDestination("sidebar");
 Promise.all([
 	OptionsManager.getValue<string>("rootFolder").then(v => {
-		if(v) {
-			rootId = v;
-			return Promise.resolve();
-		} else {
-			return Promise.reject();
-		}
+		rootId = v;
 	}),
 
 	TabViewFactory.init(),
 
-	new Promise(resolve => {
-		document.addEventListener("DOMContentLoaded", () => {
-			sessionContainer = document.getElementById("sessions");
-			noSessionsInfo = document.getElementById("no-sessions");
-
-			resolve();
-		});
+	HTMLUtilities.DOMReady().then(() => {
+		sessionContainer = document.getElementById("sessions");
+		noSessionsInfo = document.getElementById("no-sessions");
 	})
 
 ]).then(async () => {
 	let sessions:Bookmark[];
 
-	// requesting the data simulaneously
-	[sessions] = await Promise.all([
-		browser.bookmarks.getChildren(rootId),
-		getActiveSessions()
-	]);
+	// request session data
+	try {
+		sessions = await browser.bookmarks.getChildren(rootId);
+	} catch(e) {
+		let error = new SolvableError("error_noRootFolder");
+		error.setSolution(() => browser.runtime.openOptionsPage());
+
+		return Promise.reject(error);
+	}
+
+	await getActiveSessions();
 
 	// creating views
 	sessions.forEach(sessionBookmark => addView(sessionBookmark));
@@ -62,9 +61,13 @@ Promise.all([
 
 	Search.init(rootId, sessionContainer);
 }).catch(e => {
-	console.error("[TA] " + e);
-
-	document.body.innerHTML = "Error";
+	if(e instanceof TabsAsideError) {
+		document.body.innerHTML = "";
+		document.body.appendChild(e.createHTML());
+	} else {
+		console.error("[TA] " + e);
+		document.body.innerHTML = "Error";
+	}
 
 	MessageListener.add("*", () => window.location.reload());
 });

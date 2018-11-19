@@ -23,6 +23,14 @@
 		"message": "create folder"
 	},
 
+	"error_noRootFolder": {
+		"message": "Error: No root folder selected."
+	},
+
+	"error_noRootFolder_solution": {
+		"message": "Configure"
+	},
+
 	"menu_tabs-aside_label": {
 		"message": "Tabs aside"
 	},
