@@ -1,8 +1,8 @@
-@import 'base/fonts';
+@import 'base/_fonts';
 @import 'overlay-menu';
-@import 'sidebar/session';
-@import 'sidebar/search.css';
-@import 'sidebar/menu-items.css';
+@import 'sidebar/_session';
+@import 'sidebar/_search';
+@import 'sidebar/_menu-items';
 
 
 body {
