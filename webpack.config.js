@@ -4,7 +4,7 @@ const path = require('path');
 
 module.exports = {
 	mode: 'development',
-	//devtool: 'source-map',
+	devtool: 'source-map',
 
 	entry: {
 		background: './src/ts/background/background.ts',
@@ -16,12 +16,12 @@ module.exports = {
 		privileged: './src/ts/extension-pages/privileged.ts',
 
 		'bookmark-selector': './src/scss/bookmark-selector.scss',
-		'menu': './src/scss/menu.scss',
-		'options': './src/scss/options.scss',
+		'menu-css': './src/scss/menu.scss',
+		'options-css': './src/scss/options.scss',
 		'overlay-menu': './src/scss/overlay-menu.scss',
-		'privileged': './src/scss/privileged.scss',
+		'privileged-css': './src/scss/privileged.scss',
 		'tab-selector': './src/scss/tab-selector.scss',
-		'sidebar': './src/scss/sidebar.scss',
+		'sidebar-css': './src/scss/sidebar.scss',
 		'tab-view-simple-list': './src/scss/tab-view-simple-list.scss'
 	},
 
@@ -37,10 +37,9 @@ module.exports = {
 
 	module: {
 		rules: [
-			// all files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'
 			{
-				test: /\.tsx?$/,
-				loader: 'ts-loader'
+				test: /\.ts$/,
+				loader: 'ts-loader',
 			},
 			{
 				test: /\.scss$/,
