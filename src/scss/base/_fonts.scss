@@ -1,0 +1,23 @@
+/* https://google-webfonts-helper.herokuapp.com */
+
+/* open-sans-regular - latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('Open Sans Regular'),
+    local('OpenSans-Regular'),
+    url('../fonts/open-sans-v15-latin-regular.woff2') format('woff2'); /* Chrome 26+, Opera 23+, Firefox 39+ */
+}
+
+/* open-sans-condensed-300 - latin */
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: normal;
+  font-weight: 300;
+  src:
+    local('Open Sans Condensed Light'),
+    local('OpenSansCondensed-Light'),
+    url('../fonts/open-sans-condensed-v12-latin-300.woff2') format('woff2'); /* Chrome 26+, Opera 23+, Firefox 39+ */
+}
