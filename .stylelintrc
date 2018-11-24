@@ -1,0 +1,29 @@
+{
+  "ignoreFiles": [
+    "dist/**"
+  ],
+  "extends": [
+    "stylelint-config-sass-guidelines",
+    "stylelint-config-rational-order"
+  ],
+  "plugins": [
+    "stylelint-no-unsupported-browser-features"
+  ],
+  "rules": {
+    "number-leading-zero": "never",
+    "max-nesting-depth": [2, {
+      "ignore": ["blockless-at-rules"]
+    }],
+    "selector-no-qualifying-type": [true, {
+      "ignore": ["class", "attribute"]
+    }],
+    "block-no-empty": null,
+    "plugin/no-unsupported-browser-features": [true, {
+      "ignore": [
+        'css-gradients',
+        'outline'
+      ]
+    }],
+    "order/properties-alphabetical-order": null
+  }
+}
