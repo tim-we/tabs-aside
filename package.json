@@ -47,5 +47,5 @@
     "watchify": "^3.11.0",
     "web-ext": "^2.9.1"
   },
-  "browserslist": "> 0.25%, not dead"
+  "browserslist": "Firefox > 63"
 }
