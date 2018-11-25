@@ -1,3 +1,4 @@
+import "@babel/polyfill";
 import * as TabViewFactory from "./TabViewFactory";
 import * as OptionsManager from "../options/OptionsManager";
 import { OptionUpdateEvent, Message, SessionEvent, DataRequest } from "../messages/Messages";
@@ -79,7 +80,7 @@ function addView(sessionBookmark:Bookmark):void {
 
 	// create new session view
 	let view = new SessionView(sessionBookmark);
-		
+
 	// by default session are not active
 	if(activeSessions.has(view.bookmarkId)) {
 		view.setActiveState(true);
@@ -155,4 +156,3 @@ async function messageHandler(message:Message) {
 		}
 	}
 }
-

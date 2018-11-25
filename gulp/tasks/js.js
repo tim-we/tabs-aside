@@ -22,14 +22,18 @@ const destPath = path.resolve(config.destPath, config.js.dest);
 
 // browserify
 const getBundler = (type, source) => {
-  let args = { debug: config.env === 'dev' };
+  let args = {
+    debug: config.env === 'dev',
+    paths: config.js.browserify.paths,
+    extensions: config.js.browserify.extensions
+  };
   if (type === 'watch') {
     args = Object.assign(args, watchify.args);
   }
   const b = browserify(path.resolve(config.srcPath, source.entryFile), args)
-    .plugin('tsify')
     .transform(babelify, {
       presets: config.js.babelify.presets,
+      plugins: config.js.babelify.plugins,
       extensions: config.js.babelify.extensions
     });
   return type === 'watch' ? watchify(b) : b;

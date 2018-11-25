@@ -73,9 +73,18 @@ module.exports = {
         }]
       }
     ],
+    browserify: {
+      paths: ['./node_modules', './src/ts'],
+      extensions: ['.ts']
+    },
     babelify: {
       presets: [
-        ['@babel/preset-env']
+        ['@babel/preset-env'],
+        ['@babel/preset-typescript']
+      ],
+      plugins: [
+        "@babel/proposal-class-properties",
+        "@babel/proposal-object-rest-spread"
       ],
       extensions: ['.ts','.js']
     }
