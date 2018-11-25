@@ -3,9 +3,9 @@
   "version": "3.0.0",
   "description": "tab/session manager",
   "scripts": {
-    "build": "gulp",
-    "build-prod": "gulp --prod",
+    "build": "gulp --prod",
     "watch": "gulp watch",
+    "typecheck": "tsc --watch",
     "firefox": "web-ext build -s dist -a releases -i=\"**/*.pdn\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
