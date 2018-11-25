@@ -1,4 +1,3 @@
-import "@babel/polyfill";
 import * as TabViewFactory from "./TabViewFactory";
 import * as OptionsManager from "../options/OptionsManager";
 import { OptionUpdateEvent, Message, SessionEvent, DataRequest } from "../messages/Messages";

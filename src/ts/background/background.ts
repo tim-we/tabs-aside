@@ -1,4 +1,3 @@
-import "@babel/polyfill";
 import * as SessionManager from "../core/SessionManager";
 import { Message, SessionCommand, DataRequest } from "../messages/Messages";
 import * as BrowserActionManager from "../browserAction/BrowserActionManager";
