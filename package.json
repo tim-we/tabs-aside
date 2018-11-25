@@ -50,5 +50,5 @@
     "watchify": "^3.11.0",
     "web-ext": "^2.9.1"
   },
-  "browserslist": "Firefox > 63"
+  "browserslist": "Firefox 63"
 }
