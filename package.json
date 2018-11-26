@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/tim-we/tabs-aside#readme",
   "dependencies": {
+    "@types/firefox-webext-browser": "^64.0.0",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
