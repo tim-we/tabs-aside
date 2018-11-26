@@ -2,12 +2,8 @@
 	"compilerOptions": {
 		"target": "es2017",
 		"moduleResolution": "node",
-		"noEmit": true,
 		"strict": false,
 		"isolatedModules": true,
 		"esModuleInterop": true
-	},
-	"include": [
-		"src/ts/**/*.ts"
-	]
+	}
 }
