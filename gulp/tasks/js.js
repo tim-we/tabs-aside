@@ -1,6 +1,8 @@
 const del = require('del');
 const gulp = require('gulp');
 const ts = require('gulp-typescript');
+const gulpif = require('gulp-if');
+const sourcemaps = require('gulp-sourcemaps');
 
 const path = require('path');
 
@@ -22,10 +24,13 @@ task['js:clean'] = () => {
 
 task['js:build'] = () => {
   const tsResult = gulp.src(srcPath)
+    .pipe(gulpif(config.env === 'dev', sourcemaps.init({ loadMaps: true })))
     .pipe(tsProject())
     .on('error', () => {});
   log('info', 'js:build', `Build "${config.js.src}".`);
-  return tsResult.js.pipe(gulp.dest(destPath));
+  return tsResult.js
+    .pipe(gulpif(config.env === 'dev', sourcemaps.write('.', { sourceRoot: './', includeContent: false })))
+    .pipe(gulp.dest(destPath));
 };
 
 task['js:watch:init'] = (done) => {
