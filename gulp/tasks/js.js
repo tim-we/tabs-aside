@@ -22,12 +22,17 @@ task['js:clean'] = () => {
 
 task['js:build'] = () => {
   const tsResult = gulp.src(srcPath)
-    .pipe(tsProject());
+    .pipe(tsProject())
+    .on('error', () => {});
+  log('info', 'js:build', `Build "${config.js.src}".`);
   return tsResult.js.pipe(gulp.dest(destPath));
 };
 
 task['js:watch:init'] = (done) => {
-  gulp.watch(srcPath, gulp.series('js:build'));
+  gulp.watch(srcPath, gulp.series('js:build'))
+    .on('change', path => {
+      log('info', 'js:build', `File "${path}" has changed.`)
+    });
   done();
 };
 
