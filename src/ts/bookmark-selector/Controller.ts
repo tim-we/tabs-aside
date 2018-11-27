@@ -1,7 +1,7 @@
-import * as Model from "./Model";
-import * as View from "./View";
-import parseQueryString from "../util/parseQuerystring";
-import * as OptionsManager from "../options/OptionsManager";
+import * as Model from "./Model.js";
+import * as View from "./View.js";
+import parseQueryString from "../util/parseQuerystring.js";
+import * as OptionsManager from "../options/OptionsManager.js";
 
 // url search params
 var params = parseQueryString();

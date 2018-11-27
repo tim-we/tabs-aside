@@ -1,8 +1,8 @@
-import * as View from "./View";
-import FuncIterator from "../util/FuncIterator";
-import { ActiveSessionData } from "../core/ActiveSession";
-import { DataRequest, SessionEvent } from "../messages/Messages";
-import * as MessageListener from "../messages/MessageListener";
+import * as View from "./View.js";
+import FuncIterator from "../util/FuncIterator.js";
+import { ActiveSessionData } from "../core/ActiveSession.js";
+import { DataRequest, SessionEvent } from "../messages/Messages.js";
+import * as MessageListener from "../messages/MessageListener.js";
 
 export type Tab = browser.tabs.Tab;
 export type SelectableTab = Tab & {selected?:boolean};

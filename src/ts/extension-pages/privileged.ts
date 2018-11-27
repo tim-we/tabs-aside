@@ -1,5 +1,5 @@
-import * as HTMLUtils from "../util/HTMLUtilities";
-import * as Clipboard from "../util/Clipboard";
+import * as HTMLUtils from "../util/HTMLUtilities.js";
+import * as Clipboard from "../util/Clipboard.js";
 
 const prefix:string = browser.runtime.getURL("html/privileged.html");
 

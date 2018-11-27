@@ -1,4 +1,4 @@
-import { Message, MessageDestination, MessageType } from "./Messages";
+import { Message, MessageDestination, MessageType } from "./Messages.js";
 
 export type MessageListener = (m:Message) => void;
 type MessageTypeSelector = MessageType | "*";

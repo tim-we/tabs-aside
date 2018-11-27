@@ -1,6 +1,6 @@
-import * as OptionManager from "../options/OptionsManager";
-import { Message, OptionUpdateEvent } from "../messages/Messages";
-import * as MessageListener from "../messages/MessageListener";
+import * as OptionManager from "../options/OptionsManager.js";
+import { Message, OptionUpdateEvent } from "../messages/Messages.js";
+import * as MessageListener from "../messages/MessageListener.js";
 
 let badgeColor:string = "#0A84FF";
 let showBadge:boolean = true;

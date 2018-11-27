@@ -1,8 +1,8 @@
-import TabView from "./TabViews/TabView";
-import * as OptionsManager from "../options/OptionsManager";
+import TabView from "./TabViews/TabView.js";
+import * as OptionsManager from "../options/OptionsManager.js";
 
-import SimpleList from "./TabViews/SimpleList";
-import SessionView from "./SessionView";
+import SimpleList from "./TabViews/SimpleList.js";
+import SessionView from "./SessionView.js";
 
 let tabLayout:string = "simple-list";
 

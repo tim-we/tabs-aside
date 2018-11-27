@@ -1,10 +1,10 @@
-import * as OptionsManager from "./OptionsManager";
-import { Option } from "./OptionTypeDefinition";
-import Options from "./Options";
+import * as OptionsManager from "./OptionsManager.js";
+import { Option } from "./OptionTypeDefinition.js";
+import Options from "./Options.js";
 
-import * as BooleanControl from "./Controls/BooleanControl";
-import * as BookmarkControl from "./Controls/BookmarkControl";
-import * as SelectControl from "./Controls/SelectControl";
+import * as BooleanControl from "./Controls/BooleanControl.js";
+import * as BookmarkControl from "./Controls/BookmarkControl.js";
+import * as SelectControl from "./Controls/SelectControl.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 	// Multiple options depend on the active session option

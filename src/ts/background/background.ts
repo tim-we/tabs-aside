@@ -1,8 +1,8 @@
-import * as SessionManager from "../core/SessionManager";
-import { Message, SessionCommand, DataRequest } from "../messages/Messages";
-import * as BrowserActionManager from "../browserAction/BrowserActionManager";
-import * as KeyboardCommands from "./KeyboardCommands";
-import * as MessageListener from "../messages/MessageListener";
+import * as SessionManager from "../core/SessionManager.js";
+import { Message, SessionCommand, DataRequest } from "../messages/Messages.js";
+import * as BrowserActionManager from "../browserAction/BrowserActionManager.js";
+import * as KeyboardCommands from "./KeyboardCommands.js";
+import * as MessageListener from "../messages/MessageListener.js";
 
 MessageListener.setDestination("background");
 BrowserActionManager.init();

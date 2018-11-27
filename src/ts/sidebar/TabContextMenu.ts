@@ -1,10 +1,10 @@
-import OverlayMenu from "../util/OverlayMenu";
-import { Bookmark } from "../util/Types";
-import * as Clipboard from "../util/Clipboard";
-import SessionView from "./SessionView";
-import { SessionCommand } from "../messages/Messages";
-import TabView from "./TabViews/TabView";
-import TabData from "../core/TabData";
+import OverlayMenu from "../util/OverlayMenu.js";
+import { Bookmark } from "../util/Types.js";
+import * as Clipboard from "../util/Clipboard.js";
+import SessionView from "./SessionView.js";
+import { SessionCommand } from "../messages/Messages.js";
+import TabView from "./TabViews/TabView.js";
+import TabData from "../core/TabData.js";
 
 let _i18n = browser.i18n.getMessage;
 

@@ -1,4 +1,4 @@
-import * as View from "./View";
+import * as View from "./View.js";
 
 type BMTreeNode = browser.bookmarks.BookmarkTreeNode;
 

@@ -1,6 +1,6 @@
-import * as OptionsManager from "../options/OptionsManager";
-import TabData from "./TabData";
-import { Tab, Bookmark } from "../util/Types";
+import * as OptionsManager from "../options/OptionsManager.js";
+import TabData from "./TabData.js";
+import { Tab, Bookmark } from "../util/Types.js";
 
 export async function tabsAside(
 	tabs:Tab[],

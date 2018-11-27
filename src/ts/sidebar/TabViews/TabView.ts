@@ -1,4 +1,4 @@
-import SessionView from "../SessionView";
+import SessionView from "../SessionView.js";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
