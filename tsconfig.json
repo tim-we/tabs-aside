@@ -1,10 +1,13 @@
 {
 	"compilerOptions": {
-		"target": "es2017",
+		"target": "ES2017",
 		"moduleResolution": "node",
 		"strict": false,
 		"isolatedModules": true,
-		"esModuleInterop": true
+		"removeComments": true,
+		"typeRoots": [
+      "node_modules/@types"
+    ]
 	},
 	"include": [
 		"src/ts/**/*.ts"
