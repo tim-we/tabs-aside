@@ -116,7 +116,7 @@
 		Promise.all([
 			loadConfig(),
 			getActiveSessionData(),
-			utils.getTabs()
+			utils.getTabs({currentWindow:true})
 		]).then(data => {
 			// tabs in current window that are not in a (active) session
 			let remainingTabs = data[2].filter(
