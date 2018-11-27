@@ -1,12 +1,12 @@
-import * as TabViewFactory from "./TabViewFactory";
-import * as OptionsManager from "../options/OptionsManager";
-import { OptionUpdateEvent, Message, SessionEvent, DataRequest } from "../messages/Messages";
-import SessionView from "./SessionView";
-import * as Search from "./Search";
-import { ActiveSessionData } from "../core/ActiveSession";
-import * as MessageListener from "../messages/MessageListener";
-import { SolvableError, TabsAsideError } from "../util/Errors";
-import * as HTMLUtilities from "../util/HTMLUtilities";
+import * as TabViewFactory from "./TabViewFactory.js";
+import * as OptionsManager from "../options/OptionsManager.js";
+import { OptionUpdateEvent, Message, SessionEvent, DataRequest } from "../messages/Messages.js";
+import SessionView from "./SessionView.js";
+import * as Search from "./Search.js";
+import { ActiveSessionData } from "../core/ActiveSession.js";
+import * as MessageListener from "../messages/MessageListener.js";
+import { SolvableError, TabsAsideError } from "../util/Errors.js";
+import * as HTMLUtilities from "../util/HTMLUtilities.js";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 

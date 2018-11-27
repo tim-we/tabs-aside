@@ -1,5 +1,5 @@
-import { MenuItem } from "./MenuItemType";
-import * as OptionManager from "../options/OptionsManager";
+import { MenuItem } from "./MenuItemType.js";
+import * as OptionManager from "../options/OptionsManager.js";
 
 const manifest = browser.runtime.getManifest();
 let tabsAside:MenuItem, showSessions:MenuItem;

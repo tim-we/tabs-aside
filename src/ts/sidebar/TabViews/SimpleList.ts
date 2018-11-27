@@ -1,9 +1,9 @@
-import TabView from "./TabView";
-import TabData from "../../core/TabData";
-import * as StringUtils from "../../util/StringUtils";
-import { SessionCommand } from "../../messages/Messages";
-import TabContextMenu from "../TabContextMenu";
-import SessionView from "../SessionView";
+import TabView from "./TabView.js";
+import TabData from "../../core/TabData.js";
+import * as StringUtils from "../../util/StringUtils.js";
+import { SessionCommand } from "../../messages/Messages.js";
+import TabContextMenu from "../TabContextMenu.js";
+import SessionView from "../SessionView.js";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 

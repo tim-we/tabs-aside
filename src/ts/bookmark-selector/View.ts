@@ -1,5 +1,5 @@
-import * as Model from "./Model";
-import * as Controller from "./Controller";
+import * as Model from "./Model.js";
+import * as Controller from "./Controller.js";
 
 // DOM references
 var folderView:HTMLElement;

@@ -1,5 +1,5 @@
-import TabData from "./TabData";
-import * as OptionsManager from "../options/OptionsManager";
+import TabData from "./TabData.js";
+import * as OptionsManager from "../options/OptionsManager.js";
 import {
 	Tab, Bookmark, Window,
 	TabCreatedListener,
@@ -8,8 +8,8 @@ import {
 	TabAttachedListener,
 	TabDetachedListener
 } from "../util/Types";
-import { SessionContentUpdate } from "../messages/Messages";
-import * as SessionManager from "./SessionManager";
+import { SessionContentUpdate } from "../messages/Messages.js";
+import * as SessionManager from "./SessionManager.js";
 
 export interface ActiveSessionData {
 	readonly bookmarkId;

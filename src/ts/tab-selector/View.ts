@@ -1,6 +1,6 @@
-import * as HTMLUtils from "../util/HTMLUtilities";
-import { Tab, TabId, SelectableTab, toggleTab, selectAll, unSelectAll, invertSelection, getSelectedIds } from "./TabSelector";
-import { SessionCommand } from "../messages/Messages";
+import * as HTMLUtils from "../util/HTMLUtilities.js";
+import { Tab, TabId, SelectableTab, toggleTab, selectAll, unSelectAll, invertSelection, getSelectedIds } from "./TabSelector.js";
+import { SessionCommand } from "../messages/Messages.js";
 
 let tabs:Map<TabId, HTMLElement> = new Map();
 

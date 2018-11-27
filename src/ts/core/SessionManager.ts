@@ -1,10 +1,10 @@
-import ActiveSession, { ActiveSessionData } from "./ActiveSession";
-import * as ActiveSessionFactory from "./ActiveSessionFactory";
-import TabData from "./TabData";
-import { SessionCommand, SessionEvent, DataRequest, SessionContentUpdate } from "../messages/Messages";
-import * as OptionsManager from "../options/OptionsManager";
-import * as RestoreTabs from "./RestoreTabs";
-import { Tab, Bookmark, SessionId } from "../util/Types";
+import ActiveSession, { ActiveSessionData } from "./ActiveSession.js";
+import * as ActiveSessionFactory from "./ActiveSessionFactory.js";
+import TabData from "./TabData.js";
+import { SessionCommand, SessionEvent, DataRequest, SessionContentUpdate } from "../messages/Messages.js";
+import * as OptionsManager from "../options/OptionsManager.js";
+import * as RestoreTabs from "./RestoreTabs.js";
+import { Tab, Bookmark, SessionId } from "../util/Types.js";
 
 let activeSessions:Map<SessionId, ActiveSession> = new Map();
 

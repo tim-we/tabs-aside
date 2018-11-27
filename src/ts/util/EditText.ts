@@ -36,7 +36,7 @@ export function edit(element:HTMLElement, placeholder:string = "", minLength:num
 
 		input.addEventListener("keydown", e => {
 			e.stopPropagation();
-	
+
 			if (e.keyCode === 13) { // ENTER
 				resolve();
 			} else if (e.keyCode === 27) { // ESC

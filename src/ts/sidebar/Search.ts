@@ -1,5 +1,5 @@
-import { Message, SessionEvent } from "../messages/Messages";
-import * as MessageListener from "../messages/MessageListener";
+import { Message, SessionEvent } from "../messages/Messages.js";
+import * as MessageListener from "../messages/MessageListener.js";
 
 MessageListener.setDestination("sidebar");
 

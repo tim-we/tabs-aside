@@ -1,4 +1,4 @@
-import { Option } from "./OptionTypeDefinition";
+import { Option } from "./OptionTypeDefinition.js";
 
 const manifest = browser.runtime.getManifest();
 

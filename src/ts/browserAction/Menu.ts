@@ -1,6 +1,6 @@
-import MenuItems from "./MenuItems";
-import { MenuItem } from "./MenuItemType";
-import * as OptionsManager from "../options/OptionsManager";
+import MenuItems from "./MenuItems.js";
+import { MenuItem } from "./MenuItemType.js";
+import * as OptionsManager from "../options/OptionsManager.js";
 
 let showAll:boolean = false;
 

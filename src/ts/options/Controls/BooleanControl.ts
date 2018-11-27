@@ -1,5 +1,5 @@
-import { Option } from "../OptionTypeDefinition";
-import * as OptionsManager from "../OptionsManager";
+import { Option } from "../OptionTypeDefinition.js";
+import * as OptionsManager from "../OptionsManager.js";
 
 export function create(
 	row:HTMLDivElement,

@@ -1,9 +1,9 @@
-import * as TabViewFactory from "./TabViewFactory";
-import {clean} from "../util/HTMLUtilities";
-import TabView from "./TabViews/TabView";
-import { SessionCommand, SessionEvent } from "../messages/Messages";
-import * as EditText from "../util/EditText";
-import SessionOptionsMenu from "./SessionOptionsMenu";
+import * as TabViewFactory from "./TabViewFactory.js";
+import {clean} from "../util/HTMLUtilities.js";
+import TabView from "./TabViews/TabView.js";
+import { SessionCommand, SessionEvent } from "../messages/Messages.js";
+import * as EditText from "../util/EditText.js";
+import SessionOptionsMenu from "./SessionOptionsMenu.js";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 

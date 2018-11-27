@@ -1,6 +1,6 @@
-import * as OptionsManager from "../options/OptionsManager";
-import TabData from "./TabData";
-import { Window, Bookmark, SessionId } from "../util/Types";
+import * as OptionsManager from "../options/OptionsManager.js";
+import TabData from "./TabData.js";
+import { Window, Bookmark, SessionId } from "../util/Types.js";
 
 /**
  * Classic restore function (just opens tabs, no active session)

@@ -1,5 +1,5 @@
-import * as HTMLUtils from "../util/HTMLUtilities";
-import { Tab } from "../util/Types";
+import * as HTMLUtils from "../util/HTMLUtilities.js";
+import { Tab } from "../util/Types.js";
 
 var selectionHTML:HTMLElement;
 
