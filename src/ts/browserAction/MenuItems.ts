@@ -5,6 +5,12 @@ const manifest = browser.runtime.getManifest();
 let tabsAside:MenuItem, showSessions:MenuItem;
 
 let menuItems:MenuItem[] = [
+	showSessions = {
+		id: "show-sessions",
+		icon: "sessions.png",
+		shortcut: manifest.commands["_execute_sidebar_action"].suggested_key.default,
+		onclick: () => browser.sidebarAction.open()
+	},
 	tabsAside = {
 		id: "tabs-aside",
 		icon: "aside.png",
@@ -17,12 +23,6 @@ let menuItems:MenuItem[] = [
 		icon: "add.svg",
 		tooltip: true,
 		onclick: () => {}
-	},
-	showSessions = {
-		id: "show-sessions",
-		icon: "sessions.png",
-		shortcut: manifest.commands["_execute_sidebar_action"].suggested_key.default,
-		onclick: () => browser.sidebarAction.open()
 	},
 	{
 		id: "tab-selector",
