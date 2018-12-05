@@ -16,13 +16,15 @@ let menuItems:MenuItem[] = [
 		icon: "aside.png",
 		wideIcon: true,
 		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
-		onclick: () => {}
+		onclick: () => {},
+		applicable: (state) => state.freeTabs
 	},
 	{
 		id: "create-session",
 		icon: "add.svg",
 		tooltip: true,
-		onclick: () => {}
+		onclick: () => {},
+		applicable: (state) => state.freeTabs
 	},
 	{
 		id: "tab-selector",

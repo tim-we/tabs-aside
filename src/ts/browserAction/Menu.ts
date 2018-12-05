@@ -7,6 +7,11 @@ let showAll:boolean = false;
 let sessionsContainer:HTMLDivElement;
 let buttonsContainer:HTMLDivElement;
 
+let stateInfo = {
+	//TODO
+	freeTabs: true
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
 	// get DOM references
 	sessionsContainer = document.getElementById("sessions") as HTMLDivElement;
@@ -62,14 +67,21 @@ function createButton(item:MenuItem):HTMLAnchorElement {
 	}
 
 	if(item.tooltip) {
-		button.title = browser.i18n.getMessage("menu_" + item.id + "_tooltip")
+		button.title = browser.i18n.getMessage("menu_" + item.id + "_tooltip");
 	}
 
-	if(item.href) {
+	let enabled:boolean = item.applicable ? item.applicable(stateInfo) : true;
+
+	if(!enabled) {
+		button.classList.add("disabled");
+		button.title = browser.i18n.getMessage("menu_action_not_applicable");
+	}
+
+	if(enabled && item.href) {
 		button.href = item.href;
 	}
 
-	if(item.onclick) {
+	if(enabled && item.onclick) {
 		button.addEventListener("click", e => {
 			item.onclick(e);
 

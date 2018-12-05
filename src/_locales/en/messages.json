@@ -62,6 +62,10 @@
 	"menu_more_tooltip": {
 		"message": "expand menu and show all options"
 	},
+
+	"menu_action_not_applicable": {
+		"message": "Action currently not applicable."
+	},
 	
 	"option_activeSessions": {
 		"message": "Active Sessions"

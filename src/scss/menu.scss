@@ -19,6 +19,10 @@ body {
 	background-color: white;
 }
 
+.button.disabled {
+	color: rgb(110,110,110);
+}
+
 .mini-button {
 	width: 24px;
 	height: 24px;
@@ -42,6 +46,10 @@ body {
 	background-position: center;
 }
 
+.button.disabled.icon::before {
+	opacity: 0.5;
+}
+
 .button.icon.wide::before {
 	left: calc(36px - 24px - 8px);
 	width: 24px;
@@ -51,15 +59,15 @@ body {
 	display: none;
 }
 
-.button:hover, .mini-button:hover {
+.button:not(.disabled):hover, .mini-button:hover {
 	background-color: #F0F0F0;
 }
 
-.button:active, .mini-button:active {
+.button:not(.disabled):active, .mini-button:active {
 	background-color: #E8E8E8;
 }
 
-.button[data-shortcut]::after {
+.button:not(.disabled)[data-shortcut]::after {
 	content: attr(data-shortcut);
 	position:absolute;
 	color: #6D6D6D;
