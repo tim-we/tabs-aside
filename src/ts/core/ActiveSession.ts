@@ -231,6 +231,15 @@ export default class ActiveSession {
 		});
 	}
 
+	public start():void {
+		if(this.tabCreatedListener) {
+			throw new Error("Session is already active.");
+		}
+
+		// start tracking
+		this.setEventListeners();
+	}
+
 	private async setEventListeners() {
 		let removeTabs:boolean = (await OptionsManager.getValue<string>("tabClosingBehavior")) === "remove-tab";
 

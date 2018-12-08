@@ -84,8 +84,7 @@ export async function createSessionFromTabs(
 	setAside:boolean,
 	title?:string
 ):Promise<SessionId> {
-	//TODO: title generator
-	title = title ? title : "no title";
+	title = title ? title : browser.i18n.getMessage("session_title_default");
 
 	// filter tabs that cannot be restored
 	tabs = tabs.filter(tab => !TabData.createFromTab(tab).isPrivileged());
@@ -125,10 +124,6 @@ export async function createSessionFromWindow(setAside:boolean, windowId?:number
 	//TODO: remove tabs that are part of an active session
 	
 	let sessionId:SessionId = await createSessionFromTabs(tabs, setAside, title);
-
-	if(setAside) {
-
-	}
 
 	return sessionId;
 }

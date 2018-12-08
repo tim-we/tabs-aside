@@ -26,7 +26,7 @@ export class Message {
 type SessionCMD = "restore" | "restore-single" | "set-aside" | "create" | "remove" | "remove-tab";
 
 export type CreateSessionArguments = {
-	title:string;
+	title?:string;
 	windowId?:number;
 	setAside:boolean;
 	tabs?:number[];

@@ -43,6 +43,9 @@ export async function createSessionFromTabs(
 	// add to activeSessions map
 	activeSessions.set(session.bookmarkId, session);
 
+	// start tab tracking
+	session.start();
+
 	await SessionEvent.send(session.bookmarkId, "created");
 	SessionEvent.send(session.bookmarkId, "activated");
 

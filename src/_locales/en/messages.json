@@ -143,6 +143,10 @@
 		"message": "Tabs Aside could not restore this tab with the following URL:"
 	},
 
+	"session_title_default": {
+		"message": "new session"
+	},
+
 	"sidebar_search_placeholder": {
 		"message": "search sessions..."
 	},
