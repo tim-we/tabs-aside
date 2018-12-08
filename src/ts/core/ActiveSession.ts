@@ -9,7 +9,7 @@ import {
 	TabDetachedListener
 } from "../util/Types";
 import { SessionContentUpdate } from "../messages/Messages.js";
-import * as SessionManager from "./SessionManager.js";
+import * as ActiveSessionManager from "./ActiveSessionManager.js";
 
 export interface ActiveSessionData {
 	readonly bookmarkId;
@@ -245,12 +245,12 @@ export default class ActiveSession {
 					let tabBookmarks:Bookmark[] = await browser.bookmarks.getChildren(this.bookmarkId);
 
 					if(tabBookmarks.length === 0) {
-						SessionManager.removeSession(this.bookmarkId);
+						ActiveSessionManager.removeSession(this.bookmarkId);
 						return;
 					}
 				}
 
-				SessionManager.setAside(this.bookmarkId);
+				ActiveSessionManager.setAside(this.bookmarkId);
 			}
 
 			// update sidebar
@@ -258,7 +258,7 @@ export default class ActiveSession {
 		};
 
 		// removed tabs
-		this.tabRemovedListener  = async (tabId, removeInfo) => {
+		this.tabRemovedListener = async (tabId, removeInfo) => {
 			let tabBookmarkId:string = this.tabs.get(tabId);
 
 			// check if tab is part of this session

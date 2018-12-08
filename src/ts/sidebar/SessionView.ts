@@ -92,11 +92,11 @@ export default class SessionView {
 		controls.addEventListener("click", e => e.stopPropagation());
 
 		header.querySelector(".restore").addEventListener(
-			"click", () => SessionCommand.send("restore", [bookmark.id])
+			"click", () => SessionCommand.send("restore", {sessionId: bookmark.id})
 		);
 
 		header.querySelector(".aside").addEventListener(
-			"click", () => SessionCommand.send("set-aside", [bookmark.id])
+			"click", () => SessionCommand.send("set-aside", {sessionId: bookmark.id})
 		);
 
 		this.titleElement.addEventListener("click", e => {

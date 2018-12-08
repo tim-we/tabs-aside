@@ -23,7 +23,11 @@ export function init() {
 		let footerControls:HTMLElement = document.querySelector("footer");
 		footerControls.querySelector("#create-session").addEventListener("click", () => {
 			browser.sidebarAction.open();
-			SessionCommand.send("create", [null, getSelectedIds()]);
+			SessionCommand.send("create", {
+				title: "new session",
+				tabs: getSelectedIds(),
+				setAside: false
+			});
 			unSelectAll();
 		});
 

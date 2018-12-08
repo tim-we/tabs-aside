@@ -17,7 +17,10 @@ export default class SessionOptionsMenu extends OverlayMenu {
 
 		if(!activeSessions) {
 			this.addItem("sidebar_session_restore_keep", () => {
-				SessionCommand.send("restore", [session.bookmarkId, true]);
+				SessionCommand.send("restore", {
+					sessionId: session.bookmarkId,
+					keepBookmarks: true
+				});
 			}, "options-menu-restore-keep");
 		}
 
@@ -33,9 +36,15 @@ export default class SessionOptionsMenu extends OverlayMenu {
 			if(activeSessions && session.isActive()) {
 				let keep:boolean = confirm(_i18n("sidebar_session_remove_keep_tabs"));
 
-				SessionCommand.send("remove", [session.bookmarkId, keep]);
+				SessionCommand.send("remove", {
+					sessionId: session.bookmarkId,
+					keepTabs: keep
+				});
 			} else {
-				SessionCommand.send("remove", [session.bookmarkId, false]);
+				SessionCommand.send("remove", {
+					sessionId: session.bookmarkId,
+					keepTabs: false
+				});
 			}
 		}, "options-menu-remove-session");
 

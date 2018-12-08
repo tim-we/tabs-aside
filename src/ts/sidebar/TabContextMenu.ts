@@ -23,11 +23,11 @@ export default class TabContextMenu extends OverlayMenu {
 				//TODO: find a window that is not associated with a session
 				await browser.tabs.create(createProps);
 
-				SessionCommand.send("remove-tab", [tabBookmark.id]);
+				SessionCommand.send("remove-tab", {sessionId: tabBookmark.id});
 			});
 
 			this.addItem("sidebar_tab_remove_from_session", () => {
-				SessionCommand.send("remove-tab", [tabBookmark.id]);
+				SessionCommand.send("remove-tab", {sessionId: tabBookmark.id});
 			}, "options-menu-tab-remove");
 		}
 	}

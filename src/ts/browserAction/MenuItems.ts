@@ -5,24 +5,26 @@ const manifest = browser.runtime.getManifest();
 let tabsAside:MenuItem, showSessions:MenuItem;
 
 let menuItems:MenuItem[] = [
-	tabsAside = {
-		id: "tabs-aside",
-		icon: "aside.png",
-		wideIcon: true,
-		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
-		onclick: () => {}
-	},
-	{
-		id: "create-session",
-		icon: "add.svg",
-		tooltip: true,
-		onclick: () => {}
-	},
 	showSessions = {
 		id: "show-sessions",
 		icon: "sessions.png",
 		shortcut: manifest.commands["_execute_sidebar_action"].suggested_key.default,
 		onclick: () => browser.sidebarAction.open()
+	},
+	tabsAside = {
+		id: "tabs-aside",
+		icon: "aside.png",
+		wideIcon: true,
+		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
+		onclick: () => {},
+		applicable: (state) => state.freeTabs
+	},
+	{
+		id: "create-session",
+		icon: "add.svg",
+		tooltip: true,
+		onclick: () => {},
+		applicable: (state) => state.freeTabs
 	},
 	{
 		id: "tab-selector",
