@@ -1,6 +1,11 @@
-import ActiveSession, { ActiveSessionData } from "./ActiveSession.js";
+import ActiveSession from "./ActiveSession.js";
 import TabData from "./TabData.js";
-import { SessionCommand, SessionEvent, DataRequest, SessionContentUpdate } from "../messages/Messages.js";
+import {
+	SessionCommand,
+	DataRequest,
+	CreateSessionArguments as CSA,
+	ModifySessionArguments as MSA
+} from "../messages/Messages.js";
 import * as OptionsManager from "../options/OptionsManager.js";
 import { Tab, Bookmark, SessionId } from "../util/Types.js";
 
@@ -9,26 +14,33 @@ import * as ClassicSessionManager from "./ClassicSessionManager.js";
 
 export async function execCommand(cmd:SessionCommand):Promise<any> {
 	let c = cmd.cmd;
-	let sessionId:SessionId = cmd.args[0];
+	let sessionId:SessionId;
+	
+	if((<MSA>cmd.argData).sessionId) {
+		sessionId = (<MSA>cmd.argData).sessionId;
+	}
 
 	if(c === "restore") {
-		let keepBookmarks:boolean = cmd.args.length > 1 ? cmd.args[1] : false;
+		let keepBookmarks:boolean = (<MSA> cmd.argData).keepBookmarks || false;
 		restore(sessionId, keepBookmarks);
 	} else if(c === "restore-single") {
-		let tabBookmarkId:string = cmd.args[1];
+		let tabBookmarkId:string = (<MSA> cmd.argData).tabBookmarkId;
 		restoreSingle(tabBookmarkId);
 	} else if(c === "set-aside") {
 		ActiveSessionManager.setAside(sessionId);
 	} else if(c === "create") {
-		let title:string = cmd.args[0];
-		let windowId:number = cmd.args[1];
-		let setAside:boolean = cmd.args[2];
+		let data = (<CSA> cmd.argData);
 
-		createSessionFromWindow( setAside, windowId, title);
+		createSessionFromWindow(
+			data.setAside,
+			data.windowId,
+			data.title
+		);
 	} else if(c === "remove") {
-		removeSession(sessionId, cmd.args[1] || false);
+		let keepTabs:boolean = (<MSA> cmd.argData).keepTabs || false;
+		removeSession(sessionId, keepTabs);
 	} else if(c === "remove-tab") {
-		let tabBookmarkId:string = cmd.args[0];
+		let tabBookmarkId:string = (<MSA> cmd.argData).tabBookmarkId;
 		removeTabFromSession(tabBookmarkId);
 	}
 }

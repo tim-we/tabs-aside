@@ -47,7 +47,10 @@ export default class SimpleList extends TabView {
 		a.onclick = e => {
 			e.preventDefault();
 
-			SessionCommand.send("restore-single", [tabBookmark.parentId, tabBookmark.id]);
+			SessionCommand.send("restore-single", {
+				sessionId: tabBookmark.parentId,
+				tabBookmarkId: tabBookmark.id
+			});
 		};
 		a.addEventListener("contextmenu", e => {
 			e.stopImmediatePropagation();

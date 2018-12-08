@@ -25,18 +25,34 @@ export class Message {
 
 type SessionCMD = "restore" | "restore-single" | "set-aside" | "create" | "remove" | "remove-tab";
 
+export type CreateSessionArguments = {
+	title:string;
+	windowId?:number;
+	setAside:boolean;
+	tabs?:number[];
+};
+
+export type ModifySessionArguments = {
+	sessionId:string;
+	tabBookmarkId?:string;
+	keepBookmarks?:boolean;
+	keepTabs?:boolean;
+}
+
+type ArgumentData = CreateSessionArguments | ModifySessionArguments;
+
 export class SessionCommand extends Message {
 	public readonly cmd:SessionCMD;
-	public readonly args:any[];
+	public readonly argData:ArgumentData;
 
-	constructor(cmd: SessionCMD, args:any[]) {
+	constructor(cmd: SessionCMD, argData:ArgumentData) {
 		super("SessionCommand", "background");
 
 		this.cmd = cmd;
-		this.args = args;
+		this.argData = argData;
 	}
 
-	public static async send(cmd: SessionCMD, args:any[]) {
+	public static async send(cmd: SessionCMD, args:ArgumentData) {
 		let m:Message = new SessionCommand(cmd, args);
 		await browser.runtime.sendMessage(m);
 	}
