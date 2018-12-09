@@ -12,7 +12,8 @@ const config = require('../config.js');
 const task = {};
 const srcPath = path.resolve(config.srcPath, config.js.src);
 const destPath = path.resolve(config.destPath, config.js.dest);
-const tsProject = ts.createProject('tsconfig.json');
+const tsOptions = process.argv.includes('--disable-typecheck') ? {} : { isolatedModules: false };
+const tsProject = ts.createProject('tsconfig.json', tsOptions);
 
 task['js:clean'] = () => {
   return del(destPath).then(paths => {
@@ -26,7 +27,7 @@ task['js:build'] = () => {
   const tsResult = gulp.src(srcPath)
     .pipe(gulpif(config.env === 'dev', sourcemaps.init()))
     .pipe(tsProject())
-    .on('error', error => log('error', 'js:build', error.toString()));
+    .on('error', error => {});
   log('info', 'js:build', `Build "${config.js.src}".`);
   return tsResult.js
     .pipe(gulpif(config.env === 'dev', sourcemaps.write()))
