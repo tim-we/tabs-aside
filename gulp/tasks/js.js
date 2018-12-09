@@ -26,7 +26,7 @@ task['js:build'] = () => {
   const tsResult = gulp.src(srcPath)
     .pipe(gulpif(config.env === 'dev', sourcemaps.init()))
     .pipe(tsProject())
-    .on('error', () => {});
+    .on('error', error => log('error', 'js:build', error.toString()));
   log('info', 'js:build', `Build "${config.js.src}".`);
   return tsResult.js
     .pipe(gulpif(config.env === 'dev', sourcemaps.write()))

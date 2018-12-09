@@ -72,7 +72,7 @@ Promise.all([
 	MessageListener.add("*", () => window.location.reload());
 });
 
-function addView(sessionBookmark:Bookmark):void {
+function addView(sessionBookmark:Bookmark, prepend:boolean = false):void {
 	if(sessionViews.has(sessionBookmark.id)) {
 		return updateView(sessionBookmark.id, sessionBookmark);
 	}
@@ -87,7 +87,12 @@ function addView(sessionBookmark:Bookmark):void {
 
 	// add to document and internal DS
 	sessionViews.set(sessionBookmark.id, view);
-	sessionContainer.appendChild(view.getHTML());
+
+	if(prepend && sessionContainer.firstChild) {
+		sessionContainer.insertBefore(view.getHTML(), sessionContainer.firstChild);
+	} else {
+		sessionContainer.appendChild(view.getHTML());
+	}
 
 	emptyCheck();
 }
@@ -133,7 +138,7 @@ async function messageHandler(message:Message) {
 		if(!sessionView) {
 			if(msg.event === "created") {
 				let sessionBookmark:Bookmark = (await browser.bookmarks.get(msg.sessionId))[0];
-				addView(sessionBookmark);
+				addView(sessionBookmark, true);
 			} else {
 				// we can't modify a non-existing view so...
 				return;
