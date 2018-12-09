@@ -1,5 +1,5 @@
 import ActiveSession, { ActiveSessionData } from "./ActiveSession.js";
-import { Tab, Bookmark, SessionId } from "../util/Types.js";
+import { Tab, Bookmark, SessionId, BookmarkCreateDetails } from "../util/Types.js";
 import { SessionCommand, SessionEvent, DataRequest, SessionContentUpdate } from "../messages/Messages.js";
 import * as OptionsManager from "../options/OptionsManager.js";
 import TabData from "./TabData.js";
@@ -17,6 +17,7 @@ export async function createSessionFromTabs(
 
 	// create bookmark folder
 	let folder:Bookmark = await browser.bookmarks.create({
+		index: 0,
 		parentId: await OptionsManager.getValue<string>("rootFolder"),
 		title: title
 	});
