@@ -1,8 +1,11 @@
 import ActiveSession, { ActiveSessionData } from "./ActiveSession.js";
-import { Tab, Bookmark, SessionId, BookmarkCreateDetails } from "../util/Types.js";
+import { Tab, Bookmark, SessionId, Window } from "../util/Types.js";
 import { SessionCommand, SessionEvent, DataRequest, SessionContentUpdate } from "../messages/Messages.js";
 import * as OptionsManager from "../options/OptionsManager.js";
 import TabData from "./TabData.js";
+import Tuple2 from "../util/Tuple.js";
+
+type TabBookmark = Tuple2<number, SessionId>;
 
 let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
@@ -133,4 +136,55 @@ export async function removeTabFromSession(tabBookmarkId:string):Promise<void> {
 		// update views
 		SessionContentUpdate.send(sessionId);
 	}
+}
+
+export async function findActiveSessions():Promise<void> {
+	let windows:Window[] = await browser.windows.getAll({windowTypes:["normal"]});
+	let nonWindowSessions:Map<string, TabBookmark[]> = new Map();
+
+	await Promise.all(
+		windows.map(async (wnd) => {
+			let windowId = wnd.id;
+			let sessionId = (await browser.sessions.getWindowValue(wnd.id, "sessionID")) as string;
+
+			if(sessionId) {
+				// window seems to be an active session -> reactivate
+				let session:ActiveSession = await ActiveSession.reactivateWindow(sessionId, windowId);
+				activeSessions.set(session.bookmarkId, session);
+			} else {
+				// window could contain tabs of active sessions
+				let tabs:Tab[] = await browser.tabs.query({windowId: windowId});
+
+				// collect tabs that are part of active sessions
+				await Promise.all(
+					tabs.map(async (tab) => {
+						let sessionId:string = (await browser.sessions.getTabValue(tab.id, "sessionID")) as string;
+						
+						// if the tab as tab values it must be part of an active session
+						if(sessionId) {
+							
+							let bookmarkId:string = (await browser.sessions.getTabValue(tab.id, "bookmarkID")) as string;
+
+							let session:TabBookmark[] = nonWindowSessions.get(sessionId) || [];
+							session.push(new Tuple2(tab.id, bookmarkId));
+							nonWindowSessions.set(sessionId, session);
+						}
+					})
+				);
+			}
+		})
+	);
+
+	// reactivate non-window active sessions
+	for(let data of nonWindowSessions.entries()) {
+		let sessionId:SessionId = data[0];
+		let tabData:TabBookmark[] = data[1];
+
+		let session:ActiveSession = await ActiveSession.reactivateTabs(sessionId, tabData);
+		activeSessions.set(session.bookmarkId, session);
+	}
+
+	console.log(`[TA] Reactivated ${activeSessions.size} previously active sessions.`);
+
+	//TODO: make sure there is no race condition between this and the sidebar
 }

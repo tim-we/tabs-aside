@@ -10,6 +10,9 @@ import {
 } from "../util/Types";
 import { SessionContentUpdate } from "../messages/Messages.js";
 import * as ActiveSessionManager from "./ActiveSessionManager.js";
+import Tuple2 from "../util/Tuple.js"
+
+type TabBookmark = Tuple2<number, string>;
 
 export interface ActiveSessionData {
 	readonly bookmarkId;
@@ -202,6 +205,34 @@ export default class ActiveSession {
 		await browser.sessions.setWindowValue(wnd.id, "sessionID", this.bookmarkId);
 
 		return wnd;
+	}
+
+	public static async reactivateWindow(sessionId:string, windowId:number):Promise<ActiveSession> {
+		let bookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
+		let session:ActiveSession = new ActiveSession(bookmark);
+
+		session.windowId = windowId;
+
+		let tabs:Tab[] = await browser.tabs.query({windowId:windowId});
+
+		await Promise.all(tabs.map(async tab => {
+			let tabBookmarkId = (await browser.sessions.getTabValue(tab.id, "bookmarkID")) as string;
+			session.tabs.set(tab.id, tabBookmarkId);
+		}));
+
+		session.setEventListeners();
+
+		return session;
+	}
+
+	public static async reactivateTabs(sessionId:string, tabs:TabBookmark[]):Promise<ActiveSession> {
+		let bookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
+		let session:ActiveSession = new ActiveSession(bookmark);
+
+		tabs.forEach(x => session.tabs.set(x.first, x.second));
+		session.setEventListeners();
+
+		return session;
 	}
 
 	public getData():ActiveSessionData {

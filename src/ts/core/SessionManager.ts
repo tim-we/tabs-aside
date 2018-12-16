@@ -7,10 +7,14 @@ import {
 	ModifySessionArguments as MSA
 } from "../messages/Messages.js";
 import * as OptionsManager from "../options/OptionsManager.js";
-import { Tab, Bookmark, SessionId } from "../util/Types.js";
+import { Bookmark, SessionId } from "../util/Types.js";
 
 import * as  ActiveSessionManager from  "./ActiveSessionManager.js";
 import * as ClassicSessionManager from "./ClassicSessionManager.js";
+
+export async function init() {
+	return ActiveSessionManager.findActiveSessions();
+}
 
 export async function execCommand(cmd:SessionCommand):Promise<any> {
 	let c = cmd.cmd;
