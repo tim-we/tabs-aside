@@ -133,6 +133,11 @@
 				addSeparator();
 			});
 
+			document.body.appendChild(createButton("show sessions", "open the sidebar", ["session-btn", "shortcut"], e => {
+				browser.sidebarAction.open();
+				window.close();
+			}));
+
 			// are there remaining tabs?
 			if (remainingTabs.length > 0) {
 				let description = (sessions.length > 0) ?
@@ -164,11 +169,6 @@
 					document.body.appendChild(moreBtn);
 				}
 			}
-
-			document.body.appendChild(createButton("show sessions", "open the sidebar", ["session-btn", "shortcut"], e => {
-				browser.sidebarAction.open();
-				window.close();
-			}));
 		}).catch(e => {
 			alert("There was an unexpeted error.\nSee the console (Ctrl+Shift+J) for details.");
 			window.close();
