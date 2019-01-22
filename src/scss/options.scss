@@ -22,7 +22,7 @@ a:link, a:visited { color: #0000FF; }
 }
 
 .row:not(:nth-of-type(1)) {
-	border-top: 1px solid rgb(215, 215, 219);
+	border-top: 1px solid rgba(12, 12, 13, 0.4);
 }
 
 label {

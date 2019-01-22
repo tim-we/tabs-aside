@@ -55,12 +55,6 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			activeOnly: true,
 		},
 		{
-			id: "menuShowAll",
-			type: "boolean",
-			default: false,
-			group: "appearance"
-		},
-		{
 			id: "aside-command",
 			type: "command",
 			default: manifest.commands["tabs-aside"].suggested_key.default,

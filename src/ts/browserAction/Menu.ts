@@ -2,8 +2,6 @@ import MenuItems from "./MenuItems.js";
 import { MenuItem } from "./MenuItemType.js";
 import * as OptionsManager from "../options/OptionsManager.js";
 
-let showAll:boolean = false;
-
 let sessionsContainer:HTMLDivElement;
 let buttonsContainer:HTMLDivElement;
 
@@ -17,39 +15,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 	sessionsContainer = document.getElementById("sessions") as HTMLDivElement;
 	buttonsContainer  = document.getElementById("buttons") as HTMLDivElement;
 
-	showAll = await OptionsManager.getValue<boolean>("menuShowAll");
-
 	// create buttons
 	MenuItems.forEach(
 		item => buttonsContainer.appendChild(createButton(item))
 	);
-
-	if(showAll) {
-		buttonsContainer.classList.add("showAll");
-	} else {
-		let more = createButton({
-			id: "more",
-			icon: "more-16.svg",
-			closeMenu: false,
-			tooltip: true,
-			onclick: () => {
-				buttonsContainer.classList.add("showAll");
-				more.remove();
-			}
-		});
-
-		buttonsContainer.appendChild(more);
-	}
 });
 
 function createButton(item:MenuItem):HTMLAnchorElement {
 	let button:HTMLAnchorElement = document.createElement("a");
 
 	button.classList.add("button");
-	if(item.optional) {
-		button.classList.add("optional");
-	}
-
 	button.innerText = browser.i18n.getMessage("menu_" + item.id + "_label") || item.id;
 
 	if(item.icon) {

@@ -126,10 +126,6 @@
 		"message": "Show number of active sessions in browser action badge"
 	},
 
-	"option_menuShowAll": {
-		"message": "Always show all menu items"
-	},
-
 	"option_rootFolder":{
 		"message": "Session root folder",
 		"description": "The bookmark folder where sessions (bookmark subfolders) will be stored"

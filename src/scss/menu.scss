@@ -55,10 +55,6 @@ body {
 	width: 24px;
 }
 
-#buttons:not(.showAll) > .button.optional {
-	display: none;
-}
-
 .button:not(.disabled):hover, .mini-button:hover {
 	background-color: #F0F0F0;
 }
