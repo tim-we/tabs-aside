@@ -50,6 +50,10 @@ function createButton(item:MenuItem):HTMLAnchorElement {
 	if(!enabled) {
 		button.classList.add("disabled");
 		button.title = browser.i18n.getMessage("menu_action_not_applicable");
+
+		if(item.hide) {
+			button.style.display = "none";
+		}
 	}
 
 	if(enabled && item.href) {

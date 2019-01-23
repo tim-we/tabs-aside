@@ -16,6 +16,7 @@ let menuItems:MenuItem[] = [
 		id: "tabs-aside",
 		icon: "aside.png",
 		wideIcon: true,
+		tooltip: true,
 		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
 		onclick: () => {
 			SessionCommand.send("create", {
@@ -35,7 +36,8 @@ let menuItems:MenuItem[] = [
 				setAside: false
 			});
 		},
-		isApplicable: (state) => state.freeTabs
+		isApplicable: (state) => state.freeTabs,
+		hide: true
 	},
 	{
 		id: "tab-selector",

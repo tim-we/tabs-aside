@@ -35,6 +35,10 @@
 		"message": "Tabs aside"
 	},
 
+	"menu_tabs-aside_tooltip": {
+		"message": "Set tabs or current active session aside"
+	},
+
 	"menu_create-session_label": {
 		"message": "Create session"
 	},

@@ -1,4 +1,5 @@
 import { Tab } from "../util/Types.js";
+import { StateInfoData } from "../messages/Messages.js";
 
 export interface MenuItem {
 	id: string;
@@ -10,9 +11,6 @@ export interface MenuItem {
 	closeMenu?:boolean; // default: true
 	tooltip?:boolean; // default: false
 	href?:string;
-	isApplicable?:(state:StateInfo) => boolean;
-}
-
-interface StateInfo {
-	freeTabs:boolean;
+	isApplicable?:(state:StateInfoData) => boolean;
+	hide?:boolean; // default: false
 }
