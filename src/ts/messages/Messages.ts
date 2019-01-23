@@ -1,3 +1,5 @@
+import { ActiveSessionData } from "../core/ActiveSession";
+
 export type MessageType = 
 	  "SessionCommand"
 	| "SessionEvent"
@@ -58,7 +60,8 @@ export class SessionCommand extends Message {
 	}
 }
 
-type DataDescriptor = "active-sessions";
+type DataDescriptor = "active-sessions" | "state-info";
+
 export class DataRequest extends Message {
 	public readonly data: DataDescriptor;
 
@@ -72,6 +75,12 @@ export class DataRequest extends Message {
 		let m:Message = new DataRequest(data);
 		return await browser.runtime.sendMessage(m);
 	}
+}
+
+export interface StateInfoData {
+	freeTabs:boolean;
+	sessions:ActiveSessionData[];
+	currentWindowSession?:ActiveSessionData;
 }
 
 type SessionEventType = "activated" | "set-aside" | "meta-update" | "content-update" | "removed" | "created";

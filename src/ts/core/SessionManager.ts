@@ -1,13 +1,14 @@
-import ActiveSession from "./ActiveSession.js";
+import ActiveSession, { ActiveSessionData } from "./ActiveSession.js";
 import TabData from "./TabData.js";
 import {
 	SessionCommand,
 	DataRequest,
 	CreateSessionArguments as CSA,
-	ModifySessionArguments as MSA
+	ModifySessionArguments as MSA,
+	StateInfoData
 } from "../messages/Messages.js";
 import * as OptionsManager from "../options/OptionsManager.js";
-import { Bookmark, SessionId } from "../util/Types.js";
+import { Bookmark, SessionId, Tab } from "../util/Types.js";
 
 import * as  ActiveSessionManager from  "./ActiveSessionManager.js";
 import * as ClassicSessionManager from "./ClassicSessionManager.js";
@@ -52,6 +53,31 @@ export async function execCommand(cmd:SessionCommand):Promise<any> {
 export async function dataRequest(req:DataRequest):Promise<any> {
 	if(req.data === "active-sessions") {
 		return ActiveSessionManager.getActiveSessions();
+	} else if(req.data === "state-info") {
+		let sessions:ActiveSessionData[] = ActiveSessionManager.getActiveSessions();
+		let tabs:Tab[] = await browser.tabs.query({
+			currentWindow: true
+		});
+
+		let freeTabs:Tab[] = tabs.filter(tab => {
+			for(let i=0; i<sessions.length; i++) {
+				if(sessions[i].tabs.includes(tab.id)) {
+					return false;
+				}
+			}
+
+			return true;
+		});
+
+		let stateInfo:StateInfoData = {
+			freeTabs: freeTabs.length > 0,
+			sessions: sessions,
+			currentWindowSession: sessions.find(
+				session => session.windowId === browser.windows.WINDOW_ID_CURRENT
+			)
+		}
+
+		return stateInfo;
 	}
 }
 

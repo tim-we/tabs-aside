@@ -23,7 +23,7 @@ let menuItems:MenuItem[] = [
 				setAside: true
 			});
 		},
-		applicable: (state) => state.freeTabs
+		isApplicable: (state) => state.freeTabs
 	},
 	{
 		id: "create-session",
@@ -35,7 +35,7 @@ let menuItems:MenuItem[] = [
 				setAside: false
 			});
 		},
-		applicable: (state) => state.freeTabs
+		isApplicable: (state) => state.freeTabs
 	},
 	{
 		id: "tab-selector",

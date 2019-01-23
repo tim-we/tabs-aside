@@ -10,7 +10,7 @@ export interface MenuItem {
 	closeMenu?:boolean; // default: true
 	tooltip?:boolean; // default: false
 	href?:string;
-	applicable?:(state:StateInfo) => boolean;
+	isApplicable?:(state:StateInfo) => boolean;
 }
 
 interface StateInfo {
