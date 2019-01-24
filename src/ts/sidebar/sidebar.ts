@@ -39,6 +39,9 @@ Promise.all([
 	HTMLUtilities.DOMReady().then(() => {
 		sessionContainer = document.getElementById("sessions");
 		noSessionsInfo = document.getElementById("no-sessions");
+
+		// apply localization
+		HTMLUtilities.i18n();
 	})
 
 ]).then(async () => {
@@ -58,6 +61,8 @@ Promise.all([
 
 	// creating views
 	sessions.forEach(sessionBookmark => addView(sessionBookmark));
+
+	noSessionsCheck();
 
 }).then(() => {
 	MessageListener.add("*", messageHandler);
@@ -97,7 +102,7 @@ function addView(sessionBookmark:Bookmark, prepend:boolean = false):void {
 		sessionContainer.appendChild(view.getHTML());
 	}
 
-	emptyCheck();
+	noSessionsCheck();
 }
 
 function updateView(sessionId:string, sessionBookmark:Bookmark):void {
@@ -108,7 +113,7 @@ function updateView(sessionId:string, sessionBookmark:Bookmark):void {
 	}
 }
 
-function emptyCheck():void {
+function noSessionsCheck():void {
 	if(sessionViews.size === 0) {
 		noSessionsInfo.classList.add("show");
 	} else {
@@ -159,7 +164,7 @@ async function messageHandler(message:Message) {
 		} else if(msg.event === "removed") {
 			sessionView.getHTML().remove();
 			sessionViews.delete(msg.sessionId);
-			emptyCheck();
+			noSessionsCheck();
 		}
 	}
 }

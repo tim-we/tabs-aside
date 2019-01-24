@@ -147,6 +147,18 @@
 		"message": "new session"
 	},
 
+	"sidebar_nosessions_bigtext": {
+		"message": "Set aside your tabs"
+	},
+
+	"sidebar_nosessions_text1":{
+		"message": "Click the browser action button in your toolbar to set aside your tabs."
+	},
+
+	"sidebar_nosessions_text2":{
+		"message": "Restore them later to pick up where you left off."
+	},
+
 	"sidebar_search_placeholder": {
 		"message": "search sessions..."
 	},
