@@ -48,7 +48,7 @@ export default class SessionOptionsMenu extends OverlayMenu {
 			}
 		}, "options-menu-remove-session");
 
-		this.addItem("sidebar_session_details", async () => {
+		/*this.addItem("sidebar_session_details", async () => {
 			let bookmark:Bookmark = (await browser.bookmarks.get(session.bookmarkId))[0];
 
 			alert([
@@ -57,6 +57,6 @@ export default class SessionOptionsMenu extends OverlayMenu {
 				"Added:\n" + new Date(bookmark.dateAdded).toISOString(),
 				"Last change:\n" + new Date(bookmark.dateGroupModified).toISOString()
 			].join("\n"));
-		}, "options-menu-session-details");
+		}, "options-menu-session-details");*/
 	}
 }
