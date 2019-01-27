@@ -13,9 +13,9 @@ type TitleData = {
 
 /**
  * Regular expression that parses tab options and title from a bookmark title.
- * Example bookmark title: "[pinned,rm] Actual title"
+ * Example bookmark title: "[pinned,reading] Actual title"
  */
-const bmTitleParser:RegExp = /^(\[(rm,|pinned,|src)*(rm|pinned|src)?\]\s)?(.*)$/;
+const bmTitleParser:RegExp = /^(\[(reading,|pinned,|src)*(reading|pinned|src)?\]\s)?(.*)$/;
 const validURL:RegExp = /^https?:\/\//i;
 
 const readerPrefix:string = "about:reader?url=";
@@ -48,7 +48,7 @@ export default class TabData {
 
 		if(url === "about:newtab") {
 			url = undefined;
-		} else if(this.isPrivileged()) {			
+		} else if(this.isPrivileged()) {
 			url = browser.runtime.getURL(
 				`html/privileged.html?url=${encodeURIComponent(url)}&title=${this.title}`
 			);
@@ -119,7 +119,7 @@ export default class TabData {
 			this.url = bookmark.url;
 			this.title = data.title;
 			this.pinned = data.options.has("pinned");
-			this.isInReaderMode = data.options.has("rm");
+			this.isInReaderMode = data.options.has("reading");
 			this.viewSource = data.options.has("src");
 
 			this.favIconUrl = this.getFavIconURL(bookmark.url);
@@ -138,7 +138,7 @@ export default class TabData {
 		let tabOptions:string[] = [];
 
 		if(this.isInReaderMode) {
-			tabOptions.push("rm");
+			tabOptions.push("reading");
 		}
 
 		if(this.pinned) {
