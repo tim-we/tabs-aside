@@ -10,7 +10,7 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			id: "activeSessions",
 			type: "boolean",
 			default: true,
-			hint: true
+			info: true
 		},
 		{
 			id: "windowedSession",

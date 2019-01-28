@@ -75,8 +75,8 @@
 		"message": "Active Sessions"
 	},
 
-	"option_activeSessions_hint": {
-		"message": "active session = track tabs & update session"
+	"option_activeSessions_info": {
+		"message": "Tracks tab changes and updates the bookmarks in realtime while a session is active."
 	},
 
 	"option_windowedSession": {
