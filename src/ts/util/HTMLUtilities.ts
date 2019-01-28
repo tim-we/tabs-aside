@@ -22,7 +22,7 @@ export function DOMReady():Promise<void> {
 		return new Promise(resolve =>
 			document.addEventListener("DOMContentLoaded", () => {resolve()})
 		);
+	} else {
+		return Promise.resolve();
 	}
-
-	return Promise.resolve();
 }

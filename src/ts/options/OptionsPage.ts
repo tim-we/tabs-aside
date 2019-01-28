@@ -5,8 +5,11 @@ import Options from "./Options.js";
 import * as BooleanControl from "./Controls/BooleanControl.js";
 import * as BookmarkControl from "./Controls/BookmarkControl.js";
 import * as SelectControl from "./Controls/SelectControl.js";
+import * as HTMLUtilities from "../util/HTMLUtilities.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+	HTMLUtilities.i18n();
+
 	// Multiple options depend on the active session option
 	if(await OptionsManager.getValue<boolean>("activeSessions")) {
 		document.body.classList.add("active-sessions");

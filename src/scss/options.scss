@@ -82,3 +82,35 @@ body:not(.active-sessions) .row.active-only::after {
 	padding-bottom: 2px;
 	padding-top: 6px;
 }
+
+footer {
+	margin-top: 10px;
+	padding-left: 6px;
+	padding-right: 5px;
+	text-align: right;
+}
+
+footer > a::before {
+	font-size: 0;
+	display: inline-block;
+	position: relative;
+	width: 16px;
+	height: 16px;
+}
+
+footer > a:not(:last-of-type) {
+	margin-right: 3px;
+}
+
+#source-code::before {
+	content: " ";
+	top: 4px;
+	margin-right: 1px;
+	background-image: url('../img/ionicons_svg_md-code.svg');
+}
+
+#report-issues::before {
+	content: " ";
+	top: 3px;
+	background-image: url('../img/report-issues.svg');
+}
