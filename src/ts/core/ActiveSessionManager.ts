@@ -184,7 +184,9 @@ export async function findActiveSessions():Promise<void> {
 		activeSessions.set(session.bookmarkId, session);
 	}
 
-	console.log(`[TA] Reactivated ${activeSessions.size} previously active sessions.`);
+	if(activeSessions.size > 0) {
+		console.log(`[TA] Reactivated ${activeSessions.size} previously active sessions.`);
+	}
 
 	//TODO: make sure there is no race condition between this and the sidebar
 }
