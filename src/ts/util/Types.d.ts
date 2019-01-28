@@ -54,3 +54,5 @@ export type TabDetachedListener = (
 		oldPosition:number
 	}
 ) => void;
+
+export type WindowRemovedListener = (windowId:number) => void;

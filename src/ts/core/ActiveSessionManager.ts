@@ -88,7 +88,7 @@ export async function setAside(sessionId:SessionId):Promise<void> {
 	}
 
 	activeSessions.delete(sessionId);
-	await session.setAside();
+	await session.setTabsOrWindowAside();
 
 	SessionEvent.send(session.bookmarkId, "set-aside");
 }

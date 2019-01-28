@@ -6,13 +6,15 @@ import {
 	TabRemoveListener,
 	TabUpdatedListener,
 	TabAttachedListener,
-	TabDetachedListener
+	TabDetachedListener,
+	WindowRemovedListener
 } from "../util/Types";
 import { SessionContentUpdate } from "../messages/Messages.js";
 import * as ActiveSessionManager from "./ActiveSessionManager.js";
 import Tuple2 from "../util/Tuple.js"
 
 type TabBookmark = Tuple2<number, string>;
+const TAB_REMOVE_DELAY = 250;
 
 export interface ActiveSessionData {
 	readonly bookmarkId;
@@ -28,6 +30,11 @@ export default class ActiveSession {
 	
 	// maps tab ids to bookmark ids
 	private tabs:Map<number, string> = new Map();
+	
+	// removing tabs needs to be delayed because there is no API to detect window closing
+	// https://bugzilla.mozilla.org/show_bug.cgi?id=1399885
+	private bookmarkRemoveQueue:string[] = [];
+	private removeTimeoutId:number = 0;
 
 	// event listeners
 	private tabAttachedListener:TabAttachedListener;
@@ -35,6 +42,7 @@ export default class ActiveSession {
 	private tabCreatedListener:TabCreatedListener;
 	private tabRemovedListener:TabRemoveListener;
 	private tabUpdatedListener:TabUpdatedListener;
+	private wndRemovedListener:WindowRemovedListener;
 
 	constructor(sessionBookmark:Bookmark) {
 		this.bookmarkId = sessionBookmark.id;
@@ -151,7 +159,7 @@ export default class ActiveSession {
 		return browserTab;
 	}
 
-	public async setAside():Promise<void> {
+	public async setTabsOrWindowAside():Promise<void> {
 		this.removeEventListeners();
 
 		if(this.windowId && this.tabs.size > 0) {
@@ -161,6 +169,10 @@ export default class ActiveSession {
 		} else {
 			await browser.tabs.remove(this.getTabsIds());
 		}
+	}
+
+	private async setAside() {
+		return ActiveSessionManager.setAside(this.bookmarkId);
 	}
 
 	private async removeTabValues(tabId:number):Promise<void> {
@@ -271,31 +283,33 @@ export default class ActiveSession {
 		this.setEventListeners();
 	}
 
-	private async setEventListeners() {
-		let removeTabs:boolean = (await OptionsManager.getValue<string>("tabClosingBehavior")) === "remove-tab";
+	private async removeBookmarksFromQueue() {
+		this.removeTimeoutId = 0;
 
-		// shared code for tabs removed/detached from a session
-		let tabRemovedFromSession = async (tabBookmarkId:string) => {
-			if(removeTabs) {
-				await browser.bookmarks.remove(tabBookmarkId);
-			}
+		let bookmarks = this.bookmarkRemoveQueue;
+		// clear queue
+		this.bookmarkRemoveQueue = [];
 
-			if(this.tabs.size === 0) {
-				if(removeTabs) {
-					let tabBookmarks:Bookmark[] = await browser.bookmarks.getChildren(this.bookmarkId);
+		// remove bookmarks
+		await Promise.all(
+			bookmarks.map(
+				tabBookmarkId => browser.bookmarks.remove(tabBookmarkId)
+			)
+		);
 
-					if(tabBookmarks.length === 0) {
-						ActiveSessionManager.removeSession(this.bookmarkId);
-						return;
-					}
-				}
+		// check if the session should be removed
+		let tabBookmarks:Bookmark[] = await browser.bookmarks.getChildren(this.bookmarkId);
 
-				ActiveSessionManager.setAside(this.bookmarkId);
-			}
-
+		if(tabBookmarks.length === 0) {
+			ActiveSessionManager.removeSession(this.bookmarkId);
+		} else {
 			// update sidebar
 			SessionContentUpdate.send(this.bookmarkId);
-		};
+		}
+	}
+
+	private async setEventListeners() {
+		let removeTabs:boolean = (await OptionsManager.getValue<string>("tabClosingBehavior")) === "remove-tab";
 
 		// removed tabs
 		this.tabRemovedListener = async (tabId, removeInfo) => {
@@ -306,7 +320,20 @@ export default class ActiveSession {
 				// remove tab
 				this.tabs.delete(tabId);
 
-				tabRemovedFromSession(tabBookmarkId);
+				if(removeTabs) {
+					if(this.removeTimeoutId > 0) {
+						window.clearTimeout(this.removeTimeoutId);
+					}
+	
+					// only remove tab from bookmarks after a timeout
+					// to prevent the session from being removed when the window is closed
+					// the delay may be removed when https://bugzilla.mozilla.org/show_bug.cgi?id=1399885 gets shipped
+					this.bookmarkRemoveQueue.push(tabBookmarkId);
+					this.removeTimeoutId = window.setTimeout(
+						() => this.removeBookmarksFromQueue(),
+						TAB_REMOVE_DELAY
+					);
+				}
 			}
 		};
 
@@ -321,7 +348,22 @@ export default class ActiveSession {
 				// tab still exists -> remove tab values
 				await this.removeTabValues(tabId);
 
-				tabRemovedFromSession(tabBookmarkId);
+				// remove associated bookmark
+				await browser.bookmarks.remove(tabBookmarkId);
+
+				// update sidebar
+				SessionContentUpdate.send(this.bookmarkId);
+
+				if(this.tabs.size === 0) {
+					let tabBookmarks:Bookmark[] = await browser.bookmarks.getChildren(this.bookmarkId);
+
+					if(tabBookmarks.length === 0) {
+						ActiveSessionManager.removeSession(this.bookmarkId);
+						return;
+					} else {
+						ActiveSessionManager.setAside(this.bookmarkId);
+					}
+				}
 			}
 		};
 
@@ -378,6 +420,19 @@ export default class ActiveSession {
 			}
 		};
 
+		this.wndRemovedListener = async (windowId) => {
+			if(this.windowId === windowId && this.bookmarkRemoveQueue.length > 1) {
+				console.assert(this.removeTimeoutId > 0);
+
+				// do not remove tabs, ...
+				window.clearTimeout(this.removeTimeoutId);
+				console.log("[TA] Prevented session & tab bookmark removal.");
+
+				// ... just set the session aside
+				this.setAside();
+			}
+		};
+
 		// add event listeners
 		browser.tabs.onCreated.addListener(this.tabCreatedListener);
 		browser.tabs.onRemoved.addListener(this.tabRemovedListener);
@@ -385,6 +440,7 @@ export default class ActiveSession {
 		if(this.windowId) {
 			browser.tabs.onAttached.addListener(this.tabAttachedListener);
 			browser.tabs.onDetached.addListener(this.tabDetachedListener);
+			browser.windows.onRemoved.addListener(this.wndRemovedListener);
 		}
 	}
 
@@ -396,6 +452,7 @@ export default class ActiveSession {
 		if(browser.tabs.onAttached.hasListener(this.tabAttachedListener)) {
 			browser.tabs.onAttached.removeListener(this.tabAttachedListener);
 			browser.tabs.onDetached.removeListener(this.tabDetachedListener);
+			browser.windows.onRemoved.removeListener(this.wndRemovedListener);
 		}
 	}
 }
