@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/tim-we/tabs-aside#readme",
   "dependencies": {
-    "@types/firefox-webext-browser": "^64.0.0",
+    "@types/firefox-webext-browser": "^65.0.0",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
@@ -31,13 +31,13 @@
     "gulp-tap": "^1.0.1",
     "gulp-typescript": "^5.0.0-alpha.3",
     "stylelint": "^9.8.0",
-    "stylelint-config-rational-order": "0.0.2",
+    "stylelint-config-rational-order": "0.0.4",
     "stylelint-config-sass-guidelines": "^5.2.0",
     "stylelint-no-unsupported-browser-features": "^3.0.2",
     "stylelint-order": "^2.0.0",
     "stylelint-scss": "^3.4.0",
-    "typescript": "^3.1.6",
-    "web-ext": "^2.9.1"
+    "typescript": "^3.2.4",
+    "web-ext": "^2.9.3"
   },
-  "browserslist": "Firefox 63"
+  "browserslist": "Firefox 64"
 }
