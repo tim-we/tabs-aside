@@ -36,6 +36,8 @@ export default class ActiveSession {
 	private bookmarkRemoveQueue:string[] = [];
 	private removeTimeoutId:number = 0;
 
+	private ignoreNextCreatedTab:boolean = false;
+
 	// event listeners
 	private tabAttachedListener:TabAttachedListener;
 	private tabDetachedListener:TabDetachedListener;
@@ -147,22 +149,40 @@ export default class ActiveSession {
 
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
 		let createProperties = data.getTabCreateProperties();
+		createProperties.active = true;
+		createProperties.discarded = false;
 
 		if(this.windowId) {
 			createProperties.windowId = this.windowId;
 		}
 
+		this.ignoreNextCreatedTab = true;
 		let browserTab:Tab = await browser.tabs.create(createProperties);
 
 		await this.addExistingTab(browserTab, tabBookmark.id);
 
+		if(this.windowId) {
+			// focus session window
+			browser.windows.update(this.windowId, {
+				focused: true
+			});
+		}
+
 		return browserTab;
+	}
+
+	public async setTabAside(tabId:number):Promise<void> {
+		if(this.tabs.delete(tabId)) {
+			browser.tabs.remove(tabId);
+		} else {
+			return Promise.reject(new Error(`Tab ${tabId} is not part of this session.`));
+		}
 	}
 
 	public async setTabsOrWindowAside():Promise<void> {
 		this.removeEventListeners();
 
-		if(this.windowId && this.tabs.size > 0) {
+		if(this.windowId) {
 			this.tabs = new Map();
 
 			await browser.windows.remove(this.windowId);
@@ -383,6 +403,11 @@ export default class ActiveSession {
 		};
 
 		this.tabCreatedListener = async (tab) => {
+			if(this.ignoreNextCreatedTab && tab.windowId === this.windowId) {
+				this.ignoreNextCreatedTab = false;
+				return;
+			}
+
 			/* determine if tab should be added to the session
 			 * the tab should be added if:
 			 * - tab is part of the sessions window (windowed mode)
