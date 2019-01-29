@@ -249,15 +249,21 @@
 	},
 
 	"tab_contextmenu_title": {
-		"message": "Tabs Aside!"
+		"message": "&Tabs Aside!",
+		"description": "the ampersand (&) makes t the access key for this menu item"
 	},
 
 	"tab_contextmenu_add": {
-		"message": "add this tab to a session"
+		"message": "&add this tab to a session"
+	},
+
+	"tab_contextmenu_add_and_set_aside": {
+		"message": "add to a session && &set aside",
+		"description": "a single ampersand (&) marks the next character as an access key for this item"
 	},
 
 	"tab_contextmenu_set_aside": {
-		"message": "set aside"
+		"message": "&set aside"
 	},
 
 	"tab_selector_title": {

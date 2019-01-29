@@ -2,6 +2,8 @@ import * as SessionManager from "../core/SessionManager.js";
 import * as ActiveSessionManager from "../core/ActiveSessionManager.js";
 import { Tab, ContextMenuId, Bookmark, SessionId } from "../util/Types.js";
 import ActiveSession from "../core/ActiveSession.js";
+import TabData from "../core/TabData.js";
+import { SessionContentUpdate } from "../messages/Messages.js";
 
 let shown:boolean = false;
 let dynamicMenus:ContextMenuId[] = [];
@@ -55,6 +57,8 @@ async function createMenuForTab(tab:Tab) {
 				currentSession.setTabAside(tab.id);
 			}
 		}));
+	} else {
+		addAndSetAsideMenu(sessions, activeSessions, tab);
 	}
 
 	browser.menus.refresh();
@@ -66,26 +70,71 @@ async function addToSessionMenu(
 	activeSessions:Set<SessionId>,
 	tab:Tab
 ) {
-	sessions = sessions.filter(session => session.id !== currentSessionId);
-
 	if(sessions.length > 0) {
 		dynamicMenus.push(
 			browser.menus.create({
 				parentId: "parent",
 				id: "add",
-				title: browser.i18n.getMessage("tab_contextmenu_add")
+				title: browser.i18n.getMessage("tab_contextmenu_add"),
+				icons: {
+					"16": "img/menu/add.svg",
+					"32": "img/menu/add.svg"
+				}
 			})
 		);
 
 		sessions.forEach(session => browser.menus.create({
 			parentId: "add",
-			title: session.title,
+			title: "&" + session.title.replace(/&/ig, "&&").trim(),
 			icons: activeSessions.has(session.id) ? {
 				"16": "img/browserMenu/active.svg",
 				"32": "img/browserMenu/active.svg"
 			} : undefined,
-			onclick: (info) => {
-				//TODO
+			enabled: session.id !== currentSessionId,
+			onclick: async (info) => {
+				let data = TabData.createFromTab(tab);
+				await browser.bookmarks.create(
+					data.getBookmarkCreateDetails(session.id)
+				);
+
+				// update sidebar
+				SessionContentUpdate.send(session.id);
+			}
+		}));
+	}
+}
+
+async function addAndSetAsideMenu(
+	sessions:Bookmark[],
+	activeSessions:Set<SessionId>,
+	tab:Tab
+) {
+	if(sessions.length > 0) {
+		dynamicMenus.push(
+			browser.menus.create({
+				parentId: "parent",
+				id: "add-n-close",
+				title: browser.i18n.getMessage("tab_contextmenu_add_and_set_aside"),
+			})
+		);
+
+		sessions.forEach(session => browser.menus.create({
+			parentId: "add-n-close",
+			title: "&" + session.title.replace(/&/ig, "&&").trim(),
+			icons: activeSessions.has(session.id) ? {
+				"16": "img/browserMenu/active.svg",
+				"32": "img/browserMenu/active.svg"
+			} : undefined,
+			onclick: async (info) => {
+				let data = TabData.createFromTab(tab);
+				await browser.bookmarks.create(
+					data.getBookmarkCreateDetails(session.id)
+				);
+
+				browser.tabs.remove(tab.id);
+
+				// update sidebar
+				SessionContentUpdate.send(session.id);
 			}
 		}));
 	}
