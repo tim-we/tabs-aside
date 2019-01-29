@@ -38,22 +38,23 @@ export async function init() {
 
 async function createMenuForTab(tab:Tab) {
 	let currentSession:ActiveSession = ActiveSessionManager.getSessionFromTab(tab);
+	let currentSessionId:SessionId = currentSession ? currentSession.bookmarkId : null;
 	let sessions:Bookmark[] = await SessionManager.getSessionBookmarks();
 	let activeSessions:Set<SessionId> = new Set(
 		ActiveSessionManager.getActiveSessions().map(data => data.bookmarkId)
 	);
 
-	addToSessionMenu(sessions, currentSession.bookmarkId, activeSessions, tab);
+	addToSessionMenu(sessions, currentSessionId, activeSessions, tab);
 
 	if(currentSession) {
-		browser.menus.create({
+		dynamicMenus.push(browser.menus.create({
 			parentId: "parent",
 			id: "set-aside",
 			title: browser.i18n.getMessage("tab_contextmenu_set_aside"),
 			onclick: info => {
 				currentSession.setTabAside(tab.id);
 			}
-		});
+		}));
 	}
 
 	browser.menus.refresh();
