@@ -1,6 +1,7 @@
 import * as SessionManager from "../core/SessionManager.js";
 import * as ActiveSessionManager from "../core/ActiveSessionManager.js";
 import { Tab, ContextMenuId, Bookmark, SessionId } from "../util/Types.js";
+import ActiveSession from "../core/ActiveSession.js";
 
 let shown:boolean = false;
 let dynamicMenus:ContextMenuId[] = [];
@@ -36,23 +37,35 @@ export async function init() {
 }
 
 async function createMenuForTab(tab:Tab) {
-	let currentSession:SessionId = ActiveSessionManager.getSessionFromTab(tab);
+	let currentSession:ActiveSession = ActiveSessionManager.getSessionFromTab(tab);
 	let sessions:Bookmark[] = await SessionManager.getSessionBookmarks();
 	let activeSessions:Set<SessionId> = new Set(
 		ActiveSessionManager.getActiveSessions().map(data => data.bookmarkId)
 	);
 
-	addToSessionMenu(sessions, currentSession, activeSessions, tab);
+	addToSessionMenu(sessions, currentSession.bookmarkId, activeSessions, tab);
+
+	if(currentSession) {
+		browser.menus.create({
+			parentId: "parent",
+			id: "set-aside",
+			title: browser.i18n.getMessage("tab_contextmenu_set_aside"),
+			onclick: info => {
+				currentSession.setTabAside(tab.id);
+			}
+		});
+	}
+
 	browser.menus.refresh();
 }
 
 async function addToSessionMenu(
 	sessions:Bookmark[],
-	currentSession:SessionId,
+	currentSessionId:SessionId,
 	activeSessions:Set<SessionId>,
 	tab:Tab
 ) {
-	sessions = sessions.filter(session => session.id !== currentSession);
+	sessions = sessions.filter(session => session.id !== currentSessionId);
 
 	if(sessions.length > 0) {
 		dynamicMenus.push(
@@ -69,7 +82,10 @@ async function addToSessionMenu(
 			icons: activeSessions.has(session.id) ? {
 				"16": "img/browserMenu/active.svg",
 				"32": "img/browserMenu/active.svg"
-			} : undefined
+			} : undefined,
+			onclick: (info) => {
+				//TODO
+			}
 		}));
 	}
 }

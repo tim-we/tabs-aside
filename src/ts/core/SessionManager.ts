@@ -86,7 +86,7 @@ export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promis
 
 	// delegate
 	if(activeSessionsEnabled) {
-		await ActiveSessionManager.restore(sessionId, keepBookmarks);
+		await ActiveSessionManager.restore(sessionId);
 	} else {
 		await ClassicSessionManager.restore(sessionId, keepBookmarks);
 	}
@@ -97,11 +97,14 @@ export async function restoreSingle(tabBookmarkId:string) {
 
 	let tabBookmark:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
 	let sessionId:SessionId = tabBookmark.parentId;
-	let session:ActiveSession;
+	let session:ActiveSession = ActiveSessionManager.getActiveSession(sessionId);
 
-	if(activeSessionsEnabled && (session = ActiveSessionManager.getActiveSession(sessionId))) {
+	if(session) {
 		// if session is already partially active add tab to active session
 		session.openBookmarkTab(tabBookmark);
+	} else if(activeSessionsEnabled) {
+		// create a new active session
+		ActiveSessionManager.restoreSingle(sessionId, tabBookmark);
 	} else {
 		// create a new tab (no active session) otherwise
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
@@ -177,6 +180,8 @@ export async function removeSession(sessionId:SessionId, keepTabs:boolean = fals
 
 export async function removeTabFromSession(tabBookmarkId:string):Promise<void> {
 	let tabBookmark:Bookmark = (await browser.bookmarks.get(tabBookmarkId))[0];
+	console.assert(tabBookmark);
+
 	let sessionId:string = tabBookmark.parentId;
 	let session:ActiveSession = ActiveSessionManager.getActiveSession(sessionId);
 	

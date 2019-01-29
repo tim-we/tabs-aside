@@ -64,17 +64,17 @@ export function getActiveSession(sessionId:SessionId):ActiveSession {
 	return activeSessions.get(sessionId)
 }
 
-export function getSessionFromTab(tab:Tab):SessionId {
+export function getSessionFromTab(tab:Tab):ActiveSession {
 	for(let session of activeSessions.values()) {
 		if(session.hasTab(tab.id)) {
-			return session.bookmarkId;
+			return session;
 		}
 	}
 
 	return null;
 }
 
-export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promise<void> {
+export async function restore(sessionId:SessionId):Promise<void> {
 	// sanity-check
 	if (activeSessions.has(sessionId)) {
 		throw new Error(`Session ${sessionId} is already active.`);
@@ -84,6 +84,17 @@ export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promis
 	activeSessions.set(sessionId, session);
 
 	SessionEvent.send(sessionId, "activated");
+}
+
+export async function restoreSingle(sessionId:SessionId, tabBookmark:Bookmark):Promise<void> {
+	if(activeSessions.has(sessionId)) {
+		activeSessions.get(sessionId).openBookmarkTab(tabBookmark);
+	} else {
+		let session:ActiveSession = await ActiveSession.restoreSingleTab(tabBookmark);
+		activeSessions.set(sessionId, session);
+
+		SessionEvent.send(sessionId, "activated");
+	}
 }
 
 /**

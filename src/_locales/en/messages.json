@@ -256,8 +256,8 @@
 		"message": "add this tab to a session"
 	},
 
-	"tab_contextmenu_add_and_aside": {
-		"message": "set aside (add to session)"
+	"tab_contextmenu_set_aside": {
+		"message": "set aside"
 	},
 
 	"tab_selector_title": {
