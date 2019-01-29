@@ -182,13 +182,17 @@ export default class ActiveSession {
 	public async setTabsOrWindowAside():Promise<void> {
 		this.removeEventListeners();
 
-		if(this.windowId) {
-			this.tabs = new Map();
-
-			await browser.windows.remove(this.windowId);
-		} else {
-			await browser.tabs.remove(this.getTabsIds());
+		if(this.tabs.size > 0) {
+			if(this.windowId) {
+				this.tabs = new Map();
+				await browser.windows.remove(this.windowId);
+			} else {
+				let tabIds:number[] = this.getTabsIds();
+				this.tabs = new Map();
+				await browser.tabs.remove(tabIds);
+			}
 		}
+		
 	}
 
 	private async setAside() {
