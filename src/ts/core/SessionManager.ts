@@ -189,3 +189,9 @@ export async function removeTabFromSession(tabBookmarkId:string):Promise<void> {
 		ClassicSessionManager.removeTabFromSession(tabBookmark);
 	}
 }
+
+export async function getSessionBookmarks():Promise<Bookmark[]> {
+	let rootFolderId:string = await OptionsManager.getValue<string>("rootFolder");
+
+	return browser.bookmarks.getChildren(rootFolderId);
+}

@@ -3,6 +3,7 @@ import { Message, SessionCommand, DataRequest } from "../messages/Messages.js";
 import * as BrowserActionManager from "../browserAction/BrowserActionManager.js";
 import * as KeyboardCommands from "./KeyboardCommands.js";
 import * as MessageListener from "../messages/MessageListener.js";
+import * as BrowserTabContextMenu from "./BrowserTabContextMenu.js";
 
 MessageListener.setDestination("background");
 BrowserActionManager.init();
@@ -25,3 +26,6 @@ SessionManager.init().then(() => {
 		}
 	});
 });
+
+
+BrowserTabContextMenu.init();

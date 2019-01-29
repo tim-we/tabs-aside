@@ -64,6 +64,16 @@ export function getActiveSession(sessionId:SessionId):ActiveSession {
 	return activeSessions.get(sessionId)
 }
 
+export function getSessionFromTab(tab:Tab):SessionId {
+	for(let session of activeSessions.values()) {
+		if(session.hasTab(tab.id)) {
+			return session.bookmarkId;
+		}
+	}
+
+	return null;
+}
+
 export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promise<void> {
 	// sanity-check
 	if (activeSessions.has(sessionId)) {

@@ -56,3 +56,5 @@ export type TabDetachedListener = (
 ) => void;
 
 export type WindowRemovedListener = (windowId:number) => void;
+
+export type ContextMenuId = string | number;

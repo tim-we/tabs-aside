@@ -248,6 +248,18 @@
 		"description": "opens the tab and removes it from the session"
 	},
 
+	"tab_contextmenu_title": {
+		"message": "Tabs Aside!"
+	},
+
+	"tab_contextmenu_add": {
+		"message": "add this tab to a session"
+	},
+
+	"tab_contextmenu_add_and_aside": {
+		"message": "set aside (add to session)"
+	},
+
 	"tab_selector_title": {
 		"message": "Tabs Aside :: Tab selector"
 	},

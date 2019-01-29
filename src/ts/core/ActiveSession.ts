@@ -201,6 +201,10 @@ export default class ActiveSession {
 		this.tabs = new Map();
 	}
 
+	public hasTab(tabId:number):boolean {
+		return this.tabs.has(tabId);
+	}
+
 	private getTabsIds():number[] {
 		return Array.from(this.tabs.keys());
 	}
