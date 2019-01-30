@@ -39,7 +39,8 @@
 	"sidebar_action": {
 		"default_title": "Tabs you've set aside",
 		"default_panel": "html/sidebar.html",
-		"default_icon": "img/tabs.png"
+		"default_icon": "img/tabs.png",
+		"open_at_install": false
 	},
 
 	"background": {
