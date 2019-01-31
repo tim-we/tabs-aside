@@ -12,6 +12,7 @@ import { Bookmark, SessionId, Tab } from "../util/Types.js";
 
 import * as  ActiveSessionManager from  "./ActiveSessionManager.js";
 import * as ClassicSessionManager from "./ClassicSessionManager.js";
+import { getCurrentWindowId } from "../util/WebExtAPIHelpers.js";
 
 export async function init() {
 	return ActiveSessionManager.findActiveSessions();
@@ -69,11 +70,13 @@ export async function dataRequest(req:DataRequest):Promise<any> {
 			return true;
 		});
 
+		let currentWindowId:number = await getCurrentWindowId();
+
 		let stateInfo:StateInfoData = {
 			freeTabs: freeTabs.length > 0,
 			sessions: sessions,
 			currentWindowSession: sessions.find(
-				session => session.windowId === browser.windows.WINDOW_ID_CURRENT
+				session => session.windowId === currentWindowId
 			)
 		}
 
