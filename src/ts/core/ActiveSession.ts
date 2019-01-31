@@ -15,6 +15,7 @@ import Tuple2 from "../util/Tuple.js"
 
 type TabBookmark = Tuple2<number, string>;
 const TAB_REMOVE_DELAY = 250;
+const INITIAL_LOADING_TIMEOUT = 1000;
 
 export interface ActiveSessionData {
 	readonly bookmarkId;
@@ -36,7 +37,10 @@ export default class ActiveSession {
 	private bookmarkRemoveQueue:string[] = [];
 	private removeTimeoutId:number = 0;
 
+	// this is needed to avoid duplicate bookmarks for tabs activated via the sidebar
 	private ignoreNextCreatedTab:boolean = false;
+
+	private sessionStartTime:number;
 
 	// event listeners
 	private tabAttachedListener:TabAttachedListener;
@@ -49,6 +53,7 @@ export default class ActiveSession {
 	constructor(sessionBookmark:Bookmark) {
 		this.bookmarkId = sessionBookmark.id;
 		this.title = sessionBookmark.title;
+		this.sessionStartTime = Date.now();
 	}
 
 	private static async restore(sessionBookmark:Bookmark, tabBookmark?:Bookmark):Promise<ActiveSession> {
@@ -79,11 +84,6 @@ export default class ActiveSession {
 		// -> close it after sessions tabs are restored
 		if(emptyTab) {
 			await browser.tabs.remove(emptyTab.id);
-		}
-
-		if(!windowedSession) {
-			// the session does not have its own window -> highlight tabs
-			await activeSession.hightlight();
 		}
 
 		activeSession.setEventListeners();
@@ -286,7 +286,7 @@ export default class ActiveSession {
 
 	public async hightlight():Promise<void> {
 		let tabIds:number[] = this.getTabsIds();
-		// avoid browser errors
+		// the highlight API does not accept an empty array
 		if(tabIds.length === 0) { return; }
 
 		let tabs:Tab[] = await Promise.all(
@@ -434,6 +434,11 @@ export default class ActiveSession {
 
 			// check if tab loaded & part of this session
 			if(tabBookmarkId) {
+				if(tab.status === "loading" && (Date.now() - this.sessionStartTime) < INITIAL_LOADING_TIMEOUT) {
+					// ignore loading tabs
+					return;
+				}
+
 				// only update session for certain changes
 				let update:boolean = changeInfo.hasOwnProperty("url")
 					|| changeInfo.hasOwnProperty("title")
