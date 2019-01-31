@@ -7,10 +7,10 @@ export interface MenuItem {
 	shortcut?:string;
 	icon?:string;
 	wideIcon?:boolean; // default: false
-	onclick?: (e:MouseEvent) => void;
+	onclick?: (state:StateInfoData) => void;
 	closeMenu?:boolean; // default: true
 	tooltip?:boolean; // default: false
 	href?:string;
 	isApplicable?:(state:StateInfoData) => boolean;
-	hide?:boolean; // default: false
+	hide?:(state:StateInfoData) => boolean;
 }

@@ -1,43 +1,57 @@
 import { MenuItem } from "./MenuItemType.js";
 import * as OptionManager from "../options/OptionsManager.js";
 import { SessionCommand } from "../messages/Messages.js";
+import { SessionId } from "../util/Types.js";
+import { getCurrentWindowId } from "../util/WebExtAPIHelpers.js";
 
 const manifest = browser.runtime.getManifest();
-let tabsAside:MenuItem, showSessions:MenuItem;
 
 let menuItems:MenuItem[] = [
-	showSessions = {
+	{
 		id: "show-sessions",
 		icon: "sessions.png",
 		shortcut: manifest.commands["_execute_sidebar_action"].suggested_key.default,
 		onclick: () => browser.sidebarAction.open()
 	},
-	tabsAside = {
+	{
 		id: "tabs-aside",
 		icon: "aside.png",
 		wideIcon: true,
 		tooltip: true,
 		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
-		onclick: () => {
+		onclick: async () => {
 			SessionCommand.send("create", {
-				windowId: browser.windows.WINDOW_ID_CURRENT,
+				windowId: await getCurrentWindowId(),
 				setAside: true
 			});
 		},
-		isApplicable: (state) => state.freeTabs
+		isApplicable: (state) => state.freeTabs,
+		hide: (state) => !state.freeTabs && !!state.currentWindowSession
+	},
+	{
+		id: "set-aside",
+		icon: "aside.png",
+		wideIcon: true,
+		tooltip: true,
+		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
+		onclick: (state) => {
+			let sessionId:SessionId = state.currentWindowSession.bookmarkId;
+			SessionCommand.send("set-aside", {sessionId: sessionId});
+		},
+		hide: (state) => !state.currentWindowSession
 	},
 	{
 		id: "create-session",
 		icon: "add.svg",
 		tooltip: true,
-		onclick: () => {
+		onclick: async () => {
 			SessionCommand.send("create", {
-				windowId: browser.windows.WINDOW_ID_CURRENT,
+				windowId: await getCurrentWindowId(),
 				setAside: false
 			});
 		},
 		isApplicable: (state) => state.freeTabs,
-		hide: true
+		hide: (state) => !state.freeTabs
 	},
 	{
 		id: "tab-selector",
@@ -51,10 +65,5 @@ let menuItems:MenuItem[] = [
 		onclick: () => browser.runtime.openOptionsPage()
 	}
 ];
-
-(async () => {
-	tabsAside.shortcut = await OptionManager.getValue<string>("aside-command");
-	showSessions.shortcut = await OptionManager.getValue<string>("sidebar-command");
-})();
 
 export default menuItems;

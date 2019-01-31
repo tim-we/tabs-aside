@@ -24,6 +24,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 function createButton(item:MenuItem):HTMLAnchorElement {
 	let button:HTMLAnchorElement = document.createElement("a");
 
+	if(item.hide && item.hide(stateInfo)) {
+		button.style.display = "none";
+		return button;
+	}
+
 	button.classList.add("button");
 	button.innerText = browser.i18n.getMessage("menu_" + item.id + "_label") || item.id;
 
@@ -50,10 +55,6 @@ function createButton(item:MenuItem):HTMLAnchorElement {
 	if(!enabled) {
 		button.classList.add("disabled");
 		button.title = browser.i18n.getMessage("menu_action_not_applicable");
-
-		if(item.hide) {
-			button.style.display = "none";
-		}
 	}
 
 	if(enabled && item.href) {
@@ -62,7 +63,7 @@ function createButton(item:MenuItem):HTMLAnchorElement {
 
 	if(enabled && item.onclick) {
 		button.addEventListener("click", e => {
-			item.onclick(e);
+			item.onclick(stateInfo);
 
 			if(item.closeMenu !== false) {
 				window.close();
