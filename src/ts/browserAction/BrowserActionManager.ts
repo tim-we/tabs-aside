@@ -1,9 +1,9 @@
 import * as OptionManager from "../options/OptionsManager.js";
 import { Message, OptionUpdateEvent } from "../messages/Messages.js";
 import * as MessageListener from "../messages/MessageListener.js";
+import * as ActiveSessionManager from "../core/ActiveSessionManager.js";
 
 let badgeColor:string = "#0A84FF";
-let showBadge:boolean = true;
 
 export async function init() {
 	let icon:string = (await OptionManager.getValue<string>("browserActionIcon")) + ".svg";
@@ -13,7 +13,6 @@ export async function init() {
 		title: `Tabs Aside ${browser.runtime.getManifest().version}`
 	});
 
-	showBadge = await OptionManager.getValue<boolean>("badgeCounter");
 	updateBadge();
 
 	MessageListener.setDestination("background");
@@ -21,24 +20,39 @@ export async function init() {
 		if(msg.key === "browserActionIcon") {
 			let newIcon:string = msg.newValue + ".svg";
 			updateIcon(newIcon);
-		} else if(msg.key === "badgeCounter") {
-			showBadge = msg.newValue as boolean;
-			updateBadge();
 		}
 	});
 }
 
-async function updateBadge() {
-	// TODO: get number of active session
-	let n:number = /*await*/ 0;
+export async function updateBadge() {
+	let sessions = ActiveSessionManager.getActiveSessions();
+	let n:number = sessions.filter(session => !session.windowId).length;
 
-	let text:string = (showBadge && n>0) ? n+"" : "";
+	let text:string = (n>0) ? n+"" : "";
 
-	browser.browserAction.setBadgeText({ text: text });
-
+	// set global badge color
 	browser.browserAction.setBadgeBackgroundColor({
 		color: badgeColor
 	});
+
+	await browser.browserAction.setBadgeText({ text: text });
+
+	// get window ids of active sessions
+	let windows = sessions.reduce(
+		(wnds, session) => {
+			if(session.windowId) {
+				wnds.add(session.windowId);
+			}
+			return wnds;
+		},
+		new Set<number>()
+	);
+	
+	// hide badge on active session windows
+	windows.forEach(windowId => browser.browserAction.setBadgeText({
+		text: "",
+		windowId: windowId
+	}));
 }
 
 function updateIcon(newIcon:string):Promise<void> {

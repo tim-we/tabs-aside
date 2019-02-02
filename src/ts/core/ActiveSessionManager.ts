@@ -4,6 +4,7 @@ import { SessionCommand, SessionEvent, DataRequest, SessionContentUpdate } from 
 import * as OptionsManager from "../options/OptionsManager.js";
 import TabData from "./TabData.js";
 import Tuple2 from "../util/Tuple.js";
+import * as BrowserAction from "../browserAction/BrowserActionManager.js";
 
 type TabBookmark = Tuple2<number, SessionId>;
 
@@ -84,6 +85,8 @@ export async function restore(sessionId:SessionId):Promise<void> {
 	activeSessions.set(sessionId, session);
 
 	SessionEvent.send(sessionId, "activated");
+
+	BrowserAction.updateBadge();
 }
 
 export async function restoreSingle(sessionId:SessionId, tabBookmark:Bookmark):Promise<void> {
@@ -94,6 +97,7 @@ export async function restoreSingle(sessionId:SessionId, tabBookmark:Bookmark):P
 		activeSessions.set(sessionId, session);
 
 		SessionEvent.send(sessionId, "activated");
+		BrowserAction.updateBadge();
 	}
 }
 
@@ -112,6 +116,7 @@ export async function setAside(sessionId:SessionId):Promise<void> {
 	await session.setTabsOrWindowAside();
 
 	SessionEvent.send(session.bookmarkId, "set-aside");
+	BrowserAction.updateBadge();
 }
 
 /**
@@ -208,6 +213,8 @@ export async function findActiveSessions():Promise<void> {
 	if(activeSessions.size > 0) {
 		console.log(`[TA] Reactivated ${activeSessions.size} previously active sessions.`);
 	}
+
+	BrowserAction.updateBadge();
 
 	//TODO: make sure there is no race condition between this and the sidebar
 }
