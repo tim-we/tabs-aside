@@ -9,14 +9,14 @@ const manifest = browser.runtime.getManifest();
 let menuItems:MenuItem[] = [
 	{
 		id: "show-sessions",
-		icon: "sessions.png",
+		icon: "tabs.svg",
+		wideIcon: true,
 		shortcut: manifest.commands["_execute_sidebar_action"].suggested_key.default,
 		onclick: () => browser.sidebarAction.open()
 	},
 	{
 		id: "tabs-aside",
-		icon: "aside.png",
-		wideIcon: true,
+		icon: "aside.svg",
 		tooltip: true,
 		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
 		onclick: async () => {
@@ -42,7 +42,6 @@ let menuItems:MenuItem[] = [
 	},
 	{
 		id: "create-session",
-		icon: "add.svg",
 		tooltip: true,
 		onclick: async () => {
 			SessionCommand.send("create", {

@@ -53,6 +53,7 @@ body {
 .button.icon.wide::before {
 	left: calc(36px - 24px - 8px);
 	width: 24px;
+	background-position: right;
 }
 
 .button:not(.disabled):hover, .mini-button:hover {
