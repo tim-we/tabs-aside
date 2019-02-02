@@ -110,5 +110,9 @@ function showAll() {
 }
 
 MessageListener.add("SessionEvent", (e:SessionEvent) => {
-	// TODO: listen for session updates and update sessionIds
+	if(e.event === "created") {
+		sessionIds.add(e.sessionId);
+	} else if(e.event === "removed") {
+		sessionIds.delete(e.sessionId);
+	}
 });
