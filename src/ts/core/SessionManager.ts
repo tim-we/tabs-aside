@@ -124,6 +124,19 @@ export async function createSessionFromTabs(
 
 	let sessionId:string;
 
+	let activeTabs:Set<number> = new Set();
+
+	// build set of active tabs
+	ActiveSessionManager.getActiveSessions().forEach(
+		session => session.tabs.forEach(
+			tab => activeTabs.add(tab)
+		)
+	);
+	
+	// remove tabs that are part of an active session
+	tabs = tabs.filter(tab => !activeTabs.has(tab.id));
+
+	// create session
 	if(activeSessionsEnabled) {
 		let session:ActiveSession;
 		session = await ActiveSessionManager.createSessionFromTabs(tabs, title);
@@ -151,8 +164,6 @@ export async function createSessionFromWindow(setAside:boolean, windowId?:number
 	};
 
 	let tabs = await browser.tabs.query(query);
-
-	//TODO: remove tabs that are part of an active session
 	
 	let sessionId:SessionId = await createSessionFromTabs(tabs, setAside, title);
 
