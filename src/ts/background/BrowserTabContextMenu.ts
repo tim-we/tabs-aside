@@ -77,8 +77,8 @@ async function addToSessionMenu(
 				id: "add",
 				title: browser.i18n.getMessage("tab_contextmenu_add"),
 				icons: {
-					"16": "img/menu/add.svg",
-					"32": "img/menu/add.svg"
+					"16": "img/browserMenu/add.svg",
+					"32": "img/browserMenu/add.svg"
 				}
 			})
 		);
