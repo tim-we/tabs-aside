@@ -1,0 +1,65 @@
+#modal-background {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: rgba(64,64,64,0.25);
+	z-index: 9999;
+	opacity: 0;
+	transition: opacity 0.25s;
+}
+
+#modal-background > div.modal-window {
+	--modal-background: rgb(64,64,64);
+	--modal-text-color: rgb(255,255,255);
+	--modal-button-bg-color: rgb(255,255,255);
+	--modal-button-text-color: rgb(16,16,16);
+
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 50%;
+
+	background-color: var(--modal-background);
+	color: var(--modal-text-color);
+	box-shadow: 0px 0px 10px 0px rgba(16,16,16,.125);
+
+	text-align: center;
+
+	transition: opacity .25s;
+}
+
+#modal-background > div.modal-window > div.content {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	max-width: 500px;
+	text-align: left;
+}
+
+#modal-background > div.modal-window > div.content > div.custom-content {
+	width: 100%;
+	padding: 10px;
+	max-height: 800px;
+	overflow: auto;
+}
+
+#modal-background > div.modal-window > div.content > div.buttons {
+	position: relative;
+	width: 100%;
+	text-align: right;
+	background-color: rgba(16,16,16,0.1);
+	padding: 4px;
+}
+
+#modal-background > div.modal-window > div.content > div.buttons > button {
+	background-color: var(--modal-button-bg-color);
+	color: var(--modal-button-text-color);
+	min-width: 50px;
+	border: none;
+	text-align: center;
+	margin-bottom: 0px;
+	margin-left: 4px;
+	margin-right: 0px;
+}

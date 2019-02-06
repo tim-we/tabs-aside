@@ -3,6 +3,7 @@ import SessionView from "./SessionView.js";
 import * as OptionsManager from "../options/OptionsManager.js";
 import { SessionCommand } from "../messages/Messages.js";
 import { Bookmark } from "../util/Types.js";
+import ModalWindow from "../util/ModalWindow.js";
 
 let _i18n = browser.i18n.getMessage;
 
@@ -28,13 +29,13 @@ export default class SessionOptionsMenu extends OverlayMenu {
 			session.editTitle();
 		});
 
-		this.addItem("sidebar_session_remove", () => {
-			if(!confirm(_i18n("sidebar_session_remove_confirm"))) {
+		this.addItem("sidebar_session_remove", async () => {
+			if(!(await ModalWindow.confirm(_i18n("sidebar_session_remove_confirm")))) {
 				return;
 			}
 
 			if(activeSessions && session.isActive()) {
-				let keep:boolean = confirm(_i18n("sidebar_session_remove_keep_tabs"));
+				let keep:boolean = await ModalWindow.confirm(_i18n("sidebar_session_remove_keep_tabs"));
 
 				SessionCommand.send("remove", {
 					sessionId: session.bookmarkId,
@@ -48,15 +49,15 @@ export default class SessionOptionsMenu extends OverlayMenu {
 			}
 		}, "options-menu-remove-session");
 
-		/*this.addItem("sidebar_session_details", async () => {
+		this.addItem("sidebar_session_details", async () => {
 			let bookmark:Bookmark = (await browser.bookmarks.get(session.bookmarkId))[0];
 
-			alert([
+			ModalWindow.alert([
 				"Name: " + bookmark.title,
 				"Bookmark ID: " + bookmark.id,
 				"Added:\n" + new Date(bookmark.dateAdded).toISOString(),
 				"Last change:\n" + new Date(bookmark.dateGroupModified).toISOString()
 			].join("\n"));
-		}, "options-menu-session-details");*/
+		}, "options-menu-session-details");
 	}
 }

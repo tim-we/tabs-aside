@@ -7,7 +7,6 @@ import { ActiveSessionData } from "../core/ActiveSession.js";
 import * as MessageListener from "../messages/MessageListener.js";
 import { SolvableError, TabsAsideError } from "../util/Errors.js";
 import * as HTMLUtilities from "../util/HTMLUtilities.js";
-import * as FirefoxDialogFix from "../util/FirefoxDialogFix.js";
 
 type Bookmark = browser.bookmarks.BookmarkTreeNode;
 
@@ -24,8 +23,6 @@ let sessionViews:Map<string, SessionView> = new Map();
 let activeSessions:Map<string, ActiveSessionData> = new Map();
 let sessionContainer:HTMLElement;
 let noSessionsInfo:HTMLElement;
-
-FirefoxDialogFix.apply();
 
 // initialize...
 MessageListener.setDestination("sidebar");
