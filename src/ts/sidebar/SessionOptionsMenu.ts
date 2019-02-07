@@ -52,12 +52,17 @@ export default class SessionOptionsMenu extends OverlayMenu {
 		this.addItem("sidebar_session_details", async () => {
 			let bookmark:Bookmark = (await browser.bookmarks.get(session.bookmarkId))[0];
 
-			ModalWindow.alert([
-				"Name: " + bookmark.title,
-				"Bookmark ID: " + bookmark.id,
-				"Added:\n" + new Date(bookmark.dateAdded).toISOString(),
-				"Last change:\n" + new Date(bookmark.dateGroupModified).toISOString()
-			].join("\n"));
+			let modal = new ModalWindow();
+			modal.addHeading("Session details");
+			modal.addTable([
+				["Name", bookmark.title],
+				["Bookmark ID", bookmark.id],
+				["Index", ""+bookmark.index],
+				["Added", new Date(bookmark.dateAdded).toISOString()],
+				["Last change", new Date(bookmark.dateGroupModified).toISOString()]
+			]);
+			modal.setButtons(["close"]);
+			await modal.show();
 		}, "options-menu-session-details");
 	}
 }

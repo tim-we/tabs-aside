@@ -79,16 +79,16 @@
 		"message": "Action currently not applicable."
 	},
 
-	"modal_alert_ok": {
+	"modal_window_button_ok": {
 		"message": "Ok"
 	},
 
-	"modal_confirm_ok": {
-		"message": "Ok"
-	},
-
-	"modal_confirm_cancel": {
+	"modal_window_button_cancel": {
 		"message": "Cancel"
+	},
+
+	"modal_window_button_close": {
+		"message": "Close"
 	},
 	
 	"option_activeSessions": {

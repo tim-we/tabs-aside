@@ -4,7 +4,6 @@ background.id = "modal-background";
 let modals:ModalWindow[] = [];
 
 export default class ModalWindow {
-	private i18n_prefix:string = "";
 	private windowHTML:HTMLDivElement;
 	private customContent:HTMLDivElement;
 	private buttons:HTMLDivElement;
@@ -12,11 +11,10 @@ export default class ModalWindow {
 	private onClosed:()=>void;
 	public cancelable:boolean = true;
 
-	private constructor(i18n_prefix:string) {
-		this.i18n_prefix = i18n_prefix;
-
+	public constructor() {
 		this.windowHTML = document.createElement("div");
 		this.windowHTML.classList.add("modal-window");
+		this.windowHTML.addEventListener("click", e => e.stopPropagation());
 
 		let content:HTMLDivElement = document.createElement("div");
 		content.classList.add("content");
@@ -35,10 +33,30 @@ export default class ModalWindow {
 		this.customContent.appendChild(elem);
 	}
 
+	public addHeading(title:string):void {
+		let h:HTMLHeadingElement = document.createElement("h2");
+		h.innerText = title;
+		this.addContent(h);
+	}
+
 	public addText(text:string):void {
 		let p = document.createElement("p");
 		p.innerText = text;
 		this.addContent(p);
+	}
+
+	public addTable(rows:string[][]):void {
+		let table:HTMLTableElement = document.createElement("table");
+		rows.forEach(columns => {
+			let tr:HTMLTableRowElement = document.createElement("tr");
+			columns.forEach(value => {
+				let td:HTMLTableCellElement = document.createElement("td");
+				td.innerText = value;
+				tr.appendChild(td);
+			})
+			table.appendChild(tr);
+		});
+		this.addContent(table);
 	}
 
 	public show():Promise<void> {
@@ -83,7 +101,7 @@ export default class ModalWindow {
 		buttonIds.forEach(buttonId => {
 			let modal = this;
 			let button:HTMLButtonElement = document.createElement("button");
-			button.innerText = browser.i18n.getMessage(this.i18n_prefix + buttonId) || buttonId;
+			button.innerText = browser.i18n.getMessage("modal_window_button_" + buttonId) || buttonId;
 			button.classList.add("browser-style");
 			this.buttons.appendChild(button);
 
@@ -96,7 +114,7 @@ export default class ModalWindow {
 	}
 
 	public static alert(text:string):Promise<void> {
-		let modal = new ModalWindow("modal_alert_");
+		let modal = new ModalWindow();
 		modal.addText(text);
 		modal.setButtons(["ok"]);
 
@@ -104,7 +122,7 @@ export default class ModalWindow {
 	}
 
 	public static async confirm(text:string):Promise<boolean> {
-		let modal = new ModalWindow("modal_confirm_");
+		let modal = new ModalWindow();
 		modal.addText(text);
 		modal.setButtons(["ok", "cancel"]);
 		modal.cancelable = false;

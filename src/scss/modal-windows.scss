@@ -45,6 +45,24 @@
 	overflow: auto;
 }
 
+#modal-background > div.modal-window > div.content > div.custom-content > h2:first-child {
+	margin-top: 0px;
+	margin-bottom: 7px;
+}
+
+#modal-background > div.modal-window > div.content > div.custom-content > table {
+	border: none;
+	width: 100%;
+}
+
+#modal-background > div.modal-window > div.content > div.custom-content > table tr:nth-of-type(even) {
+	background-color: rgba(200,200,200,0.1);
+}
+
+#modal-background > div.modal-window > div.content > div.custom-content > table td {
+	padding: 0px 2px;
+}
+
 #modal-background > div.modal-window > div.content > div.buttons {
 	position: relative;
 	width: 100%;
