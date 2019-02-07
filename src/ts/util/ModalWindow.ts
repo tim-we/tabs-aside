@@ -4,6 +4,7 @@ background.id = "modal-background";
 let modals:ModalWindow[] = [];
 
 export default class ModalWindow {
+	private i18n_prefix:string = "";
 	private windowHTML:HTMLDivElement;
 	private customContent:HTMLDivElement;
 	private buttons:HTMLDivElement;
@@ -11,7 +12,9 @@ export default class ModalWindow {
 	private onClosed:()=>void;
 	public cancelable:boolean = true;
 
-	private constructor() {
+	private constructor(i18n_prefix:string) {
+		this.i18n_prefix = i18n_prefix;
+
 		this.windowHTML = document.createElement("div");
 		this.windowHTML.classList.add("modal-window");
 
@@ -75,40 +78,40 @@ export default class ModalWindow {
 		this.onClosed();
 	}
 
-	public setButtons(labels:string[]):void {
+	public setButtons(buttonIds:string[]):void {
 		this.buttons.innerHTML = "";
-		labels.forEach(label => {
+		buttonIds.forEach(buttonId => {
 			let modal = this;
 			let button:HTMLButtonElement = document.createElement("button");
-			button.innerText = label;
+			button.innerText = browser.i18n.getMessage(this.i18n_prefix + buttonId) || buttonId;
 			button.classList.add("browser-style");
 			this.buttons.appendChild(button);
 
 			button.addEventListener("click", e => {
 				e.stopPropagation();
-				modal.buttonPressed = label;
+				modal.buttonPressed = buttonId;
 				modal.close();
 			});
 		});
 	}
 
 	public static alert(text:string):Promise<void> {
-		let modal = new ModalWindow();
+		let modal = new ModalWindow("modal_alert_");
 		modal.addText(text);
-		modal.setButtons(["Ok"]);
+		modal.setButtons(["ok"]);
 
 		return modal.show();
 	}
 
 	public static async confirm(text:string):Promise<boolean> {
-		let modal = new ModalWindow();
+		let modal = new ModalWindow("modal_confirm_");
 		modal.addText(text);
-		modal.setButtons(["Ok", "Cancel"]);
+		modal.setButtons(["ok", "cancel"]);
 		modal.cancelable = false;
 
 		await modal.show();
 
-		return modal.buttonPressed === "Ok";
+		return modal.buttonPressed === "ok";
 	}
 }
 

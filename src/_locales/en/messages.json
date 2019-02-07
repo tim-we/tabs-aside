@@ -78,6 +78,18 @@
 	"menu_action_not_applicable": {
 		"message": "Action currently not applicable."
 	},
+
+	"modal_alert_ok": {
+		"message": "Ok"
+	},
+
+	"modal_confirm_ok": {
+		"message": "Ok"
+	},
+
+	"modal_confirm_cancel": {
+		"message": "Cancel"
+	},
 	
 	"option_activeSessions": {
 		"message": "Active Sessions"
