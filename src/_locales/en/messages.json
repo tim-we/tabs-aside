@@ -255,6 +255,34 @@
 		"description": "Session options (...) menu item to show session details"
 	},
 
+	"sidebar_session_details_modal_title": {
+		"message": "Session details",
+		"description": "Title of the modal window showing session details in the sidebar"
+	},
+
+	"sidebar_session_details_name": {
+		"message": "Name",
+		"description": "Session name (bookmark title)"
+	},
+
+	"sidebar_session_details_id": {
+		"message": "Bookmark ID"
+	},
+
+	"sidebar_session_details_index": {
+		"message": "Index",
+		"description": "Position of the bookmark within the parent folder"
+	},
+
+	"sidebar_session_details_created": {
+		"message": "Created",
+		"description": "date the session folder was created"
+	},
+
+	"sidebar_session_details_last_change": {
+		"message": "Last change"
+	},
+
 	"sidebar_tab_copy_url": {
 		"message": "copy URL to clipboard"
 	},

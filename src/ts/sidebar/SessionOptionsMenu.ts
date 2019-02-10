@@ -7,6 +7,12 @@ import ModalWindow from "../util/ModalWindow.js";
 
 let _i18n = browser.i18n.getMessage;
 
+function date2str(date:Date|number):string {
+	return date instanceof Date ?
+		date.toISOString() :
+		(new Date(date)).toISOString();
+}
+
 let activeSessions:boolean = true;
 
 // needs to be loaded just once because sidebar will reload if this is changed
@@ -53,13 +59,13 @@ export default class SessionOptionsMenu extends OverlayMenu {
 			let bookmark:Bookmark = (await browser.bookmarks.get(session.bookmarkId))[0];
 
 			let modal = new ModalWindow();
-			modal.addHeading("Session details");
+			modal.addHeading(_i18n("sidebar_session_details_modal_title"));
 			modal.addTable([
-				["Name", bookmark.title],
-				["Bookmark ID", bookmark.id],
-				["Index", ""+bookmark.index],
-				["Added", new Date(bookmark.dateAdded).toISOString()],
-				["Last change", new Date(bookmark.dateGroupModified).toISOString()]
+				[_i18n("sidebar_session_details_name"), bookmark.title],
+				[_i18n("sidebar_session_details_id"), bookmark.id],
+				[_i18n("sidebar_session_details_index"), ""+bookmark.index],
+				[_i18n("sidebar_session_details_created"), date2str(bookmark.dateAdded)],
+				[_i18n("sidebar_session_details_last_change"), date2str(bookmark.dateGroupModified)]
 			]);
 			modal.setButtons(["close"]);
 			await modal.show();
