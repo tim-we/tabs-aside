@@ -69,17 +69,11 @@ export default class ModalWindow {
 			background.style.opacity = "1";
 		}
 
-		this.computeOffset();
 		this.windowHTML.style.opacity = "1";
 
 		modals.push(this);
 
 		return new Promise(resolve => this.onClosed = resolve);
-	}
-
-	public computeOffset():void {
-		let height = window.getComputedStyle(this.windowHTML).height || "100px";
-		this.windowHTML.style.marginTop = "calc(-0.5 * " + height + ")";
 	}
 
 	public close():void {
@@ -139,10 +133,4 @@ background.addEventListener("click", () => {
 	if(currentModal.cancelable) {
 		currentModal.close();
 	}
-});
-
-window.addEventListener("resize", () => {
-	modals.forEach(modal => {
-		modal.computeOffset();
-	});
 });

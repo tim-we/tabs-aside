@@ -1,12 +1,20 @@
 #modal-background {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
 	position: fixed;
 	top: 0px;
 	left: 0px;
 	right: 0px;
 	bottom: 0px;
+	margin: 0px;
+	padding: 0px;
+
 	background-color: rgba(64,64,64,0.25);
 	z-index: 9999;
 	opacity: 0;
+
 	transition: opacity 0.25s;
 }
 
@@ -16,10 +24,8 @@
 	--modal-button-bg-color: rgb(255,255,255);
 	--modal-button-text-color: rgb(16,16,16);
 
-	position: absolute;
-	left: 0px;
-	right: 0px;
-	top: 50%;
+	position: relative;
+	width: 100%;
 
 	background-color: var(--modal-background);
 	color: var(--modal-text-color);
