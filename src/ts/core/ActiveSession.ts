@@ -76,7 +76,7 @@ export default class ActiveSession {
 		// add tabs
 		await Promise.all(
 			tabsToOpen.map(
-				tabBookmark => activeSession.openBookmarkTab(tabBookmark)
+				tabBookmark => activeSession.openBookmarkTab(tabBookmark, false)
 			)
 		);
 
@@ -144,7 +144,7 @@ export default class ActiveSession {
 	 * Open a tab from a bookmark and add it to this session
 	 * @param tabBookmark - A bookmark from this session
 	 */
-	public async openBookmarkTab(tabBookmark:Bookmark):Promise<Tab> {
+	public async openBookmarkTab(tabBookmark:Bookmark, skipCreateEvent:boolean = true):Promise<Tab> {
 		console.assert(tabBookmark && tabBookmark.parentId === this.bookmarkId);
 
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
@@ -156,7 +156,9 @@ export default class ActiveSession {
 			createProperties.windowId = this.windowId;
 		}
 
-		this.ignoreNextCreatedTab = true;
+		if(skipCreateEvent) {
+			this.ignoreNextCreatedTab = true;
+		}
 		let browserTab:Tab = await browser.tabs.create(createProperties);
 
 		await this.addExistingTab(browserTab, tabBookmark.id);
@@ -409,6 +411,7 @@ export default class ActiveSession {
 		this.tabCreatedListener = async (tab) => {
 			if(this.ignoreNextCreatedTab && tab.windowId === this.windowId) {
 				this.ignoreNextCreatedTab = false;
+				console.log("tab ignored");
 				return;
 			}
 
@@ -425,6 +428,8 @@ export default class ActiveSession {
 
 				// update sidebar
 				SessionContentUpdate.send(this.bookmarkId);
+			} else {
+				console.log("tab not added");
 			}
 		};
 
