@@ -30,7 +30,7 @@ let menuItems:MenuItem[] = [
 	},
 	{
 		id: "set-aside",
-		icon: "aside.png",
+		icon: "aside.svg",
 		wideIcon: true,
 		tooltip: true,
 		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
