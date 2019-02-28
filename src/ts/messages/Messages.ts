@@ -1,4 +1,5 @@
-import { ActiveSessionData } from "../core/ActiveSession";
+import { ActiveSessionData } from "../core/ActiveSession.js";
+import { attempt } from "../util/PromiseUtils.js";
 
 export type MessageType = 
 	  "SessionCommand"
@@ -56,7 +57,7 @@ export class SessionCommand extends Message {
 
 	public static async send(cmd: SessionCMD, args:ArgumentData) {
 		let m:Message = new SessionCommand(cmd, args);
-		await browser.runtime.sendMessage(m);
+		await attempt(browser.runtime.sendMessage(m));
 	}
 }
 
@@ -73,7 +74,7 @@ export class DataRequest extends Message {
 
 	public static async send<T>(data:DataDescriptor):Promise<T> {
 		let m:Message = new DataRequest(data);
-		return await browser.runtime.sendMessage(m);
+		return browser.runtime.sendMessage(m);
 	}
 }
 
@@ -98,7 +99,7 @@ export class SessionEvent extends Message {
 
 	public static async send(sessionId:string, event:SessionEventType) {
 		let m:Message = new SessionEvent(sessionId, event);
-		await browser.runtime.sendMessage(m);
+		await attempt(browser.runtime.sendMessage(m));
 	}
 }
 
@@ -113,7 +114,7 @@ export class SessionContentUpdate extends SessionEvent {
 
 	public static async send(sessionId:string) {
 		let m:Message = new SessionContentUpdate(sessionId);
-		await browser.runtime.sendMessage(m);
+		await attempt(browser.runtime.sendMessage(m));
 	}
 }
 
@@ -130,6 +131,6 @@ export class OptionUpdateEvent extends Message {
 
 	public static async send(key:string, newValue:any) {
 		let m:Message = new OptionUpdateEvent(key, newValue);
-		await browser.runtime.sendMessage(m);
+		await attempt(browser.runtime.sendMessage(m));
 	}
 }
