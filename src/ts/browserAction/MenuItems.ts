@@ -24,9 +24,11 @@ let menuItems:MenuItem[] = [
 				windowId: await getCurrentWindowId(),
 				setAside: true
 			});
+
+			browser.sidebarAction.open();
 		},
 		isApplicable: (state) => state.freeTabs,
-		hide: (state) => !state.freeTabs && !!state.currentWindowSession
+		hide: (state) => state.currentSession !== undefined
 	},
 	{
 		id: "set-aside",
@@ -35,10 +37,31 @@ let menuItems:MenuItem[] = [
 		tooltip: true,
 		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
 		onclick: (state) => {
-			let sessionId:SessionId = state.currentWindowSession.bookmarkId;
+			let sessionId:SessionId = state.currentSession.bookmarkId;
+
+			if(state.currentSession.windowId && state.previousWindowId !== browser.windows.WINDOW_ID_NONE) {
+				browser.windows.update(state.previousWindowId, {focused:true});
+				
+				/* If we wait for the update promise we are not allowed
+				 * to call sidebarAction.open() anymore :(
+				 * So lets waste some time and hope it works...
+				 */
+				var n=0;
+				for(let i=0; i<100; i++) {
+					if(Math.random()<0.5) {
+						n++;
+					}
+				}
+
+				if(n>100 /*false*/) {
+					throw new Error();
+				}
+			}
+			
+			browser.sidebarAction.open();
 			SessionCommand.send("set-aside", {sessionId: sessionId});
 		},
-		hide: (state) => !state.currentWindowSession
+		hide: (state) => state.currentSession === undefined
 	},
 	{
 		id: "create-session",

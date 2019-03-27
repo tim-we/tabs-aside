@@ -61,7 +61,7 @@ export class SessionCommand extends Message {
 	}
 }
 
-type DataDescriptor = "active-sessions" | "state-info";
+type DataDescriptor = "active-sessions" | "state-info" | "previous-window-id";
 
 export class DataRequest extends Message {
 	public readonly data: DataDescriptor;
@@ -81,7 +81,9 @@ export class DataRequest extends Message {
 export interface StateInfoData {
 	freeTabs:boolean;
 	sessions:ActiveSessionData[];
-	currentWindowSession?:ActiveSessionData;
+	currentWindowSessions:ActiveSessionData[];
+	currentSession:ActiveSessionData;
+	previousWindowId:number;
 }
 
 type SessionEventType = "activated" | "set-aside" | "meta-update" | "content-update" | "removed" | "created";
