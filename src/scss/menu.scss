@@ -2,7 +2,42 @@ body {
 	width: 268px;
 	--button-height: 25px;
 	--icon-size: 16px;
+	--accent-color: rgb(10,132,255);
 	min-height: calc(3 * var(--button-height));
+}
+
+body.active-session {
+	background-color: var(--accent-color);
+}
+
+#active-session-indicator {
+	position: relative;
+	display: none;
+	background-color: var(--accent-color);
+	color: white;
+	font-size: 12px;
+	height: 16px;
+	line-height: 16px;
+	padding: 0px 2px;
+	padding-left: 4px;
+	margin-bottom: 1px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+#active-session-indicator::after {
+	content: " ";
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: -15px;
+	bottom: 0px;
+	width: 16px;
+	box-shadow: 0px 0px 10px 3px var(--accent-color);
+}
+
+body.active-session div#active-session-indicator {
+	display: block;
 }
 
 .button {

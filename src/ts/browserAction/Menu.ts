@@ -3,17 +3,28 @@ import { MenuItem } from "./MenuItemType.js";
 import * as OptionsManager from "../options/OptionsManager.js";
 import { StateInfoData, DataRequest } from "../messages/Messages.js";
 
-let sessionsContainer:HTMLDivElement;
+let activeSessionIndicator:HTMLDivElement;
 let buttonsContainer:HTMLDivElement;
 
 let stateInfo:StateInfoData;
 
 document.addEventListener("DOMContentLoaded", async () => {
+
 	// get DOM references
-	sessionsContainer = document.getElementById("sessions") as HTMLDivElement;
-	buttonsContainer  = document.getElementById("buttons") as HTMLDivElement;
+	activeSessionIndicator = document.getElementById("active-session-indicator") as HTMLDivElement;
+	buttonsContainer   = document.getElementById("buttons") as HTMLDivElement;
 
 	stateInfo = await DataRequest.send("state-info");
+
+	if(stateInfo.currentSession) {
+		// current tab is part of an active session
+		document.body.classList.add("active-session");
+		activeSessionIndicator.innerText = browser.i18n.getMessage(
+			"menu_active-session-indicator", 
+			[stateInfo.currentSession.title]
+		);
+		activeSessionIndicator.title = browser.i18n.getMessage("menu_active-session-indicator_tooltip");
+	}
 
 	// create buttons
 	MenuItems.forEach(
