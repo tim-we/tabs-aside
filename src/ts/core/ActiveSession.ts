@@ -11,9 +11,8 @@ import {
 } from "../util/Types";
 import { SessionContentUpdate } from "../messages/Messages.js";
 import * as ActiveSessionManager from "./ActiveSessionManager.js";
-import Tuple2 from "../util/Tuple.js"
 
-type TabBookmark = Tuple2<number, string>;
+type TabBookmark = [number, string];
 const TAB_REMOVE_DELAY = 250;
 const INITIAL_LOADING_TIMEOUT = 1000;
 
@@ -271,7 +270,7 @@ export default class ActiveSession {
 		let bookmark:Bookmark = (await browser.bookmarks.get(sessionId))[0];
 		let session:ActiveSession = new ActiveSession(bookmark);
 
-		tabs.forEach(x => session.tabs.set(x.first, x.second));
+		tabs.forEach(x => session.tabs.set(x[0], x[1]));
 		session.setEventListeners();
 
 		return session;

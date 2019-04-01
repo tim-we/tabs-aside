@@ -3,10 +3,9 @@ import { Tab, Bookmark, SessionId, Window } from "../util/Types.js";
 import { SessionCommand, SessionEvent, DataRequest, SessionContentUpdate } from "../messages/Messages.js";
 import * as OptionsManager from "../options/OptionsManager.js";
 import TabData from "./TabData.js";
-import Tuple2 from "../util/Tuple.js";
 import * as BrowserAction from "../browserAction/BrowserActionManager.js";
 
-type TabBookmark = Tuple2<number, SessionId>;
+type TabBookmark = [number, SessionId];
 
 let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
@@ -192,7 +191,7 @@ export async function findActiveSessions():Promise<void> {
 							let bookmarkId:string = (await browser.sessions.getTabValue(tab.id, "bookmarkID")) as string;
 
 							let session:TabBookmark[] = nonWindowSessions.get(sessionId) || [];
-							session.push(new Tuple2(tab.id, bookmarkId));
+							session.push([tab.id, bookmarkId]);
 							nonWindowSessions.set(sessionId, session);
 						}
 					})
