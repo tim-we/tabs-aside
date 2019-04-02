@@ -159,9 +159,18 @@ export async function createSessionFromTabs(
 	return sessionId;
 }
 
-export async function createSessionFromWindow(setAside:boolean, windowId?:number, title?:string):Promise<SessionId> {
+export async function createSessionFromWindow(
+	setAside:boolean,
+	windowId?:number,
+	title?:string
+):Promise<SessionId> {
 	if(windowId === undefined) {
-		windowId = browser.windows.WINDOW_ID_CURRENT;
+		windowId = await getCurrentWindowId();
+	}
+
+	if(title === undefined) {
+		// if the `sessionTitle` value is not set `title` will still be undefined
+		title = (await browser.sessions.getWindowValue(windowId, "sessionTitle")) as string;
 	}
 
 	// tab search query

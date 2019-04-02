@@ -39,23 +39,28 @@ export async function createSession(
  * @param sessionId
  */
 export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promise<void> {
-	let tabBookmarks:Bookmark[],
+	let tabBookmark:Bookmark,
 		openInNewWindow:boolean;
 
 	// let the browser handle these requests simultaneously
-	[tabBookmarks, openInNewWindow] = await Promise.all([
-		browser.bookmarks.getChildren(sessionId),
+	[[tabBookmark], openInNewWindow] = await Promise.all([
+		browser.bookmarks.getSubTree(sessionId),
 		OptionsManager.getValue<boolean>("windowedSession")
 	]);
 
-	let windowId:number;
+	let tabBookmarks:Bookmark[] = tabBookmark.children;
 	let newTabId:number;
 
 	if(openInNewWindow) {
 		// create window for the tabs
 		let wnd:Window = await browser.windows.create();
-		windowId = wnd.id;
 		newTabId = wnd.tabs[0].id;
+
+		if(keepBookmarks) {
+			browser.sessions.setWindowValue(wnd.id, "sessionID", this.bookmarkId);
+		} else {
+			browser.sessions.setWindowValue(wnd.id, "sessionTitle", tabBookmark.title);
+		}
 	}
 
 	// create tabs
