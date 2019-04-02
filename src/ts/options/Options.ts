@@ -50,9 +50,10 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 		{
 			id: "badgeCounter",
 			type: "boolean",
-			default: true,
+			default: false,
 			group: "appearance",
 			activeOnly: true,
+			hidden: true
 		},
 		{
 			id: "aside-command",
