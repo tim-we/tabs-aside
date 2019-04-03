@@ -1,0 +1,66 @@
+@import 'base/fonts';
+
+body {
+	--bg-color: rgb(249,249,250);
+
+	font-family: 'Open Sans', Segoe UI, sans-serif;
+	background-color: var(--bg-color);
+}
+
+a, a:visited {
+	cursor: pointer;
+	color: rgb(0, 0, 238);
+}
+
+#header {
+	padding: 5px;
+}
+
+#title {
+	font-size: 2em;
+}
+
+#version {
+	opacity: .75;
+	margin-left: 1px;
+}
+
+#setup-content {
+	padding: 5px;
+}
+
+.setup-step {
+	position: relative;
+	background-color: white;
+	box-shadow: rgba(12, 12, 13, 0.1) 0px 1px 4px 0px;
+	border-radius: 4px;
+	margin: 0 0 8px;
+	padding: 5px;
+}
+
+#footer {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	background-color: var(--bg-color);
+	box-shadow: 0px 0px 4px 0px var(--bg-color);
+	padding: 5px 1px;
+}
+
+#footer a {
+	display: inline-block;
+	position: relative;
+	padding: 1px 4px;
+	border-radius: 2px;
+	color: rgb(12,12,13);
+}
+
+#footer a > img:first-child {
+	position: relative;
+	top: 3px;
+}
+
+#footer a:hover {
+	background-color: rgba(12,12,13,0.1);
+}
