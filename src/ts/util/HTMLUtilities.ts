@@ -26,3 +26,11 @@ export function DOMReady():Promise<void> {
 		return Promise.resolve();
 	}
 }
+
+export function stringToParagraphs(str:string):HTMLParagraphElement[] {
+	return str.split("\n").map(line => {
+		let p = document.createElement("p");
+		p.innerText = line;
+		return p;
+	});
+}

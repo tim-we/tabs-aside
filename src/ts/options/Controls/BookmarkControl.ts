@@ -20,8 +20,7 @@ export function create(
 	row:HTMLDivElement,
 	i:number,
 	option:Option, bookmarkId:string,
-	i18nMessageName:string,
-	
+	i18nMessageName:string
 ) {
 	let folderView:HTMLDivElement = document.createElement("div");
 	folderView.title = browser.i18n.getMessage("bookmarkFolderSelector_tooltip");
@@ -32,7 +31,8 @@ export function create(
 	updateFolderView(folderView, bookmarkId);
 
 	folderView.addEventListener("click", async () => {
-		let url = "../html/bookmark-selector.html?fpreset=" + encodeURIComponent("Tabs Aside");
+		let url = browser.runtime.getURL("html/bookmark-selector.html");
+		url += "?fpreset=" + encodeURIComponent("Tabs Aside");
 		url += "&option=" + encodeURIComponent(option.id);
 		let bmId:string = folderView.getAttribute("data-bmId") || "";
 
@@ -45,7 +45,6 @@ export function create(
 			allowScriptsToClose: true,
 			width: 500,
 			height: 300,
-			//@ts-ignore
 			titlePreface: "Tabs Aside! ",
 			type: "popup",
 			url: url
