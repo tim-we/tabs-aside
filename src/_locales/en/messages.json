@@ -186,7 +186,19 @@
 	},
 
 	"session_title_default": {
-		"message": "new session"
+		"message": "New session"
+	},
+
+	"setup_info_text": {
+		"message": "All settings can be changed at a later time via the options page."
+	},
+
+	"setup_root_folder_auto_create":{
+		"message": "Create new 'Tabs Aside' folder"
+	},
+
+	"setup_root_folder_select":{
+		"message": "Select custom folder"
 	},
 
 	"setup_root_folder_text": {

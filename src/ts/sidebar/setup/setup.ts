@@ -3,6 +3,8 @@ import * as BookmarkControl from "../../options/Controls/BookmarkControl.js";
 import SetupStep from "./SetupStep.js";
 
 let step1 = new SetupStep("setup_root_folder_text");
+step1.addOption("setup_root_folder_auto_create", () => {}, true);
+step1.addOption("setup_root_folder_select", () => {});
 
 HTMLUtils.DOMReady().then(() => {
 	HTMLUtils.i18n();

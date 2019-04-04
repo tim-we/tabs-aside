@@ -29,13 +29,76 @@ a, a:visited {
 	padding: 5px;
 }
 
-.setup-step {
+.content-box {
 	position: relative;
 	background-color: white;
 	box-shadow: rgba(12, 12, 13, 0.1) 0px 1px 4px 0px;
 	border-radius: 4px;
 	margin: 0 0 8px;
 	padding: 5px;
+	font-size: 14px;
+}
+
+.options {
+	border-radius: 4px;
+	background-color: inherit;
+	overflow:hidden;
+}
+
+.options > a {
+	display: block;
+	background-color: rgba(12, 12, 13, 0.1);
+	text-align: center;
+	padding: 2px;
+	color: rgb(12, 12, 13);
+	min-height: 32px;
+	line-height: 32px;
+}
+
+.options > a.recommended {
+	background-color: rgb(10,132,255);
+	color: white;
+}
+
+.options > a:hover {
+	background-color: rgba(12, 12, 13, 0.2);
+}
+
+.options > a.recommended:hover {
+	background-color: rgb(14, 118, 230);
+}
+
+.options > a:hover:active {
+	background-color: rgba(12, 12, 13, 0.3);
+}
+
+.options > a.recommended:hover:active {
+	background-color: rgb(15, 115, 212);
+}
+
+.help-text {
+	position: relative;
+	color: rgb(12,12,13);
+	margin: 5px 0px;
+	padding: 1px 4px;
+	padding-left: 25px;
+}
+
+.help-text:last-child {
+	margin-bottom: 0px;
+}
+
+.help-text::before {
+	content: " ";
+	display: inline-block;
+	position: absolute;
+	top: 3px;
+	left: 4px;
+	width: 16px;
+	height: 16px;
+	background-image: url("../img/help-16.svg");
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 #footer {
@@ -54,11 +117,13 @@ a, a:visited {
 	padding: 1px 4px;
 	border-radius: 2px;
 	color: rgb(12,12,13);
+	margin-bottom: 4px;
 }
 
 #footer a > img:first-child {
 	position: relative;
 	top: 3px;
+	margin-right: 2px;
 }
 
 #footer a:hover {
