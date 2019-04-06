@@ -15,3 +15,9 @@ export function rejects(promise:Promise<any>):Promise<boolean> {
 		() => Promise.resolve(true)
 	);
 }
+
+export function wait(time:number):Promise<void> {
+	return new Promise(
+		resolve => window.setTimeout(resolve, time)
+	);
+}

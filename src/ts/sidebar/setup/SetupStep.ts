@@ -1,10 +1,13 @@
 import * as HTMLUtils from "../../util/HTMLUtilities.js";
 
+type CompletionListener = () => any;
+
 export default class SetupStep {
 	private static parent:HTMLElement;
 	private static current:SetupStep = null;
 	private readonly html:HTMLElement;
 	private options:HTMLElement = null;
+	private completionListeners:Set<CompletionListener> = new Set();
 
 	public constructor(messageName:string) {
 		this.html = document.createElement("div");
@@ -27,7 +30,7 @@ export default class SetupStep {
 		SetupStep.current = this;
 	}
 
-	public addOption(i18n:string, action:()=>any, recommended:boolean = false):void {
+	public addOption(i18n:string, action:()=>Promise<void>, recommended:boolean = false):void {
 		if(!this.options) {
 			this.options = document.createElement("div");
 			this.options.classList.add("options");
@@ -36,12 +39,28 @@ export default class SetupStep {
 
 		let a:HTMLAnchorElement = document.createElement("a");
 		a.innerText = browser.i18n.getMessage(i18n) || i18n;
-		a.addEventListener("click", action);
+		a.addEventListener("click", async () => {
+			action().then(
+				() => this.complete(),
+				() => {}
+			);
+		});
 
 		if(recommended) {
 			a.classList.add("recommended");
 		}
 
 		this.options.appendChild(a);
+	}
+
+	public completion():Promise<void> {
+		return new Promise(resolve => {
+			this.completionListeners.add(resolve);
+		});
+	}
+
+	private complete() {
+		this.completionListeners.forEach(f => f());
+		this.completionListeners.clear();
 	}
 }

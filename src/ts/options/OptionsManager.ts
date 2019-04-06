@@ -19,7 +19,7 @@ export async function getValue<T>(key:string):Promise<T> {
 	return value as T;
 }
 
-export async function setValue<T>(key:string, value:T, skipGuard:boolean = false) {
+export async function setValue<T>(key:string, value:T) {
 	// receive stored options from the storage API
 	let storedOptions = (await storage.get("options"))["options"] as {[s:string]: any} || {};
 	

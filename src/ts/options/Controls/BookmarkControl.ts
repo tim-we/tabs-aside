@@ -1,5 +1,4 @@
 import { Option } from "../OptionTypeDefinition.js";
-import * as OptionsManager from "../OptionsManager.js";
 import { OptionUpdateEvent, Message } from "../../messages/Messages.js";
 
 let optionIdFolderViewMap:Map<string, HTMLDivElement> = new Map<string, HTMLDivElement>();
