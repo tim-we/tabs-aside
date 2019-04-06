@@ -9,8 +9,8 @@ var params = parseQueryString();
 // is there a selected folder?
 var initPromise:Promise<void>;
 
+
 if (params["selected"]) {
-	console.log(`[TA] [BMS] bookmark ${params["selected"]} selected`);
 	let selectedFolderID = params["selected"].trim();
 	initPromise = Model.init(
 		params["option"],

@@ -1,4 +1,5 @@
 import * as View from "./View.js";
+import * as OptionsManager from "../options/OptionsManager.js";
 
 type BMTreeNode = browser.bookmarks.BookmarkTreeNode;
 
@@ -15,10 +16,6 @@ export var OptionId:string;
 
 export var FolderNamePreset:string = "Tabs Aside";
 
-export function setFolderNamePreset(name:string):void {
-	FolderNamePreset = name;
-}
-
 function makeBreadcrumbs(folder:BMTreeNode|BMTreeNode[]):Promise<void> {
 	if (folder instanceof Array) { folder = folder[0]; }
 
@@ -34,11 +31,15 @@ function makeBreadcrumbs(folder:BMTreeNode|BMTreeNode[]):Promise<void> {
 	return Promise.resolve();
 }
 
-export function init(option:string, bmFolderId?:string):Promise<any> {
+export async function init(option:string, bmFolderId?:string):Promise<any> {
 	OptionId = option;
 
+	if(!bmFolderId) {
+		bmFolderId = await OptionsManager.getValue<string>(option);
+	}
+
 	if (bmFolderId) {
-		return browser.bookmarks.get(bmFolderId).then(async function(data) {
+		await browser.bookmarks.get(bmFolderId).then(async function(data) {
 			console.assert(data.length === 1);
 			selectedFolderID = bmFolderId;
 			oldSelectedFolderID = bmFolderId;
@@ -65,16 +66,12 @@ export function init(option:string, bmFolderId?:string):Promise<any> {
 			return init(option);
 		});
 	} else {
-		return browser.bookmarks.getTree().then(data => {
-			console.assert(data.length === 1);
-			return data[0];
-		}).then(async root => {
-			bcrumbs.push(root);
-		
-			folders = await getSubFolders(root);
+		let data = await browser.bookmarks.getTree();
+		console.assert(data.length === 1);
+		let root = data[0];
 
-			return Promise.resolve();
-		});
+		bcrumbs.push(root);
+		folders = await getSubFolders(root);
 	}
 }
 

@@ -3,38 +3,24 @@ import SetupStep from "./SetupStep.js";
 import { Bookmark } from "../../util/Types.js";
 import * as OptionsManager from "../../Options/OptionsManager.js";
 import { wait, rejects } from "../../util/PromiseUtils.js";
+import { selectBookmark } from "../../options/Controls/BookmarkControl.js";
 
 let step1 = new SetupStep("setup_root_folder_text");
+
 step1.addOption("setup_root_folder_auto_create", async () => {
 	let folder:Bookmark = await browser.bookmarks.create({title: "Tabs Aside"});
 	console.log("[TA] Created bookmark folder 'Tabs Aside'.");
 	OptionsManager.setValue<string>("rootFolder", folder.id);
 }, true);
+
 step1.addOption("setup_root_folder_select", async () => {
-	let url = browser.runtime.getURL("html/bookmark-selector.html");
-		url += "?fpreset=" + encodeURIComponent("Tabs Aside");
-		url += "&option=" + encodeURIComponent("rootFolder");
+	await selectBookmark("rootFolder");
+	let folderId = await OptionsManager.getValue<string>("rootFolder");
 
-	let wnd:browser.windows.Window = await browser.windows.create({
-		allowScriptsToClose: true,
-		width: 500,
-		height: 300,
-		titlePreface: "Tabs Aside! ",
-		type: "popup",
-		url: url
-	});
-
-	while(true) {
-		await wait(500);
-		let folderId = await OptionsManager.getValue<string>("rootFolder");
-		if(folderId !== null) {
-			break;
-		} else if(await rejects(browser.windows.get(wnd.id))) {
-			// stop this loop if the window was closed
-			return Promise.reject();
-		}
-	}
+	return folderId ? Promise.resolve() : Promise.reject();
 });
+
+browser.sidebarAction.setTitle({title:"Tabs Aside"});
 
 HTMLUtils.DOMReady().then(() => {
 	HTMLUtils.i18n();
@@ -66,5 +52,8 @@ async function setup() {
 
 async function completed() {
 	console.log("[TA] Setup completed.");
-	//TODO
+
+	// reset sidebar
+	browser.sidebarAction.setTitle({title:null});
+	browser.sidebarAction.setPanel({panel:null});
 }

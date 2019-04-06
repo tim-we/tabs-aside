@@ -29,26 +29,7 @@ export function create(
 
 	updateFolderView(folderView, bookmarkId);
 
-	folderView.addEventListener("click", async () => {
-		let url = browser.runtime.getURL("html/bookmark-selector.html");
-		url += "?fpreset=" + encodeURIComponent("Tabs Aside");
-		url += "&option=" + encodeURIComponent(option.id);
-		let bmId:string = folderView.getAttribute("data-bmId") || "";
-
-		if(bmId) {
-			url += "&selected=" + bmId;
-		}
-
-		let bmsWindow:browser.windows.Window = await browser.windows.create({
-			//focused: true, // not supported by FF
-			allowScriptsToClose: true,
-			width: 500,
-			height: 300,
-			titlePreface: "Tabs Aside! ",
-			type: "popup",
-			url: url
-		});
-	});
+	folderView.addEventListener("click", () => selectBookmark(option.id));
 
 	let label:HTMLLabelElement = document.createElement("label");
 	label.setAttribute("for", folderView.id);
@@ -70,4 +51,34 @@ async function updateFolderView(view:HTMLDivElement, bookmarkId:string) {
 	}
 
 	view.setAttribute("data-bmId", bookmarkId);
+}
+
+/**
+ * Opens the bookmark selector and returns a promise that resolves when the BMS is closed
+ * @param optionId 
+ */
+export async function selectBookmark(optionId:string):Promise<void> {
+	let url = browser.runtime.getURL("html/bookmark-selector.html");
+		url += "?option=" + encodeURIComponent(optionId);
+
+	let bmsWindow:browser.windows.Window = await browser.windows.create({
+		//focused: true, // not supported by FF
+		allowScriptsToClose: true,
+		width: 500,
+		height: 300,
+		titlePreface: "Tabs Aside! ",
+		type: "popup",
+		url: url
+	});
+
+	return new Promise(resolve => {
+		function onWindowClosed(windowId:number) {
+			if(windowId === bmsWindow.id) {
+				browser.windows.onRemoved.removeListener(onWindowClosed);
+				resolve();
+			}
+		}
+	
+		browser.windows.onRemoved.addListener(onWindowClosed);
+	});
 }

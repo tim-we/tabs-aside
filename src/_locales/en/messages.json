@@ -202,7 +202,7 @@
 	},
 
 	"setup_root_folder_text": {
-		"message": "Tabs Aside stores your tabs as bookmarks.\nThis gives you full control over the data and enables synchronization between devices via Firefox Sync.\nTabs Aside requires a bookmark folder for it to store tabs in, each session will be stored in its own subfolder."
+		"message": "Tabs Aside gives you the option to set tabs aside for later. Those tabs are stored as bookmarks.\nThis gives you full control over the data and enables synchronization between devices via Firefox Sync.\nTabs Aside requires a bookmark folder for it to store tabs in, each session will be stored in its own subfolder."
 	},
 
 	"setup_skip": {
