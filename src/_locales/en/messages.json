@@ -189,6 +189,19 @@
 		"message": "New session"
 	},
 
+	"setup_completed_close": {
+		"message": "Close setup"
+	},
+
+	"setup_completed_options_page": {
+		"message": "Show all options",
+		"description": "Opens the addons options page"
+	},
+	
+	"setup_completed_text": {
+		"message": "Setup completed.\nYou can further customize your experience via the options page. This includes the option to set the color of the Tabs Aside theme to better match your selected theme."
+	},
+
 	"setup_info_text": {
 		"message": "All settings can be changed at a later time via the options page."
 	},

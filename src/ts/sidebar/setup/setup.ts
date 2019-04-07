@@ -6,19 +6,8 @@ import { wait, rejects } from "../../util/PromiseUtils.js";
 import { selectBookmark } from "../../options/Controls/BookmarkControl.js";
 
 let step1 = new SetupStep("setup_root_folder_text");
-
-step1.addOption("setup_root_folder_auto_create", async () => {
-	let folder:Bookmark = await browser.bookmarks.create({title: "Tabs Aside"});
-	console.log("[TA] Created bookmark folder 'Tabs Aside'.");
-	OptionsManager.setValue<string>("rootFolder", folder.id);
-}, true);
-
-step1.addOption("setup_root_folder_select", async () => {
-	await selectBookmark("rootFolder");
-	let folderId = await OptionsManager.getValue<string>("rootFolder");
-
-	return folderId ? Promise.resolve() : Promise.reject();
-});
+let step2 = null;
+let step3 = new SetupStep("setup_completed_text");
 
 browser.sidebarAction.setTitle({title:"Tabs Aside"});
 
@@ -37,7 +26,7 @@ HTMLUtils.DOMReady().then(() => {
 	skip.addEventListener("click", e => {
 		e.preventDefault();
 		browser.runtime.openOptionsPage();
-		completed();
+		close();
 	});
 
 	setup();
@@ -47,13 +36,34 @@ async function setup() {
 	step1.show();
 	await step1.completion();
 
-	completed();
+	step3.show();
+	await step3.completion();
+
+	close();
 }
 
-async function completed() {
+async function close() {
 	console.log("[TA] Setup completed.");
 
 	// reset sidebar
 	browser.sidebarAction.setTitle({title:null});
 	browser.sidebarAction.setPanel({panel:null});
 }
+
+// ------ setup details -------
+
+step1.addOption("setup_root_folder_auto_create", async () => {
+	let folder:Bookmark = await browser.bookmarks.create({title: "Tabs Aside"});
+	console.log("[TA] Created bookmark folder 'Tabs Aside'.");
+	OptionsManager.setValue<string>("rootFolder", folder.id);
+}, true);
+
+step1.addOption("setup_root_folder_select", async () => {
+	await selectBookmark("rootFolder");
+	let folderId = await OptionsManager.getValue<string>("rootFolder");
+
+	return folderId ? Promise.resolve() : Promise.reject();
+});
+
+step3.addOption("setup_completed_close", () => Promise.resolve(), true);
+step3.addOption("setup_completed_options_page", () => browser.runtime.openOptionsPage());
