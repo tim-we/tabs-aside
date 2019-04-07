@@ -206,6 +206,30 @@
 		"message": "All settings can be changed at a later time via the options page."
 	},
 
+	"setup_preset_active_sessions_disabled": {
+		"message": "Active sessions disabled"
+	},
+
+	"setup_preset_windowed_sessions_disabled": {
+		"message": "Windowed mode disabled"
+	},
+
+	"setup_preset_default": {
+		"message": "Default"
+	},
+
+	"setup_preset_classic": {
+		"message": "Like Tabs Aside 2"
+	},
+
+	"setup_preset_edge": {
+		"message": "Like Microsoft Edge"
+	},
+
+	"setup_preset_selection_text": {
+		"message": "Tabs Aside has a feature called 'Active Sessions', which is enabled by default. If enabled the session bookmarks get updated automatically as changes to the tabs occur.\nBy default each session will have its own window.\nWhich behavior do you prefer?"
+	},
+
 	"setup_root_folder_auto_create":{
 		"message": "Create new 'Tabs Aside' folder"
 	},

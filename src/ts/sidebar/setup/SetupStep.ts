@@ -2,6 +2,13 @@ import * as HTMLUtils from "../../util/HTMLUtilities.js";
 
 type CompletionListener = () => any;
 
+type OptionDetails = {
+	text: string;
+	action: ()=>Promise<void>;
+	recommended?:boolean;
+	detailList?:string[]
+};
+
 export default class SetupStep {
 	private static parent:HTMLElement;
 	private static current:SetupStep = null;
@@ -30,7 +37,7 @@ export default class SetupStep {
 		SetupStep.current = this;
 	}
 
-	public addOption(i18n:string, action:()=>Promise<void>, recommended:boolean = false):void {
+	public addOption(details:OptionDetails):void {
 		if(!this.options) {
 			this.options = document.createElement("div");
 			this.options.classList.add("options");
@@ -38,16 +45,34 @@ export default class SetupStep {
 		}
 
 		let a:HTMLAnchorElement = document.createElement("a");
-		a.innerText = browser.i18n.getMessage(i18n) || i18n;
+		a.innerText = browser.i18n.getMessage(details.text) || details.text;
 		a.addEventListener("click", async () => {
-			action().then(
+			details.action().then(
 				() => this.complete(),
 				() => {}
 			);
 		});
 
-		if(recommended) {
+		if(details.recommended) {
 			a.classList.add("recommended");
+		}
+
+		if(details.detailList) {
+			let ul = document.createElement("ul");
+
+			details.detailList.forEach(
+				msg => {
+					let text = browser.i18n.getMessage(msg);
+
+					if(text) {
+						let li = document.createElement("li");
+						li.innerText = text;
+						ul.appendChild(li);
+					}
+				}
+			);
+
+			a.appendChild(ul);
 		}
 
 		this.options.appendChild(a);

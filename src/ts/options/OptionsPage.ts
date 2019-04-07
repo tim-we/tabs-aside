@@ -1,11 +1,17 @@
 import * as OptionsManager from "./OptionsManager.js";
-import { Option } from "./OptionTypeDefinition.js";
 import Options from "./Options.js";
 
 import * as BooleanControl from "./Controls/BooleanControl.js";
 import * as BookmarkControl from "./Controls/BookmarkControl.js";
 import * as SelectControl from "./Controls/SelectControl.js";
 import * as HTMLUtilities from "../util/HTMLUtilities.js";
+import * as MessageListener from "../messages/MessageListener.js";
+
+MessageListener.setDestination("options-page");
+MessageListener.add("OptionUpdate", () => {
+	// this will only be triggered by option updates from other pages
+	window.location.reload();
+})
 
 document.addEventListener("DOMContentLoaded", async () => {
 	HTMLUtilities.i18n();

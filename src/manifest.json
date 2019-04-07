@@ -40,7 +40,7 @@
 		"default_title": "Tabs you've set aside",
 		"default_panel": "html/sidebar.html",
 		"default_icon": "img/sidebar/icon.svg",
-		"open_at_install": false
+		"open_at_install": true
 	},
 
 	"background": {

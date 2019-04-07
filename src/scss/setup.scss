@@ -76,6 +76,28 @@ a, a:visited {
 	background-color: rgb(15, 115, 212);
 }
 
+.options > a ul {
+	font-size: 0.8em;
+	opacity: 0.7;
+	margin: 0px;
+	margin-bottom: 5px;
+	line-height: normal;
+	max-width: 90vw;
+	padding-left: 35vw;
+}
+
+@media (max-width: 270px) {
+	.options > a ul {
+		padding-left: 25vw;
+	}
+}
+
+@media (max-width: 240px) {
+	.options > a ul {
+		padding-left: 10vw;
+	}
+}
+
 .help-text {
 	position: relative;
 	color: rgb(12,12,13);
