@@ -8,7 +8,7 @@ export interface SelectOption extends GenericOption<"select", string> {
 	options: string[];
 }
 
-type OptionsGroup = "appearance" | "keyboard";
+type OptionsGroup = "appearance" | "core" | "keyboard";
 
 interface DisplayOptions {
 	hint?:boolean; // tooltip

@@ -56,23 +56,10 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			hidden: true
 		},
 		{
-			id: "aside-command",
-			type: "command",
-			default: manifest.commands["tabs-aside"].suggested_key.default,
-			hidden: true,
-			group: "keyboard"
-		},
-		{
-			id: "sidebar-command",
-			type: "command",
-			default: manifest.commands["_execute_sidebar_action"].suggested_key.default,
-			hidden: true
-		},
-		{
 			id: "rootFolder",
 			type: "bookmark",
 			default: null,
-			group: "keyboard"
+			group: "core"
 		}
 	];
 

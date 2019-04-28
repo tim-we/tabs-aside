@@ -1,24 +1,22 @@
 import { MenuItem } from "./MenuItemType.js";
-import * as OptionManager from "../options/OptionsManager.js";
 import { SessionCommand } from "../messages/Messages.js";
 import { SessionId } from "../util/Types.js";
 import { getCurrentWindowId } from "../util/WebExtAPIHelpers.js";
+import { getCommandByName } from "../util/WebExtAPIHelpers.js";
 
-const manifest = browser.runtime.getManifest();
+let showSessions:MenuItem, tabsAside:MenuItem, setAside:MenuItem;
 
 let menuItems:MenuItem[] = [
-	{
+	showSessions = {
 		id: "show-sessions",
 		icon: "tabs.svg",
 		wideIcon: true,
-		shortcut: manifest.commands["_execute_sidebar_action"].suggested_key.default,
 		onclick: () => browser.sidebarAction.open()
 	},
-	{
+	tabsAside = {
 		id: "tabs-aside",
 		icon: "aside.svg",
 		tooltip: true,
-		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
 		onclick: async () => {
 			SessionCommand.send("create", {
 				windowId: await getCurrentWindowId(),
@@ -30,12 +28,11 @@ let menuItems:MenuItem[] = [
 		isApplicable: (state) => state.freeTabs,
 		hide: (state) => state.currentSession !== undefined
 	},
-	{
+	setAside = {
 		id: "set-aside",
 		icon: "aside.svg",
 		wideIcon: true,
 		tooltip: true,
-		shortcut: manifest.commands["tabs-aside"].suggested_key.default,
 		onclick: (state) => {
 			let sessionId:SessionId = state.currentSession.bookmarkId;
 
@@ -87,5 +84,14 @@ let menuItems:MenuItem[] = [
 		onclick: () => browser.runtime.openOptionsPage()
 	}
 ];
+
+(async () => {
+	let sidebarCmd = await getCommandByName("_execute_sidebar_action");
+	let asideCmd   = await getCommandByName("tabs-aside");
+
+	showSessions.shortcut = sidebarCmd.shortcut;
+	tabsAside.shortcut = asideCmd.shortcut;
+	setAside.shortcut = tabsAside.shortcut;
+})();
 
 export default menuItems;
