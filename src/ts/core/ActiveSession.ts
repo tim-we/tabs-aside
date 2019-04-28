@@ -468,7 +468,7 @@ export default class ActiveSession {
 
 				// do not remove tabs, ...
 				window.clearTimeout(this.removeTimeoutId);
-				console.log("[TA] Prevented session & tab bookmark removal.");
+				console.log("[TA] Prevented removal of session & tab bookmarks.");
 
 				// ... just set the session aside
 				this.setAside();
