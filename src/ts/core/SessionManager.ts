@@ -140,7 +140,7 @@ export async function createSessionFromTabs(
 		)
 	);
 	
-	// remove tabs that are part of an active session
+	// ignore tabs that are part of an active session
 	tabs = tabs.filter(tab => !activeTabs.has(tab.id));
 
 	// create session
