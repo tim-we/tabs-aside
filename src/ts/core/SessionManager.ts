@@ -15,41 +15,38 @@ import * as ClassicSessionManager from "./ClassicSessionManager.js";
 import { getCurrentWindowId } from "../util/WebExtAPIHelpers.js";
 import * as WindowFocusHistory from "../background/WindowFocusHistory.js";
 
+type Command = (data:MSA|CSA) => void;
+
+const commands:Map<String, Command> = new Map();
+
+commands.set("restore",		   (data:MSA) => restore(data.sessionId, data.keepBookmarks || false));
+commands.set("restore-single", (data:MSA) => restoreSingle(data.tabBookmarkId));
+
+commands.set("set-aside",	   (data:MSA) => ActiveSessionManager.setAside(data.sessionId));
+
+commands.set("create", (data:CSA) =>
+	createSessionFromWindow(
+		data.setAside,
+		data.windowId,
+		data.title
+	)
+);
+
+commands.set("remove",	   (data:MSA) => removeSession(data.sessionId, data.keepTabs || false));
+commands.set("remove-tab", (data:MSA) => removeTabFromSession(data.tabBookmarkId));
+
 export async function init() {
 	WindowFocusHistory.init();
 	return ActiveSessionManager.findActiveSessions();
 }
 
-export async function execCommand(cmd:SessionCommand):Promise<any> {
-	let c = cmd.cmd;
-	let sessionId:SessionId;
-	
-	if((<MSA>cmd.argData).sessionId) {
-		sessionId = (<MSA>cmd.argData).sessionId;
-	}
+export async function execCommand(sc:SessionCommand):Promise<any> {
+	let cmd = commands.get(sc.cmd);
 
-	if(c === "restore") {
-		let keepBookmarks:boolean = (<MSA> cmd.argData).keepBookmarks || false;
-		restore(sessionId, keepBookmarks);
-	} else if(c === "restore-single") {
-		let tabBookmarkId:string = (<MSA> cmd.argData).tabBookmarkId;
-		restoreSingle(tabBookmarkId);
-	} else if(c === "set-aside") {
-		ActiveSessionManager.setAside(sessionId);
-	} else if(c === "create") {
-		let data = (<CSA> cmd.argData);
-
-		createSessionFromWindow(
-			data.setAside,
-			data.windowId,
-			data.title
-		);
-	} else if(c === "remove") {
-		let keepTabs:boolean = (<MSA> cmd.argData).keepTabs || false;
-		removeSession(sessionId, keepTabs);
-	} else if(c === "remove-tab") {
-		let tabBookmarkId:string = (<MSA> cmd.argData).tabBookmarkId;
-		removeTabFromSession(tabBookmarkId);
+	if(cmd) {
+		cmd(sc.argData);
+	} else {
+		console.error("[TA] No such command: " + sc.cmd);
 	}
 }
 
