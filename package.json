@@ -36,8 +36,8 @@
     "stylelint-no-unsupported-browser-features": "^3.0.2",
     "stylelint-order": "^3.0.0",
     "stylelint-scss": "^3.8.0",
-    "typescript": "^3.5.2",
-    "web-ext": "^3.0.0"
+    "typescript": "^3.5.3",
+    "web-ext": "^3.1.1"
   },
   "browserslist": "Firefox 64"
 }
