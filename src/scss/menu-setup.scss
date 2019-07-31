@@ -1,0 +1,32 @@
+body {
+	padding: 20px;
+	width: 350px;
+}
+
+body > div {
+	text-align: center;
+}
+
+body > div:not(:last-child){
+	margin-bottom: 15px;
+}
+
+button {
+	width: 120px;
+	min-height: 42px;
+	margin: 5px;
+
+	text-align: center;
+
+	background-color: #0996f8;
+	border: none;
+	box-shadow: 0 1px 0 #0670cc inset;
+	color: white;
+
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #0670cc;
+	box-shadow: 0 1px 0 #005bab inset;
+}

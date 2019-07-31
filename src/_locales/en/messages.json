@@ -189,6 +189,14 @@
 		"message": "New session"
 	},
 
+	"setup_browserAction_text": {
+		"message": "Tabs Aside 3 requires a brief setup before it can be used."
+	},
+
+	"setup_browserAction_button": {
+		"message": "Get started"
+	},
+
 	"setup_completed_close": {
 		"message": "Close setup"
 	},
