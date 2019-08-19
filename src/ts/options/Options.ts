@@ -1,7 +1,5 @@
 import { Option } from "./OptionTypeDefinition.js";
 
-const manifest = browser.runtime.getManifest();
-
 let optionsMap:Map<string, Option> = new Map<string, Option>();
 
 (() => {
