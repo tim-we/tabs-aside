@@ -2,9 +2,9 @@ import * as OptionsManager from "../options/OptionsManager.js";
 
 type StoredData = {
 	"version"?:number,
-	"bookmarkFolderID"?:string
-	"options"?:any,
-	"ba-icon"?:string
+	"bookmarkFolderID"?:string // legacy
+	"options"?:any, // legacy
+	"ba-icon"?:string // legacy
 };
 
 export async function isSetup():Promise<boolean> {
@@ -21,6 +21,7 @@ export async function setup():Promise<void> {
 
 	if(data.version == 1) {
 		if(data["bookmarkFolderID"]) {
+			// this will not be removed to keep old versions working
 			await browser.bookmarks.get(data["bookmarkFolderID"]).then(
 				bms => {
 					if(bms[0].type === "folder") {
@@ -58,4 +59,6 @@ export async function setup():Promise<void> {
 	}
 
 	await OptionsManager.setValue("browserActionIcon", icon);
+
+	await browser.storage.local.set({"version": 2});
 }

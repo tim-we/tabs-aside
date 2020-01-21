@@ -42,6 +42,8 @@ async function setup() {
 	step3.show();
 	await step3.completion();
 
+	browser.runtime.reload();
+
 	close();
 }
 
