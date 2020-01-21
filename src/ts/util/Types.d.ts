@@ -10,6 +10,7 @@ export type TabCreateProperties = {
 	openInReaderMode?:boolean;
 	windowId?:number;
 	discarded?: boolean;
+	cookieStoreId?: string;
 };
 
 export type BookmarkCreateDetails = browser.bookmarks.CreateDetails;

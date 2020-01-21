@@ -8,14 +8,23 @@ import {
 
 type TitleData = {
 	title:string,
-	options:Set<string>
+	flags:Set<string>
+	variables:Map<string,string>
 };
 
 /**
  * Regular expression that parses tab options and title from a bookmark title.
  * Example bookmark title: "[pinned,reading] Actual title"
+ * 
+ * possible flags:
+ * 	reading:	reading mode
+ * 	pinned:		whether the tab is pinned or not
+ * 	src:		source code view
+ * 
+ * possible variables:
+ * 	csid: (string) cookieStoreId, for containers
  */
-const bmTitleParser:RegExp = /^(\[(reading,|pinned,|src)*(reading|pinned|src)?\]\s)?(.*)$/;
+const bmTitleParser:RegExp = /^(\[(reading,|pinned,|src,|csid=[-\w]+?,)*(reading|pinned|src|csid=[-\w]+?)?\]\s)?(.*)$/;
 const validURL:RegExp = /^https?:\/\//i;
 
 const readerPrefix:string = "about:reader?url=";
@@ -28,6 +37,7 @@ export default class TabData {
 	public readonly url:string;
 	public readonly favIconUrl:string;
 	public readonly viewSource:boolean;
+	public readonly cookieStoreId:string;
 
 	public static createFromTab(tab:Tab):TabData {
 		return new TabData(tab, null);
@@ -64,6 +74,10 @@ export default class TabData {
 			pinned: this.pinned,
 			discarded: discardTab
 		};
+
+		if(this.cookieStoreId) {
+			createProperties.cookieStoreId = this.cookieStoreId;
+		}
 		
 		return createProperties;
 	}
@@ -98,6 +112,7 @@ export default class TabData {
 			this.url = tab.url;
 			this.favIconUrl = tab.favIconUrl;
 			this.viewSource = tab.url.startsWith(viewSourcePrefix);
+			this.cookieStoreId = tab.cookieStoreId;
 			
 			if(tab.isInReaderMode) {
 				this.isInReaderMode = true;
@@ -118,14 +133,18 @@ export default class TabData {
 
 			this.url = bookmark.url;
 			this.title = data.title;
-			this.pinned = data.options.has("pinned");
-			this.isInReaderMode = data.options.has("reading");
-			this.viewSource = data.options.has("src");
+			this.pinned = data.flags.has("pinned");
+			this.isInReaderMode = data.flags.has("reading");
+			this.viewSource = data.flags.has("src");
 
 			this.favIconUrl = this.getFavIconURL(bookmark.url);
 
 			if(this.viewSource) {
 				this.url = viewSourcePrefix + this.url;
+			}
+
+			if(data.variables.has("csid")) {
+				this.cookieStoreId = data.variables.get("csid");
 			}
 		}
 
@@ -149,6 +168,10 @@ export default class TabData {
 			tabOptions.push("src");
 		}
 
+		if(this.cookieStoreId) {
+			tabOptions.push("csid=" + this.cookieStoreId);
+		}
+
 		let prefix:string = (tabOptions.length > 0) ? 
 			`[${tabOptions.join(",")}] ` : "";
 
@@ -159,13 +182,24 @@ export default class TabData {
 		let matches:string[] = title.match(bmTitleParser);
 
 		let data:string = matches[1] || "";
-		let options:Set<string> = new Set<string>(
-			data.substring(1, data.length - 2).split(",")
-		);
+		let options:Set<string> = new Set();
+		let variables:Map<string,string> = new Map();
+
+		data.substring(1, data.length - 2).split(",").forEach(s => {
+			if(s.includes("=", 4)) {
+				let tmp = s.split("=");
+				if(tmp.length === 2 && tmp[1].length > 0) {
+					variables.set(tmp[0], tmp[1]);
+				}
+			} else {
+				options.add(s);
+			}
+		});
 
 		return {
-			title: matches[matches.length - 1],
-			options: options
+			title: matches[matches.length - 1].trim(),
+			flags: options,
+			variables: variables
 		};
 	}
 

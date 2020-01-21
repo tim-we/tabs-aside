@@ -23,7 +23,8 @@
 		"tabs",
 		"storage",
 		"menus",
-		"sessions"
+		"sessions",
+		"cookies"
 	],
 
 	"browser_action": {
