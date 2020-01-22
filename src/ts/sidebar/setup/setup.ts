@@ -33,6 +33,16 @@ HTMLUtils.DOMReady().then(() => {
 });
 
 async function setup() {
+	let rootFolder:string = await OptionsManager.getValue("rootFolder");
+
+	if(rootFolder) {
+		step1.addOption({
+			text: "setup_root_folder_keep",
+			action: () => Promise.resolve(),
+			recommended: true
+		});
+	}
+
 	step1.show();
 	await step1.completion();
 
@@ -68,7 +78,7 @@ step1.addOption({
 });
 
 step1.addOption({
-	text: "setup_root_folder_select", 
+	text: "setup_root_folder_select",
 	action: async () => {
 		await selectBookmark("rootFolder");
 		let folderId = await OptionsManager.getValue<string>("rootFolder");

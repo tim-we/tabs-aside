@@ -238,8 +238,17 @@
 		"message": "Tabs Aside has a feature called 'Active Sessions', which is enabled by default. If enabled the session bookmarks get updated automatically as changes to the tabs occur.\nBy default each session will have its own window.\nWhich behavior do you prefer?"
 	},
 
+	"setup_recommended_option": {
+		"message": "Recommended",
+		"description": "Tooltip on recommended options"
+	},
+
 	"setup_root_folder_auto_create":{
 		"message": "Create new 'Tabs Aside' folder"
+	},
+
+	"setup_root_folder_keep":{
+		"message": "Keep folder from previous installation"
 	},
 
 	"setup_root_folder_select":{

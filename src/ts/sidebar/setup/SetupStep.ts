@@ -15,6 +15,7 @@ export default class SetupStep {
 	private readonly html:HTMLElement;
 	private options:HTMLElement = null;
 	private completionListeners:Set<CompletionListener> = new Set();
+	private recommended:HTMLAnchorElement = null;
 
 	public constructor(messageName:string) {
 		this.html = document.createElement("div");
@@ -44,6 +45,8 @@ export default class SetupStep {
 			this.html.appendChild(this.options);
 		}
 
+		let prepend:boolean = false;
+
 		let a:HTMLAnchorElement = document.createElement("a");
 		a.innerText = browser.i18n.getMessage(details.text) || details.text;
 		a.addEventListener("click", async () => {
@@ -54,7 +57,16 @@ export default class SetupStep {
 		});
 
 		if(details.recommended) {
+			// there can only be one recommended option
+			if(this.recommended) {
+				this.recommended.classList.remove("recommended");
+				this.recommended.removeAttribute("title");
+				prepend = true;
+			}
+
 			a.classList.add("recommended");
+			a.title = browser.i18n.getMessage("setup_recommended_option");
+			this.recommended = a;
 		}
 
 		if(details.detailList) {
@@ -75,7 +87,11 @@ export default class SetupStep {
 			a.appendChild(ul);
 		}
 
-		this.options.appendChild(a);
+		if(prepend) {
+			this.options.prepend(a);
+		} else {
+			this.options.appendChild(a);
+		}
 	}
 
 	public completion():Promise<void> {
