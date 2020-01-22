@@ -172,7 +172,7 @@ export default class TabData {
 			tabOptions.push("src");
 		}
 
-		if(defaultCookieStoreId !== this.cookieStoreId) {
+		if(this.cookieStoreId && defaultCookieStoreId !== this.cookieStoreId) {
 			tabOptions.push("cs=" + this.cookieStoreId);
 		}
 
