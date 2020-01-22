@@ -114,3 +114,30 @@ footer > a:not(:last-of-type) {
 	top: 3px;
 	background-image: url('../img/report-issues.svg');
 }
+
+@media (prefers-color-scheme: dark) {
+
+	body {
+		color: rgb(249, 249, 250);
+		background-color: rgb(32, 32, 35);
+	}
+
+	a:link, a:visited {
+		color: rgb(69, 161, 255);
+	}
+
+	.info {
+		color: rgb(177, 177, 179);
+	}
+
+	div.bookmarkFolderView {
+		border: 1px solid rgb(177, 177, 177);
+		background-color: rgb(251,251,251);
+		color: rgb(32, 32, 35);
+		opacity: 1;
+	}
+
+	div.bookmarkFolderView:hover {
+		opacity: 0.9;
+	}
+}
