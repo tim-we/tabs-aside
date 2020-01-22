@@ -1,4 +1,5 @@
 import * as OptionsManager from "../options/OptionsManager.js";
+import * as BrowserActionManager from "../browserAction/BrowserActionManager.js";
 
 type StoredData = {
 	"version"?:number,
@@ -16,7 +17,7 @@ export async function isSetup():Promise<boolean> {
 export async function setup():Promise<void> {
 	let data:StoredData = await browser.storage.local.get();
 
-	let icon:string = "dark";
+	let icon:string|null = null;
 	let root:string|null = null;
 
 	if(data.version == 1) {
@@ -58,7 +59,22 @@ export async function setup():Promise<void> {
 		await OptionsManager.setValue("rootFolder", root);
 	}
 
-	await OptionsManager.setValue("browserActionIcon", icon);
+	if(icon === null) {
+		// if no previous setting found use OS setting
+		icon = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "dark";
+		console.log("[TA] Using OS color scheme to determine icon color: " + icon);
+	}
+
+	await OptionsManager.setValue("browserActionIcon", icon || "dark");
 
 	await browser.storage.local.set({"version": 2});
+
+	// update browser action icon
+	BrowserActionManager.init();
+
+	BrowserActionManager.showSetup();
+	browser.sidebarAction.setPanel({
+		panel: browser.runtime.getURL("html/setup.html")
+	});
+
 }

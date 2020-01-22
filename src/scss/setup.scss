@@ -58,6 +58,8 @@ a, a:visited {
 .options > a.recommended {
 	background-color: rgb(10,132,255);
 	color: white;
+
+	animation: linear .2s recommended_fadein;
 }
 
 .options > a:hover {
@@ -149,4 +151,14 @@ a, a:visited {
 
 #footer a:hover {
 	background-color: rgba(12,12,13,0.1);
+}
+
+@keyframes recommended_fadein {
+	0% {
+		background-color: rgba(12, 12, 13, 0.1);
+	}
+
+	100% {
+		background-color: rgb(10,132,255);
+	}
 }

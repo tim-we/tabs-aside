@@ -65,3 +65,11 @@ function updateIcon(newIcon:string):Promise<void> {
 		}
 	}).catch(e => console.error("[TA] Error updating icon:\n" + e));
 }
+
+export function showSetup():Promise<void> {
+	return browser.browserAction.setPopup({
+		popup: browser.runtime.getURL("html/menu/setup.html")
+	}).then(
+		_ => browser.browserAction.setBadgeText({text:"!"})
+	);
+}
