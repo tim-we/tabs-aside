@@ -22,13 +22,14 @@ type TitleData = {
  * 	src:		source code view
  * 
  * possible variables:
- * 	csid: (string) cookieStoreId, for containers
+ * 	cs: (string) cookieStoreId, for containers
  */
-const bmTitleParser:RegExp = /^(\[(reading,|pinned,|src,|csid=[-\w]+?,)*(reading|pinned|src|csid=[-\w]+?)?\]\s)?(.*)$/;
+const bmTitleParser:RegExp = /^(\[(reading,|pinned,|src,|cs=[-\w]+?,)*(reading|pinned|src|cs=[-\w]+?)?\]\s)?(.*)$/;
 const validURL:RegExp = /^https?:\/\//i;
 
 const readerPrefix:string = "about:reader?url=";
 const viewSourcePrefix:string = "view-source:";
+const defaultCookieStoreId:string = "firefox-default";
 
 export default class TabData {
 	public readonly pinned:boolean;
@@ -112,7 +113,10 @@ export default class TabData {
 			this.url = tab.url;
 			this.favIconUrl = tab.favIconUrl;
 			this.viewSource = tab.url.startsWith(viewSourcePrefix);
-			this.cookieStoreId = tab.cookieStoreId;
+
+			if(tab.cookieStoreId !== defaultCookieStoreId) {
+				this.cookieStoreId = tab.cookieStoreId;
+			}
 			
 			if(tab.isInReaderMode) {
 				this.isInReaderMode = true;
@@ -143,8 +147,8 @@ export default class TabData {
 				this.url = viewSourcePrefix + this.url;
 			}
 
-			if(data.variables.has("csid")) {
-				this.cookieStoreId = data.variables.get("csid");
+			if(data.variables.has("cs")) {
+				this.cookieStoreId = data.variables.get("cs");
 			}
 		}
 
@@ -168,8 +172,8 @@ export default class TabData {
 			tabOptions.push("src");
 		}
 
-		if(this.cookieStoreId) {
-			tabOptions.push("csid=" + this.cookieStoreId);
+		if(defaultCookieStoreId !== this.cookieStoreId) {
+			tabOptions.push("cs=" + this.cookieStoreId);
 		}
 
 		let prefix:string = (tabOptions.length > 0) ? 
@@ -186,7 +190,7 @@ export default class TabData {
 		let variables:Map<string,string> = new Map();
 
 		data.substring(1, data.length - 2).split(",").forEach(s => {
-			if(s.includes("=", 4)) {
+			if(s.includes("=", 2)) {
 				let tmp = s.split("=");
 				if(tmp.length === 2 && tmp[1].length > 0) {
 					variables.set(tmp[0], tmp[1]);
