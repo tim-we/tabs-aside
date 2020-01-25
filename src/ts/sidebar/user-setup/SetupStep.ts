@@ -31,7 +31,7 @@ export default class SetupStep {
 	}
 
 	public show():void {
-		SetupStep.parent.appendChild(this.html);
+		SetupStep.parent.prepend(this.html);
 		if(SetupStep.current) {
 			SetupStep.current.html.remove();
 		}

@@ -9,6 +9,7 @@ let step1 = new SetupStep("setup_root_folder_text");
 let step2 = new SetupStep("setup_preset_selection_text");
 let step3 = new SetupStep("setup_completed_text");
 
+let setupContainer:HTMLElement;
 let skipButton:HTMLAnchorElement;
 
 browser.sidebarAction.setTitle({title:"Tabs Aside"});
@@ -16,7 +17,8 @@ browser.sidebarAction.setTitle({title:"Tabs Aside"});
 HTMLUtils.DOMReady().then(() => {
 	HTMLUtils.i18n();
 
-	SetupStep.setParent(document.getElementById("setup-content"));
+	setupContainer = document.getElementById("setup-content");
+	SetupStep.setParent(setupContainer);
 
 	let version = document.getElementById("version");
 	version.innerText = browser.i18n.getMessage(
@@ -40,12 +42,27 @@ HTMLUtils.DOMReady().then(() => {
 async function setup() {
 	let rootFolder:string = await OptionsManager.getValue("rootFolder");
 
+	// add a button to keep the root folder from a previous installation
 	if(rootFolder) {
 		step1.addOption({
 			text: "setup_root_folder_keep",
 			action: () => Promise.resolve(),
 			recommended: true
 		});
+	}
+
+	// changelog box
+	{
+		let box = createBox();
+		let a = document.createElement("a");
+		a.href = "https://github.com/tim-we/tabs-aside/wiki/Tabs-Aside-3-::-Whats-new%3F";
+		a.innerText = browser.i18n.getMessage("setup_changelog");
+		let text = document.createElement("p");
+		text.innerText = browser.i18n.getMessage("setup_changelog_text");
+		text.appendChild(document.createElement("br"));
+		text.appendChild(a);
+		box.appendChild(text);
+		setupContainer.appendChild(box);
 	}
 
 	step1.show();
@@ -67,6 +84,18 @@ async function close() {
 	console.log("[TA] Setup completed.");
 
 	browser.runtime.reload();
+}
+
+function createBox(text?:string):HTMLDivElement {
+	let box = document.createElement("div");
+	box.classList.add("content-box");
+
+	if(text) {
+		let ps = HTMLUtils.stringToParagraphs(text);
+		ps.forEach(p => box.appendChild(p));
+	}
+	
+	return box;
 }
 
 // ------ setup details -------

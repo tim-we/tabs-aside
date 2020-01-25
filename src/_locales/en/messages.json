@@ -193,6 +193,15 @@
 		"message": "Show all options",
 		"description": "Opens the addons options page"
 	},
+
+	"setup_changelog": {
+		"message": "Show changelog",
+		"description": "Setup link text"
+	},
+
+	"setup_changelog_text": {
+		"message": "Want to know what has changed?"
+	},
 	
 	"setup_completed_text": {
 		"message": "Setup completed.\nYou can further customize your experience via the options page. This includes the option to set the color of the Tabs Aside theme to better match your selected theme."
