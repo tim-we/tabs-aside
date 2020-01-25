@@ -116,7 +116,6 @@ footer > a:not(:last-of-type) {
 }
 
 @media (prefers-color-scheme: dark) {
-
 	body {
 		color: rgb(249, 249, 250);
 		background-color: rgb(32, 32, 35);
@@ -139,5 +138,9 @@ footer > a:not(:last-of-type) {
 
 	div.bookmarkFolderView:hover {
 		opacity: 0.9;
+	}
+
+	.row:not(:nth-of-type(1)) {
+		border-top: 1px solid rgba(249, 249, 250, 0.2);
 	}
 }
