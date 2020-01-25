@@ -81,14 +81,6 @@
 		"message": "Options"
 	},
 
-	"menu_more_label": {
-		"message": "More..."
-	},
-
-	"menu_more_tooltip": {
-		"message": "expand menu and show all options"
-	},
-
 	"menu_action_not_applicable": {
 		"message": "Action currently not applicable."
 	},
@@ -160,10 +152,6 @@
 	"option_browserActionIcon__light": { "message": "light" },
 	"option_browserActionIcon__context": { "message": "context" },
 
-	"option_badgeCounter": {
-		"message": "Show number of active sessions in browser action badge"
-	},
-
 	"option_rootFolder":{
 		"message": "Session root folder",
 		"description": "The bookmark folder where sessions (bookmark subfolders) will be stored"
@@ -182,7 +170,7 @@
 	},
 
 	"privileged_tab_text": {
-		"message": "Tabs Aside could not restore this tab with the following URL:"
+		"message": "Tabs Aside was unable to restore this tab with the following URL:"
 	},
 
 	"session_title_default": {
