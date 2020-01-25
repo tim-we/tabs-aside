@@ -3,15 +3,16 @@ import * as BrowserActionManager from "../browserAction/BrowserActionManager.js"
 
 type StoredData = {
 	"version"?:number,
+	"options"?:any, // user options
+	"setup"?:boolean, // (user) setup completed flag
 	"bookmarkFolderID"?:string // legacy
-	"options"?:any, // legacy
 	"ba-icon"?:string // legacy
 };
 
 export async function isSetup():Promise<boolean> {
 	let data:StoredData = await browser.storage.local.get();
 
-	return data.version == 2;
+	return data.version === 2 && data.setup === true;
 }
 
 export async function setup():Promise<void> {
@@ -19,6 +20,8 @@ export async function setup():Promise<void> {
 
 	let icon:string|null = null;
 	let root:string|null = null;
+
+	// data migration
 
 	if(data.version == 1) {
 		if(data["bookmarkFolderID"]) {
@@ -74,7 +77,6 @@ export async function setup():Promise<void> {
 
 	BrowserActionManager.showSetup();
 	browser.sidebarAction.setPanel({
-		panel: browser.runtime.getURL("html/setup.html")
+		panel: browser.runtime.getURL("html/user-setup.html")
 	});
-
 }

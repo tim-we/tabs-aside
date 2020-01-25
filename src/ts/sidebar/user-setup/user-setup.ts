@@ -9,6 +9,8 @@ let step1 = new SetupStep("setup_root_folder_text");
 let step2 = new SetupStep("setup_preset_selection_text");
 let step3 = new SetupStep("setup_completed_text");
 
+let skipButton:HTMLAnchorElement;
+
 browser.sidebarAction.setTitle({title:"Tabs Aside"});
 
 HTMLUtils.DOMReady().then(() => {
@@ -22,12 +24,15 @@ HTMLUtils.DOMReady().then(() => {
 		[browser.runtime.getManifest().version]
 	);
 
-	let skip = document.getElementById("skip") as HTMLAnchorElement;
-	skip.addEventListener("click", e => {
+	skipButton = document.getElementById("skip") as HTMLAnchorElement;
+	skipButton.addEventListener("click", async e => {
 		e.preventDefault();
 		browser.runtime.openOptionsPage();
 		close();
 	});
+
+	// hide skip button
+	skipButton.style.display = "none";
 
 	setup();
 });
@@ -45,6 +50,8 @@ async function setup() {
 
 	step1.show();
 	await step1.completion();
+	// show skip button
+	skipButton.style.display = "inline";
 
 	step2.show();
 	await step2.completion();
@@ -52,17 +59,14 @@ async function setup() {
 	step3.show();
 	await step3.completion();
 
-	browser.runtime.reload();
-
 	close();
 }
 
 async function close() {
+	await browser.storage.local.set({"setup": true});
 	console.log("[TA] Setup completed.");
 
-	// reset sidebar
-	browser.sidebarAction.setTitle({title:null});
-	browser.sidebarAction.setPanel({panel:null});
+	browser.runtime.reload();
 }
 
 // ------ setup details -------
