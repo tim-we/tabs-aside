@@ -6,4 +6,4 @@ An extension for Mozilla Firefox based on the Microsoft Edge feature Tabs Aside.
 Set your tabs aside as sessions for later. Tabs are stored as bookmarks in a folder of your choice.
 Supports Firefox containers.
 
-[Telegram Channel](https://t.me/tabsaside)
+[Telegram Dev Channel](https://t.me/tabsaside)
