@@ -70,6 +70,12 @@ export function showSetup():Promise<void> {
 	return browser.browserAction.setPopup({
 		popup: browser.runtime.getURL("html/menu/setup.html")
 	}).then(
-		_ => browser.browserAction.setBadgeText({text:"!"})
+		_ => {
+			// delay badge text update because otherwise it sometimes does not do anything
+			window.setTimeout(
+				_ => browser.browserAction.setBadgeText({text:"!"}), 
+				750
+			);
+		}
 	);
 }

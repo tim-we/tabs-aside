@@ -36,11 +36,13 @@ HTMLUtils.DOMReady().then(() => {
 	// hide skip button
 	skipButton.style.display = "none";
 
-	setup();
+	setup().catch(e => {
+		console.error("[TA] Setup failed: " + e);
+	});
 });
 
 async function setup() {
-	let rootFolder:string = await OptionsManager.getValue("rootFolder");
+	let rootFolder:string|null = await OptionsManager.getValue("rootFolder");
 
 	// add a button to keep the root folder from a previous installation
 	if(rootFolder) {

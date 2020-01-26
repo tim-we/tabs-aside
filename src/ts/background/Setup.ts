@@ -10,13 +10,13 @@ type StoredData = {
 };
 
 export async function isSetup():Promise<boolean> {
-	let data:StoredData = await browser.storage.local.get();
+	let data:StoredData = await browser.storage.local.get() || {};
 
 	return data.version === 2 && data.setup === true;
 }
 
 export async function setup():Promise<void> {
-	let data:StoredData = await browser.storage.local.get();
+	let data:StoredData = await browser.storage.local.get() || {};
 
 	let icon:string|null = null;
 	let root:string|null = null;
@@ -54,11 +54,11 @@ export async function setup():Promise<void> {
 		if(data.length > 0) {
 			// folder found
 			root = data[0].id;
-			console.log("[TA] Found 'Tabs Aside' folder from a previous installation.");
 		}
 	}
 
 	if(root !== null) {
+		console.log("[TA] Found 'Tabs Aside' folder from a previous installation.");
 		await OptionsManager.setValue("rootFolder", root);
 	}
 
@@ -75,6 +75,7 @@ export async function setup():Promise<void> {
 	// update browser action icon
 	BrowserActionManager.init();
 
+	// prepare user setup
 	BrowserActionManager.showSetup();
 	browser.sidebarAction.setPanel({
 		panel: browser.runtime.getURL("html/user-setup.html")
