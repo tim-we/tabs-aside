@@ -1,7 +1,7 @@
 import * as HTMLUtils from "../../util/HTMLUtilities.js";
 import SetupStep from "./SetupStep.js";
 import { Bookmark } from "../../util/Types.js";
-import * as OptionsManager from "../../Options/OptionsManager.js";
+import * as OptionsManager from "../../options/OptionsManager.js";
 import { selectBookmark } from "../../options/Controls/BookmarkControl.js";
 import { apply, Edge, Classic } from "./OptionsPresets.js";
 

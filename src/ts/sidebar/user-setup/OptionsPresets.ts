@@ -1,4 +1,4 @@
-import * as OptionsManager from "../../Options/OptionsManager.js";
+import * as OptionsManager from "../../options/OptionsManager.js";
 
 interface OptionsPreset {
 	options:{[id:string]: boolean|string};
