@@ -18,7 +18,6 @@ export async function isSetup():Promise<boolean> {
 export async function setup():Promise<void> {
 	let data:StoredData = await browser.storage.local.get() || {};
 
-	let icon:string|null = null;
 	let root:string|null = null;
 
 	// data migration
@@ -38,9 +37,7 @@ export async function setup():Promise<void> {
 		if(data["ba-icon"]) {
 			// use old browser action icon setting
 			if(data["ba-icon"] === "dynamic") {
-				icon = "context";
-			} else if(data["ba-icon"] === "light" || data["ba-icon"] === "dark") {
-				icon = data["ba-icon"];
+				OptionsManager.setValue<boolean>("browserActionContextIcon", true);
 			}
 
 			browser.storage.local.remove("ba-icon");
@@ -61,14 +58,6 @@ export async function setup():Promise<void> {
 		console.log("[TA] Found 'Tabs Aside' folder from a previous installation.");
 		await OptionsManager.setValue("rootFolder", root);
 	}
-
-	if(icon === null) {
-		// if no previous setting found use OS setting
-		icon = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "dark";
-		console.log("[TA] Using OS color scheme to determine icon color: " + icon);
-	}
-
-	await OptionsManager.setValue("browserActionIcon", icon || "dark");
 
 	await browser.storage.local.set({"version": 2});
 

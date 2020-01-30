@@ -34,7 +34,16 @@
 		},
 		"default_title": "Tabs Aside!",
 		"default_popup": "html/menu/main.html",
-		"browser_style": true
+		"browser_style": true,
+		"theme_icons": [{
+			"light": "img/browserAction/light.svg",
+			"dark": "img/browserAction/dark.svg",
+			"size": 16
+		  }, {
+			"light": "img/browserAction/light.svg",
+			"dark": "img/browserAction/dark.svg",
+			"size": 32
+		  }]
 	},
 
 	"sidebar_action": {

@@ -6,8 +6,9 @@ import * as ActiveSessionManager from "../core/ActiveSessionManager.js";
 let badgeColor:string = "#0A84FF";
 
 export async function init() {
-	let icon:string = (await OptionManager.getValue<string>("browserActionIcon")) + ".svg";
-	updateIcon(icon);
+	if(await OptionManager.getValue<string>("browserActionContextIcon")) {
+		updateIcon("context.svg");
+	}
 
 	browser.browserAction.setTitle({
 		title: `Tabs Aside ${browser.runtime.getManifest().version}`
@@ -17,9 +18,12 @@ export async function init() {
 
 	MessageListener.setDestination("background");
 	MessageListener.add("OptionUpdate", (msg:OptionUpdateEvent) => {
-		if(msg.key === "browserActionIcon") {
-			let newIcon:string = msg.newValue + ".svg";
-			updateIcon(newIcon);
+		if(msg.key === "browserActionContextIcon") {
+			if(msg.newValue as boolean) {
+				updateIcon("context.svg");
+			} else {
+				updateIcon();
+			}
 		}
 	});
 }
@@ -55,15 +59,23 @@ export async function updateBadge() {
 	}));
 }
 
-function updateIcon(newIcon:string):Promise<void> {
-	let iconPath:string = "../img/browserAction/" + newIcon;
+function updateIcon(newIcon?:string):Promise<void> {
+	let p:Promise<void>;
 
-	return browser.browserAction.setIcon({
-		path: {
-			"16": iconPath,
-			"32": iconPath
-		}
-	}).catch(e => console.error("[TA] Error updating icon:\n" + e));
+	if(newIcon) {
+		let iconPath:string = "../img/browserAction/" + newIcon;
+
+		p = browser.browserAction.setIcon({
+			path: {
+				"16": iconPath,
+				"32": iconPath
+			}
+		});
+	} else {
+		p = browser.browserAction.setIcon({});
+	}
+
+	return p.catch(e => console.error("[TA] Error updating icon:\n" + e));
 }
 
 export function showSetup():Promise<void> {

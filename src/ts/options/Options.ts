@@ -38,10 +38,9 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			group: "appearance"
 		},
 		{
-			id: "browserActionIcon",
-			type: "select",
-			options: ["dark", "light", "context"],
-			default: "dark",
+			id: "browserActionContextIcon",
+			type: "boolean",
+			default: true,
 			info: true,
 			group: "appearance"
 		},

@@ -134,23 +134,18 @@
 		"message": "pinned tabs that are not part of a session yet"
 	},
 
-	"option_browserActionIcon": {
-		"message": "Browser action icon",
-		"description": "label for the browser action icon selector, the options are option_browserActionIcon__*"
+	"option_browserActionContextIcon": {
+		"message": "Use context color for browser action"
 	},
 
-	"option_browserActionIcon_info": {
-		"message": "The context dependent icon <a href=\"$URL$\">requires specific Firefox settings</a>.",
+	"option_browserActionContextIcon_info": {
+		"message": "Makes the icon the same color as the native icons. Requires <a href=\"$URL$\">specific Firefox settings</a>.",
 		"placeholders": {
 			"url": {
 				"content": "https://github.com/tim-we/tabs-aside/wiki/dynamic-icon"
 			}
 		}
 	},
-
-	"option_browserActionIcon__dark": { "message": "dark" },
-	"option_browserActionIcon__light": { "message": "light" },
-	"option_browserActionIcon__context": { "message": "context" },
 
 	"option_rootFolder":{
 		"message": "Session root folder",
