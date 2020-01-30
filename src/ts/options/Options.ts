@@ -40,7 +40,7 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 		{
 			id: "browserActionContextIcon",
 			type: "boolean",
-			default: true,
+			default: false,
 			info: true,
 			group: "appearance"
 		},
