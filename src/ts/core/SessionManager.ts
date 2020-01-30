@@ -165,6 +165,17 @@ export async function createSessionFromWindow(
 		windowId = await getCurrentWindowId();
 	}
 
+	let otherWindows = (await browser.windows.getAll({windowTypes:["normal"]}))
+						.filter(wnd => wnd.id !== windowId);
+
+	// if there are no other windows open a new one
+	// to prevent the browser from closing itself
+	if(otherWindows.length === 0) {
+		browser.windows.create({});
+		// hide the new window for now
+		browser.windows.update(windowId, {focused: true});
+	}
+
 	if(title === undefined) {
 		// if the `sessionTitle` value is not set `title` will still be undefined
 		title = (await browser.sessions.getWindowValue(windowId, "sessionTitle")) as string;
@@ -172,11 +183,10 @@ export async function createSessionFromWindow(
 
 	// tab search query
 	// https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs/query
-	let query = {
+	let queryInfo = {
 		windowId: windowId
 	};
-
-	let tabs = await browser.tabs.query(query);
+	let tabs = await browser.tabs.query(queryInfo);
 	
 	let sessionId:SessionId = await createSessionFromTabs(tabs, setAside, title);
 
