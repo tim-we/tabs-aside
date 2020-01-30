@@ -31,6 +31,15 @@
 		"message": "Configure"
 	},
 
+	"error_bgpNotResponding": {
+		"message": "Error: The background page is not responding."
+	},
+
+	"error_bgpNotResponding_solution": {
+		"message": "Try again",
+		"description": "Reloads the sidebar"
+	},
+
 	"menu_active-session-indicator": {
 		"message": "Active session: $SESSION$",
 		"description": "Shows the session title of the current active session.",

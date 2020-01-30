@@ -1,8 +1,10 @@
 import { ActiveSessionData } from "../core/ActiveSession.js";
 import { attempt } from "../util/PromiseUtils.js";
 
-export type MessageType = 
-	  "SessionCommand"
+export type MessageType =
+	  "Ping"
+	| "ExtensionCommand"
+	| "SessionCommand"
 	| "SessionEvent"
 	| "DataRequest"
 	| "OptionUpdate";
@@ -134,5 +136,31 @@ export class OptionUpdateEvent extends Message {
 	public static async send(key:string, newValue:any) {
 		let m:Message = new OptionUpdateEvent(key, newValue);
 		await attempt(browser.runtime.sendMessage(m));
+	}
+}
+
+export class BackgroundPing extends Message {
+	public static readonly RESPONSE = "Pong";
+
+	public constructor() {
+		super("Ping", "background");
+	}
+
+	public static async send():Promise<void> {
+		let m:Message = new BackgroundPing();
+		let response:string|undefined = await browser.runtime.sendMessage(m);
+
+		return (response === BackgroundPing.RESPONSE) ?
+			Promise.resolve() :
+			Promise.reject("Unexpected Ping response: '" + response + "'");
+	}
+}
+
+export class ExtensionCommand extends Message {
+	public readonly command:"reload" = "reload";
+
+	public constructor(destination:MessageDestination, command:"reload") {
+		super("ExtensionCommand", destination);
+		this.command = command;
 	}
 }

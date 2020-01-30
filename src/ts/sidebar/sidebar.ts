@@ -1,6 +1,6 @@
 import * as TabViewFactory from "./TabViewFactory.js";
 import * as OptionsManager from "../options/OptionsManager.js";
-import { OptionUpdateEvent, Message, SessionEvent, DataRequest } from "../messages/Messages.js";
+import { OptionUpdateEvent, Message, SessionEvent, DataRequest, BackgroundPing, ExtensionCommand } from "../messages/Messages.js";
 import SessionView from "./SessionView.js";
 import * as Search from "./Search.js";
 import { ActiveSessionData } from "../core/ActiveSession.js";
@@ -41,7 +41,18 @@ Promise.all([
 		HTMLUtilities.i18n();
 	})
 
-]).then(async () => {
+]).then(() => {
+	// check if the background page is responding
+	// this can happen when the browser starts with the sidebar open
+	return BackgroundPing.send().catch(e => {
+		let error = new SolvableError("error_bgpNotResponding");
+		error.setSolution(() => {
+			window.location.reload();
+		});
+
+		return Promise.reject(error);
+	});
+}).then(async () => {
 	let sessions:Bookmark[];
 
 	// request session data
@@ -162,6 +173,12 @@ async function messageHandler(message:Message) {
 			sessionView.getHTML().remove();
 			sessionViews.delete(msg.sessionId);
 			noSessionsCheck();
+		}
+	} else if(message.type === "ExtensionCommand") {
+		let ecm = message as ExtensionCommand;
+
+		if(ecm.command === "reload") {
+			window.location.reload();
 		}
 	}
 }
