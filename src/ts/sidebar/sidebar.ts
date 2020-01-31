@@ -136,7 +136,7 @@ async function getActiveSessions() {
 	let response:ActiveSessionData[] = await DataRequest.send<ActiveSessionData[]>("active-sessions");
 
 	activeSessions.clear();
-	response.map(data => activeSessions.set(data.bookmarkId, data));
+	response.forEach(data => activeSessions.set(data.bookmarkId, data));
 }
 
 async function messageHandler(message:Message) {
