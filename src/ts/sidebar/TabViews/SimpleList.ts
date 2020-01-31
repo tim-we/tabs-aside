@@ -16,7 +16,6 @@ export default class SimpleList extends TabView {
 	}
 
 	public createHTML(tabBookmarks:Bookmark[]): HTMLOListElement {
-		let ol = this.list;
 		this.populateList(tabBookmarks);
 		return this.list;
 	}

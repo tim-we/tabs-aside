@@ -17,7 +17,7 @@ import * as WindowFocusHistory from "../background/WindowFocusHistory.js";
 
 type Command = (data:MSA|CSA) => void;
 
-const commands:Map<String, Command> = new Map();
+const commands:Map<string, Command> = new Map();
 
 commands.set("restore",		   (data:MSA) => restore(data.sessionId, data.keepBookmarks || false));
 commands.set("restore-single", (data:MSA) => restoreSingle(data.tabBookmarkId));

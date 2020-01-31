@@ -45,12 +45,12 @@ export async function setup():Promise<void> {
 	} else if(data.version != 2) {
 		// removing the extension will also remove all the stored data
 		// lets check if there exists a "Tabs Aside" folder from a previous installation
-		let data = (await browser.bookmarks.search({title:"Tabs Aside"}))
+		let folders = (await browser.bookmarks.search({title:"Tabs Aside"}))
 					.filter(bm => bm.type === "folder");
 
-		if(data.length > 0) {
+		if(folders.length > 0) {
 			// folder found
-			root = data[0].id;
+			root = folders[0].id;
 		}
 	}
 

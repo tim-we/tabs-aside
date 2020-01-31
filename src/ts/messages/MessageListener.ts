@@ -17,7 +17,7 @@ export function add(type:MessageTypeSelector, listener:MessageListener):void {
 	let typeListeners:Set<MessageListener> = listeners.get(type) || new Set();
 	typeListeners.add(listener);
 	listeners.set(type, typeListeners);
-};
+}
 
 export function remove(type:MessageTypeSelector, listener:MessageListener):void {
 	let typeListeners:Set<MessageListener> = listeners.get(type);

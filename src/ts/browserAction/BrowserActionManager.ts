@@ -1,5 +1,5 @@
 import * as OptionManager from "../options/OptionsManager.js";
-import { Message, OptionUpdateEvent } from "../messages/Messages.js";
+import { OptionUpdateEvent } from "../messages/Messages.js";
 import * as MessageListener from "../messages/MessageListener.js";
 import * as ActiveSessionManager from "../core/ActiveSessionManager.js";
 
@@ -82,10 +82,10 @@ export function showSetup():Promise<void> {
 	return browser.browserAction.setPopup({
 		popup: browser.runtime.getURL("html/menu/setup.html")
 	}).then(
-		_ => {
+		() => {
 			// delay badge text update because otherwise it sometimes does not do anything
 			window.setTimeout(
-				_ => browser.browserAction.setBadgeText({text:"!"}), 
+				() => browser.browserAction.setBadgeText({text:"!"}), 
 				750
 			);
 		}

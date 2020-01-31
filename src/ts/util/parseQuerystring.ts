@@ -8,6 +8,6 @@ export default function parseQueryString() {
 	);
 
 	return objURL;
-};
+}
 
 // let params = parseQueryString(); params["foo"] = "bar" ...

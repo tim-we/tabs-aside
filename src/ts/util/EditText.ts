@@ -1,5 +1,3 @@
-import { resolve } from "path";
-
 let previousText:Map<HTMLElement, string> = new Map();
 let rejectors:Map<HTMLElement, () => void> = new Map();
 

@@ -1,6 +1,5 @@
 import MenuItems from "./MenuItems.js";
 import { MenuItem } from "./MenuItemType.js";
-import * as OptionsManager from "../options/OptionsManager.js";
 import { StateInfoData, DataRequest } from "../messages/Messages.js";
 
 let activeSessionIndicator:HTMLDivElement;

@@ -179,7 +179,7 @@ export default class TabData {
 		let prefix:string = (tabOptions.length > 0) ? 
 			`[${tabOptions.join(",")}] ` : "";
 
-		return prefix + this.title;;
+		return prefix + this.title;
 	}
 
 	private decodeTitle(title:string):TitleData {

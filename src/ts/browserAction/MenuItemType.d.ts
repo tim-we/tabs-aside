@@ -1,4 +1,3 @@
-import { Tab } from "../util/Types.js";
 import { StateInfoData } from "../messages/Messages.js";
 
 export interface MenuItem {
