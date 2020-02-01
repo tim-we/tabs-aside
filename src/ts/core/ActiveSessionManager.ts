@@ -1,6 +1,6 @@
 import ActiveSession, { ActiveSessionData } from "./ActiveSession.js";
 import { Tab, Bookmark, SessionId, Window } from "../util/Types.js";
-import { SessionCommand, SessionEvent, DataRequest, SessionContentUpdate } from "../messages/Messages.js";
+import { SessionEvent, SessionContentUpdate } from "../messages/Messages.js";
 import * as OptionsManager from "../options/OptionsManager.js";
 import TabData from "./TabData.js";
 import * as BrowserAction from "../browserAction/BrowserActionManager.js";
