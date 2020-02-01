@@ -18,12 +18,14 @@ let menuItems:MenuItem[] = [
 		icon: "aside.svg",
 		tooltip: true,
 		onclick: async () => {
+			// the sidebar can only be opened as
+			// a direct response to a user event
+			browser.sidebarAction.open();
+
 			SessionCommand.send("create", {
 				windowId: await getCurrentWindowId(),
 				setAside: true
 			});
-
-			browser.sidebarAction.open();
 		},
 		isApplicable: (state) => state.freeTabs,
 		hide: (state) => state.currentSession !== undefined
