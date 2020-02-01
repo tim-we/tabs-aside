@@ -39,6 +39,7 @@ export default class TabData {
 	public readonly favIconUrl:string;
 	public readonly viewSource:boolean;
 	public readonly cookieStoreId:string;
+	public readonly index:number;
 
 	public static createFromTab(tab:Tab):TabData {
 		return new TabData(tab, null);
@@ -73,7 +74,8 @@ export default class TabData {
 			url: url,
 			openInReaderMode: this.isInReaderMode,
 			pinned: this.pinned,
-			discarded: discardTab
+			discarded: discardTab,
+			index: this.index
 		};
 
 		if(this.cookieStoreId) {
@@ -87,7 +89,8 @@ export default class TabData {
 		return {
 			parentId: parentId,
 			title: this.encodeTitle(),
-			url: this.url
+			url: this.url,
+			index: this.index
 		};
 	}
 
@@ -113,6 +116,7 @@ export default class TabData {
 			this.url = tab.url;
 			this.favIconUrl = tab.favIconUrl;
 			this.viewSource = tab.url.startsWith(viewSourcePrefix);
+			this.index = tab.index;
 
 			if(tab.cookieStoreId !== defaultCookieStoreId) {
 				this.cookieStoreId = tab.cookieStoreId;
@@ -140,6 +144,7 @@ export default class TabData {
 			this.pinned = data.flags.has("pinned");
 			this.isInReaderMode = data.flags.has("reading");
 			this.viewSource = data.flags.has("src");
+			this.index = bookmark.index;
 
 			this.favIconUrl = this.getFavIconURL(bookmark.url);
 

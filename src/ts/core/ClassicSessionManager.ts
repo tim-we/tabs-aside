@@ -22,6 +22,7 @@ export async function createSession(
 		let tab:Tab = tabs[i];
 		let data:TabData = TabData.createFromTab(tab);
 
+		//TODO: is this check necessary?
 		if(!data.isPrivileged()) {
 			// create bookmark & close tab
 			await Promise.all([

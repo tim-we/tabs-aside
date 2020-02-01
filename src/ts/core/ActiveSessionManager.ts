@@ -28,21 +28,23 @@ export async function createSessionFromTabs(
 	// ActiveSession instance
 	let session:ActiveSession = new ActiveSession(folder);
 
-	// setup tabs
-	await Promise.all(
-		tabs.map(
-			async tab => {
-				let data:TabData = TabData.createFromTab(tab);
+	let promises:Promise<void>[] = [];
 
-				// create a bookmark for the tab
-				let bm:Bookmark = await browser.bookmarks.create(
-					data.getBookmarkCreateDetails(session.bookmarkId)
-				);
+	// add tabs to session
+	for(const tab of tabs) {
+		const data:TabData = TabData.createFromTab(tab);
 
-				await session.addExistingTab(tab, bm.id);
-			}
-		)
-	);
+		// create a bookmark for the tab
+		const bm:Bookmark = await browser.bookmarks.create(
+			data.getBookmarkCreateDetails(session.bookmarkId)
+		);
+
+		// we don't have to wait for this promise
+		// in order to create new bookmarks
+		promises.push(session.addExistingTab(tab, bm.id));
+	}
+
+	await Promise.all(promises);
 
 	// add to activeSessions map
 	activeSessions.set(session.bookmarkId, session);

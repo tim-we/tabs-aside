@@ -142,6 +142,9 @@ export async function createSessionFromTabs(
 	// ignore tabs that are part of an active session
 	tabs = tabs.filter(tab => !activeTabs.has(tab.id));
 
+	// sort tabs by tab index to prevent insertion order problems
+	tabs = tabs.sort((a,b) => a.index - b.index);
+
 	// create session
 	if(activeSessionsEnabled) {
 		let session:ActiveSession;

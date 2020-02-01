@@ -193,7 +193,8 @@ export default class ActiveSession {
 				await browser.tabs.remove(tabIds);
 			}
 		}
-		
+
+		//TODO: prevent browser from closing
 	}
 
 	private async setAside() {
