@@ -1,5 +1,4 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tim-we_tabs-aside&metric=alert_status)](https://sonarcloud.io/dashboard?id=tim-we_tabs-aside)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=tim-we_tabs-aside&metric=bugs)](https://sonarcloud.io/dashboard?id=tim-we_tabs-aside)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=tim-we_tabs-aside&metric=ncloc)](https://sonarcloud.io/dashboard?id=tim-we_tabs-aside)
 ![Mozilla Add-on](https://img.shields.io/amo/users/tabs-aside)
 ![Mozilla Add-on](https://img.shields.io/amo/rating/tabs-aside)
