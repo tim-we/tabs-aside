@@ -14,7 +14,7 @@ export default class SetupStep {
 	private static current:SetupStep = null;
 	private readonly html:HTMLElement;
 	private options:HTMLElement = null;
-	private completionListeners:Set<CompletionListener> = new Set();
+	private readonly completionListeners:Set<CompletionListener> = new Set();
 	private recommended:HTMLAnchorElement = null;
 
 	public constructor(messageName:string) {

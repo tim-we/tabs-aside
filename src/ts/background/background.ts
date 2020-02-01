@@ -14,11 +14,13 @@ MessageListener.setDestination("background");
 		KeyboardCommands.init();
 
 		SessionManager.init().then(() => {
-			MessageListener.add("*", async (message:Message) => {
+			MessageListener.add("*", (message:Message) => {
 				if(message.type === "SessionCommand") {
 					let cmd:SessionCommand = message as SessionCommand;
-					return await SessionManager.execCommand(cmd);
+					return SessionManager.execCommand(cmd);
 				}
+
+				return Promise.resolve();
 			});
 			
 			browser.runtime.onMessage.addListener((message:Message) => {
@@ -29,6 +31,8 @@ MessageListener.setDestination("background");
 				} else if(message.type === "Ping") {
 					return Promise.resolve(BackgroundPing.RESPONSE);
 				}
+
+				return Promise.resolve();
 			});
 		});
 

@@ -25,7 +25,7 @@ export interface ActiveSessionData {
 
 export default class ActiveSession {
 	public readonly bookmarkId:string;
-	private title:string;
+	private readonly title:string;
 	private windowId:number;
 	
 	// maps tab ids to bookmark ids
@@ -39,7 +39,7 @@ export default class ActiveSession {
 	// this is needed to avoid duplicate bookmarks for tabs activated via the sidebar
 	private ignoreNextCreatedTab:boolean = false;
 
-	private sessionStartTime:number;
+	private readonly sessionStartTime:number;
 
 	// event listeners
 	private tabAttachedListener:TabAttachedListener;

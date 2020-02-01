@@ -85,6 +85,8 @@ export async function dataRequest(req:DataRequest):Promise<any> {
 		}
 
 		return stateInfo;
+	} else {
+		return Promise.reject("No handler for " + req.data);
 	}
 }
 
