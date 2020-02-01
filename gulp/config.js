@@ -9,6 +9,7 @@ module.exports = {
       'manifest.json',
       'img/**/*',
       'html/**/*',
+      'tab-loader/*',
       'fonts/**/*',
       '_locales/**/*'
     ]
