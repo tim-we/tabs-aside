@@ -1,10 +1,10 @@
 (function () {
-    let params = new URLSearchParams(document.location.search.substring(1));
-    let url = new URL(params.get("url"));
+    const params = new URLSearchParams(document.location.search.substring(1));
+    const url = new URL(params.get("url"));
 
     console.log("[TA] Found an unloaded tab from a previous version.", url);
 
-    let a = document.getElementById("load-manually");
+    const a = document.getElementById("load-manually");
     a.href = url.href;
     document.getElementById("url").textContent = url.href;
 

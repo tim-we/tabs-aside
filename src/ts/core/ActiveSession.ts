@@ -55,6 +55,7 @@ export default class ActiveSession {
 		this.sessionStartTime = Date.now();
 	}
 
+	/** Restores a session. If `tabBookmark` is set then only this single tab is restored. */
 	private static async restore(sessionBookmark:Bookmark, tabBookmark?:Bookmark):Promise<ActiveSession> {
 		// create ActiveSession instance
 		let activeSession:ActiveSession = new ActiveSession(sessionBookmark);
@@ -75,7 +76,7 @@ export default class ActiveSession {
 		// add tabs
 		await Promise.all(
 			tabsToOpen.map(
-				tabBookmark => activeSession.openBookmarkTab(tabBookmark, false)
+				bookmark => activeSession.openBookmarkTab(bookmark, false)
 			)
 		);
 

@@ -185,16 +185,16 @@ export async function findActiveSessions():Promise<void> {
 				// collect tabs that are part of active sessions
 				await Promise.all(
 					tabs.map(async (tab) => {
-						let sessionId:string = (await browser.sessions.getTabValue(tab.id, "sessionID")) as string;
+						let tabSessionId:string = (await browser.sessions.getTabValue(tab.id, "sessionID")) as string;
 						
-						// if the tab as tab values it must be part of an active session
-						if(sessionId) {
+						// if the tab has tab values it must be part of an active session
+						if(tabSessionId) {
 							
 							let bookmarkId:string = (await browser.sessions.getTabValue(tab.id, "bookmarkID")) as string;
 
-							let session:TabBookmark[] = nonWindowSessions.get(sessionId) || [];
+							let session:TabBookmark[] = nonWindowSessions.get(tabSessionId) || [];
 							session.push([tab.id, bookmarkId]);
-							nonWindowSessions.set(sessionId, session);
+							nonWindowSessions.set(tabSessionId, session);
 						}
 					})
 				);
