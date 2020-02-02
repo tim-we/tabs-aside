@@ -165,6 +165,14 @@
 		"message": "Pick the folder where sessions are stored."
 	},
 
+	"option_confirmSessionRemoval": {
+		"message": "Confirm session removal"
+	},
+
+	"option_confirmSessionRemoval_info": {
+		"message": "Ask for confirmation before removing a session via the sidebar."
+	},
+
 	"option_page_footer_issues":{
 		"message": "Report a problem"
 	},

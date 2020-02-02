@@ -57,6 +57,12 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			type: "bookmark",
 			default: null,
 			group: "core"
+		},
+		{
+			id: "confirmSessionRemoval",
+			type: "boolean",
+			default: true,
+			info: true
 		}
 	];
 

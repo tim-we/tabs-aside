@@ -36,8 +36,13 @@ export default class SessionOptionsMenu extends OverlayMenu {
 		});
 
 		this.addItem("sidebar_session_remove", async () => {
-			if(!(await ModalWindow.confirm(_i18n("sidebar_session_remove_confirm")))) {
-				return;
+			const confirmationRequired:boolean = await OptionsManager.getValue("confirmSessionRemoval");
+
+			if(confirmationRequired) {
+				const confirmation:boolean = await ModalWindow.confirm(_i18n("sidebar_session_remove_confirm"));
+				if(!confirmation) {
+					return;
+				}
 			}
 
 			if(activeSessions && session.isActive()) {
