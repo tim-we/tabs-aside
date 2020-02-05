@@ -123,16 +123,19 @@ export async function createSessionFromTabs(
 ):Promise<SessionId> {
 	title = title ? title : browser.i18n.getMessage("session_title_default");
 
+	// load settings
+	let activeSessionsEnabled:boolean = await OptionsManager.getValue<boolean>("activeSessions");
+	let ignorePinned:boolean = await OptionsManager.getValue<boolean>("ignorePinned");
+
 	// filter tabs that cannot be restored
 	tabs = tabs.filter(tab => !TabData.createFromTab(tab).isPrivileged());
 
-	let activeSessionsEnabled:boolean = await OptionsManager.getValue<boolean>("activeSessions");
-
-	let sessionId:string;
-
-	let activeTabs:Set<number> = new Set();
+	if(ignorePinned) {
+		tabs = tabs.filter(tab => !tab.pinned);
+	}
 
 	// build set of active tabs
+	let activeTabs:Set<number> = new Set();
 	ActiveSessionManager.getActiveSessions().forEach(
 		session => session.tabs.forEach(
 			tab => activeTabs.add(tab)
@@ -144,6 +147,8 @@ export async function createSessionFromTabs(
 
 	// sort tabs by tab index to prevent insertion order problems
 	tabs = tabs.sort((a,b) => a.index - b.index);
+
+	let sessionId:string;
 
 	// create session
 	if(activeSessionsEnabled) {
