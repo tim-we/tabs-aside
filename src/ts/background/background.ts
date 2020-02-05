@@ -34,6 +34,8 @@ MessageListener.setDestination("background");
 
 				return Promise.resolve();
 			});
+		}, e => {
+			console.error("[TA] Failed to initialize SessionManager.", e);
 		});
 
 		// if sidebar was already open it has to be reloaded

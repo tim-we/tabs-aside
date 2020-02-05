@@ -175,6 +175,13 @@ export async function findActiveSessions():Promise<void> {
 			let sessionId = (await browser.sessions.getWindowValue(wnd.id, "sessionID")) as string;
 
 			if(sessionId) {
+				browser.bookmarks.get(sessionId).catch(e => {
+					sessionId = undefined;
+					console.error("[TA] Unable to reactivate session, bookmark is missing.");
+				});
+			}
+
+			if(sessionId) {
 				// window seems to be an active session -> reactivate
 				let session:ActiveSession = await ActiveSession.reactivateWindow(sessionId, windowId);
 				activeSessions.set(session.bookmarkId, session);
