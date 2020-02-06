@@ -176,9 +176,14 @@ export async function findActiveSessions():Promise<void> {
 
 			if(sessionId) {
 				await browser.bookmarks.get(sessionId).catch(e => {
+					console.error("[TA] Unable to reactivate windowed session, bookmark is missing.", sessionId);
 					sessionId = undefined;
-					console.error("[TA] Unable to reactivate session, bookmark is missing.");
 				});
+
+				// if session bookmark is missing skip the next part
+				if(sessionId === undefined) {
+					return Promise.resolve();
+				}
 			}
 
 			if(sessionId) {
@@ -193,10 +198,17 @@ export async function findActiveSessions():Promise<void> {
 				await Promise.all(
 					tabs.map(async (tab) => {
 						let tabSessionId:string = (await browser.sessions.getTabValue(tab.id, "sessionID")) as string;
+
+						// verify that session bookmark still exists
+						if(tabSessionId) {
+							await browser.bookmarks.get(tabSessionId).catch(e => {
+								console.error("[TA] Unable to reactivate session, bookmark is missing.", tabSessionId);
+								tabSessionId = undefined;
+							});
+						}
 						
 						// if the tab has tab values it must be part of an active session
 						if(tabSessionId) {
-							
 							let bookmarkId:string = (await browser.sessions.getTabValue(tab.id, "bookmarkID")) as string;
 
 							let session:TabBookmark[] = nonWindowSessions.get(tabSessionId) || [];
