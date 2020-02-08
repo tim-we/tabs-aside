@@ -1,23 +1,20 @@
 import * as Model from "./Model.js";
 import * as View from "./View.js";
-import parseQueryString from "../util/parseQuerystring.js";
 import * as OptionsManager from "../options/OptionsManager.js";
 
-// url search params
-var params = parseQueryString();
+const params = new URLSearchParams(document.location.search.substring(1));
 
 // is there a selected folder?
 var initPromise:Promise<void>;
 
-
-if (params["selected"]) {
-	let selectedFolderID = params["selected"].trim();
+if (params.get("selected")) {
+	let selectedFolderID = params.get("selected");
 	initPromise = Model.init(
-		params["option"],
+		params.get("option"),
 		selectedFolderID
 	);
 } else {
-	initPromise = Model.init(params["option"]);
+	initPromise = Model.init(params.get("option"));
 }
 
 Promise.all([
