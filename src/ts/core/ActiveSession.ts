@@ -76,7 +76,7 @@ export default class ActiveSession {
 		// add tabs
 		await Promise.all(
 			tabsToOpen.map(
-				bookmark => activeSession.openBookmarkTab(bookmark, false)
+				bookmark => activeSession.openBookmarkTab(bookmark, false, false)
 			)
 		);
 
@@ -143,14 +143,19 @@ export default class ActiveSession {
 	/**
 	 * Open a tab from a bookmark and add it to this session
 	 * @param tabBookmark - A bookmark from this session
+	 * @param makeActive (optional) Make this tab the active tab
+	 * @param skipCreateEvent (optional) Ignore the `tab created event` for this tab
 	 */
-	public async openBookmarkTab(tabBookmark:Bookmark, skipCreateEvent:boolean = true):Promise<Tab> {
+	public async openBookmarkTab(tabBookmark:Bookmark, makeActive:boolean=false, skipCreateEvent:boolean = true):Promise<Tab> {
 		console.assert(tabBookmark && tabBookmark.parentId === this.bookmarkId);
 
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
 		let createProperties = data.getTabCreateProperties();
-		createProperties.active = true;
-		createProperties.discarded = false;
+
+		if(makeActive) {
+			createProperties.active = true;
+			createProperties.discarded = false;
+		}
 
 		if(this.windowId) {
 			createProperties.windowId = this.windowId;
@@ -412,7 +417,7 @@ export default class ActiveSession {
 		this.tabCreatedListener = async (tab) => {
 			if(this.ignoreNextCreatedTab && tab.windowId === this.windowId) {
 				this.ignoreNextCreatedTab = false;
-				console.log("tab ignored");
+				console.log("[TA] tab ignored", tab);
 				return;
 			}
 
@@ -430,7 +435,7 @@ export default class ActiveSession {
 				// update sidebar
 				SessionContentUpdate.send(this.bookmarkId);
 			} else {
-				console.log("tab not added");
+				console.log("[TA] tab not added", tab);
 			}
 		};
 
@@ -440,13 +445,14 @@ export default class ActiveSession {
 
 			// check if tab loaded & part of this session
 			if(tabBookmarkId) {
-				if(tab.status === "loading" && (Date.now() - this.sessionStartTime) < INITIAL_LOADING_TIMEOUT) {
-					// ignore loading tabs
+				if(changeInfo.url === "about:blank") {
+					// (discarded) loading tabs cycle through a phase where they are about:blank
 					return;
 				}
 
 				// only update session for certain changes
-				let update:boolean = changeInfo.hasOwnProperty("url")
+				let update:boolean = tab.status === "complete"
+					|| changeInfo.hasOwnProperty("url")
 					|| changeInfo.hasOwnProperty("title")
 					|| changeInfo.hasOwnProperty("mutedInfo")
 					|| changeInfo.hasOwnProperty("pinned");

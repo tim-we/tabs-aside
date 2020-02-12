@@ -108,7 +108,7 @@ export async function restoreSingle(tabBookmarkId:string) {
 
 	if(session) {
 		// if session is already partially active add tab to active session
-		session.openBookmarkTab(tabBookmark);
+		session.openBookmarkTab(tabBookmark, true);
 	} else {
 		// create a new tab (no active session) otherwise
 		let data:TabData = TabData.createFromBookmark(tabBookmark);

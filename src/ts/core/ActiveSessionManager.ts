@@ -92,7 +92,7 @@ export async function restore(sessionId:SessionId):Promise<void> {
 
 export async function restoreSingle(sessionId:SessionId, tabBookmark:Bookmark):Promise<void> {
 	if(activeSessions.has(sessionId)) {
-		activeSessions.get(sessionId).openBookmarkTab(tabBookmark);
+		activeSessions.get(sessionId).openBookmarkTab(tabBookmark, true);
 	} else {
 		let session:ActiveSession = await ActiveSession.restoreSingleTab(tabBookmark);
 		activeSessions.set(sessionId, session);
