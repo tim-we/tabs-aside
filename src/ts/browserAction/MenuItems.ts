@@ -74,11 +74,6 @@ let menuItems:MenuItem[] = [
 		isApplicable: (state) => state.freeTabs,
 		hide: (state) => !state.freeTabs
 	},
-	/*{
-		id: "tab-selector",
-		optional: true,
-		href: browser.runtime.getURL("html/menu/tab-selector.html")
-	},*/
 	{
 		id: "options",
 		icon: "options-16.svg",

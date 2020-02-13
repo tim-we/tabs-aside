@@ -82,10 +82,6 @@
 		"message": "Show sessions"
 	},
 
-	"menu_tab-selector_label": {
-		"message": "Tab selector"
-	},
-
 	"menu_options_label": {
 		"message": "Options"
 	},
@@ -431,62 +427,5 @@
 
 	"tab_contextmenu_set_aside": {
 		"message": "&set aside"
-	},
-
-	"tab_selector_title": {
-		"message": "Tabs Aside :: Tab selector"
-	},
-
-	"tab_selector_selection": {
-		"message": "$N$/$M$ tabs selected",
-		"placeholders": {
-			"n" : {
-				"content" : "$1",
-				"example" : "3"
-			},
-			"m" : {
-				"content" : "$2",
-				"example" : "5"
-			}
-		}
-	},
-
-	"tab_selector_select_all": {
-		"message": "select all"
-	},
-
-	"tab_selector_clear": {
-		"message": "clear",
-		"description": "clear tab selection"
-	},
-
-	"tab_selector_invert": {
-		"message": "invert",
-		"description": "invert selection"
-	},
-
-	"tab_selector_set_aside": {
-		"message": "set aside",
-		"description": "Set selected tabs aside (close tabs & create bookmarks)"
-	},
-
-	"tab_selector_create_session": {
-		"message": "create session",
-		"description": "Create a session from the selected tabs"
-	},
-
-	"tab_selector_close": {
-		"message": "close tabs",
-		"description": "Close selected tabs"
-	},
-
-	"tab_selector_in_session": {
-		"message": "This tab is already part of a session.",
-		"description": "Tabs selector tooltip for tabs in active sessions"
-	},
-
-	"tab_selector_multiselect_error": {
-		"message": "To select multiple tabs please enable browser.tabs.multiselect in about:config.",
-		"description":"As of FF64 browser.tabs.multiselect is enabled by default."
 	}
 }
