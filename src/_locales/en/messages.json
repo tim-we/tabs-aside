@@ -173,6 +173,14 @@
 		"message": "Ask for confirmation before removing a session via the sidebar."
 	},
 
+	"option_lazyLoading": {
+		"message": "Tab lazy loading"
+	},
+
+	"option_lazyLoading_info": {
+		"message": "A restored tab’s content is only loaded when the tab is activated."
+	},
+
 	"option_page_footer_issues":{
 		"message": "Report a problem"
 	},

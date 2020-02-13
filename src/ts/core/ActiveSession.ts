@@ -14,7 +14,6 @@ import * as ActiveSessionManager from "./ActiveSessionManager.js";
 
 type TabBookmark = [number, string];
 const TAB_REMOVE_DELAY = 250;
-const INITIAL_LOADING_TIMEOUT = 1000;
 
 export interface ActiveSessionData {
 	readonly bookmarkId;
@@ -60,9 +59,11 @@ export default class ActiveSession {
 		// create ActiveSession instance
 		let activeSession:ActiveSession = new ActiveSession(sessionBookmark);
 
-		let windowedSession:boolean = await OptionsManager.getValue<boolean>("windowedSession");
-		let emptyTab:Tab = null;
+		// load options
+		const windowedSession:boolean = await OptionsManager.getValue("windowedSession");
+		const discardTabs:boolean = await OptionsManager.getValue("lazyLoading");
 
+		let emptyTab:Tab = null;
 		if(windowedSession) {
 			// windowed mode
 			let wnd:Window = await activeSession.createSessionWindow(sessionBookmark);
@@ -76,7 +77,7 @@ export default class ActiveSession {
 		// add tabs
 		await Promise.all(
 			tabsToOpen.map(
-				bookmark => activeSession.openBookmarkTab(bookmark, false, false)
+				bookmark => activeSession.openBookmarkTab(bookmark, !discardTabs, false)
 			)
 		);
 
@@ -445,7 +446,7 @@ export default class ActiveSession {
 
 			// check if tab loaded & part of this session
 			if(tabBookmarkId) {
-				if(changeInfo.url === "about:blank") {
+				if(tab.url === "about:blank") {
 					// (discarded) loading tabs cycle through a phase where they are about:blank
 					return;
 				}

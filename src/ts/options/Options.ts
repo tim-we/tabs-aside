@@ -5,6 +5,12 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 (() => {
 	let options:Option[] = [
 		{
+			id: "rootFolder",
+			type: "bookmark",
+			default: null,
+			group: "core"
+		},
+		{
 			id: "activeSessions",
 			type: "boolean",
 			default: true,
@@ -22,6 +28,12 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			default: "remove-tab",
 			info: true,
 			activeOnly: true
+		},
+		{
+			id: "lazyLoading",
+			type: "boolean",
+			default: true,
+			info: true
 		},
 		{
 			id: "ignorePinned",
@@ -51,12 +63,6 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			group: "appearance",
 			activeOnly: true,
 			hidden: true
-		},
-		{
-			id: "rootFolder",
-			type: "bookmark",
-			default: null,
-			group: "core"
 		},
 		{
 			id: "confirmSessionRemoval",
