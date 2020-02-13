@@ -40,13 +40,11 @@ export async function createSession(
  * @param sessionId
  */
 export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promise<void> {
-	let tabBookmark:Bookmark,
-		openInNewWindow:boolean;
-
 	// let the browser handle these requests simultaneously
-	[[tabBookmark], openInNewWindow] = await Promise.all([
+	let [[tabBookmark], openInNewWindow, lazyLoading] = await Promise.all([
 		browser.bookmarks.getSubTree(sessionId),
-		OptionsManager.getValue<boolean>("windowedSession")
+		OptionsManager.getValue<boolean>("windowedSession"),
+		OptionsManager.getValue<boolean>("lazyLoading")
 	]);
 
 	let tabBookmarks:Bookmark[] = tabBookmark.children;
@@ -68,10 +66,13 @@ export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promis
 	await Promise.all(
 		tabBookmarks.map(bm => {
 			let data:TabData = TabData.createFromBookmark(bm);
+			let createProperties = data.getTabCreateProperties();
 
-			return browser.tabs.create(
-				data.getTabCreateProperties()
-			);
+			if(!lazyLoading && createProperties.discarded) {
+				createProperties.discarded = false;
+			}
+
+			return browser.tabs.create(createProperties);
 		})
 	);
 

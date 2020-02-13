@@ -178,7 +178,7 @@
 	},
 
 	"option_lazyLoading_info": {
-		"message": "A restored tab’s content is only loaded when the tab is activated."
+		"message": "A restored tab’s content is only loaded when the tab is activated. Recommended for big sessions."
 	},
 
 	"option_page_footer_issues":{
