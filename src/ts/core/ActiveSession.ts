@@ -7,6 +7,7 @@ import {
 	TabUpdatedListener,
 	TabAttachedListener,
 	TabDetachedListener,
+	TabMovedListener,
 	WindowRemovedListener
 } from "../util/Types";
 import { SessionContentUpdate } from "../messages/Messages.js";
@@ -38,20 +39,18 @@ export default class ActiveSession {
 	// this is needed to avoid duplicate bookmarks for tabs activated via the sidebar
 	private ignoreNextCreatedTab:boolean = false;
 
-	private readonly sessionStartTime:number;
-
 	// event listeners
 	private tabAttachedListener:TabAttachedListener;
 	private tabDetachedListener:TabDetachedListener;
 	private tabCreatedListener:TabCreatedListener;
 	private tabRemovedListener:TabRemoveListener;
 	private tabUpdatedListener:TabUpdatedListener;
+	private tabMovedListener:TabMovedListener;
 	private wndRemovedListener:WindowRemovedListener;
 
 	constructor(sessionBookmark:Bookmark) {
 		this.bookmarkId = sessionBookmark.id;
 		this.title = sessionBookmark.title;
-		this.sessionStartTime = Date.now();
 	}
 
 	/** Restores a session. If `tabBookmark` is set then only this single tab is restored. */
@@ -471,6 +470,18 @@ export default class ActiveSession {
 			}
 		};
 
+		this.tabMovedListener = async (tabId, moveInfo) => {
+			let tabBookmarkId:string = this.tabs.get(tabId);
+
+			// check if tab is part of this session
+			if(tabBookmarkId) {
+				await browser.bookmarks.move(tabBookmarkId, { index: moveInfo.toIndex });
+
+				// update sidebar
+				SessionContentUpdate.send(this.bookmarkId);
+			}
+		};
+
 		this.wndRemovedListener = async (windowId) => {
 			if(this.windowId === windowId && this.bookmarkRemoveQueue.length > 1) {
 				console.assert(this.removeTimeoutId > 0);
@@ -488,6 +499,7 @@ export default class ActiveSession {
 		browser.tabs.onCreated.addListener(this.tabCreatedListener);
 		browser.tabs.onRemoved.addListener(this.tabRemovedListener);
 		browser.tabs.onUpdated.addListener(this.tabUpdatedListener);
+		browser.tabs.onMoved.addListener(this.tabMovedListener);
 		if(this.windowId) {
 			browser.tabs.onAttached.addListener(this.tabAttachedListener);
 			browser.tabs.onDetached.addListener(this.tabDetachedListener);
@@ -499,6 +511,7 @@ export default class ActiveSession {
 		browser.tabs.onCreated.removeListener(this.tabCreatedListener);
 		browser.tabs.onRemoved.removeListener(this.tabRemovedListener);
 		browser.tabs.onUpdated.removeListener(this.tabUpdatedListener);
+		browser.tabs.onMoved.removeListener(this.tabMovedListener);
 
 		if(browser.tabs.onAttached.hasListener(this.tabAttachedListener)) {
 			browser.tabs.onAttached.removeListener(this.tabAttachedListener);

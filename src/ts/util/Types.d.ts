@@ -1,3 +1,7 @@
+/**
+ * @types/firefox-webext-browser does not expose all types (e.g. listener types).
+ */
+
 export type SessionId = string;
 export type Tab = browser.tabs.Tab;
 export type Window = browser.windows.Window;
@@ -54,6 +58,15 @@ export type TabDetachedListener = (
 	detachInfo:{
 		oldWindowId:number,
 		oldPosition:number
+	}
+) => void;
+
+export type TabMovedListener = (
+	tabId:number,
+	moveInfo:{
+		windowId:number,
+		fromIndex:number,
+		toIndex:number
 	}
 ) => void;
 
