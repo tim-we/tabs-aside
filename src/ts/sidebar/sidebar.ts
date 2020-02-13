@@ -173,6 +173,10 @@ async function messageHandler(message:Message) {
 			sessionView.getHTML().remove();
 			sessionViews.delete(msg.sessionId);
 			noSessionsCheck();
+		} else if(msg.event === "moved") {
+			//TODO: support other moves
+			sessionView.getHTML().remove();
+			sessionContainer.prepend(sessionView.getHTML());
 		}
 	} else if(message.type === "ExtensionCommand") {
 		let ecm = message as ExtensionCommand;

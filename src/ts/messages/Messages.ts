@@ -88,7 +88,7 @@ export interface StateInfoData {
 	previousWindowId:number;
 }
 
-type SessionEventType = "activated" | "set-aside" | "meta-update" | "content-update" | "removed" | "created";
+type SessionEventType = "activated" | "set-aside" | "meta-update" | "content-update" | "removed" | "created" | "moved";
 
 export class SessionEvent extends Message {
 	public readonly sessionId:string;

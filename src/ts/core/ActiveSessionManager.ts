@@ -85,6 +85,12 @@ export async function restore(sessionId:SessionId):Promise<void> {
 	let session:ActiveSession = await ActiveSession.restoreAll(sessionId);
 	activeSessions.set(sessionId, session);
 
+	if((await browser.bookmarks.get(sessionId))[0].index > 0) {
+		// move session to the top
+		await browser.bookmarks.move(sessionId, { index: 0 });
+		await SessionEvent.send(sessionId, "moved");
+	}
+
 	SessionEvent.send(sessionId, "activated");
 
 	BrowserAction.updateBadge();
