@@ -2,6 +2,7 @@ import * as OptionsManager from "../options/OptionsManager.js";
 import TabData from "./TabData.js";
 import { Tab, Window, Bookmark, SessionId } from "../util/Types.js";
 import { SessionEvent, SessionContentUpdate } from "../messages/Messages.js";
+import { createTab } from "../util/WebExtAPIHelpers.js";
 
 export async function createSession(
 	tabs:Tab[],
@@ -72,7 +73,7 @@ export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promis
 				createProperties.discarded = false;
 			}
 
-			return browser.tabs.create(createProperties);
+			return createTab(createProperties);
 		})
 	);
 

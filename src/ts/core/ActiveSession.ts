@@ -12,6 +12,7 @@ import {
 } from "../util/Types";
 import { SessionContentUpdate } from "../messages/Messages.js";
 import * as ActiveSessionManager from "./ActiveSessionManager.js";
+import { createTab } from "../util/WebExtAPIHelpers.js";
 
 type TabBookmark = [number, string];
 const TAB_REMOVE_DELAY = 250;
@@ -76,7 +77,7 @@ export default class ActiveSession {
 		// add tabs
 		await Promise.all(
 			tabsToOpen.map(
-				bookmark => activeSession.openBookmarkTab(bookmark, !discardTabs, false)
+				bookmark => activeSession.openBookmarkTab(bookmark, !discardTabs || tabBookmark !== undefined, false)
 			)
 		);
 
@@ -164,8 +165,8 @@ export default class ActiveSession {
 		if(skipCreateEvent) {
 			this.ignoreNextCreatedTab = true;
 		}
-		let browserTab:Tab = await browser.tabs.create(createProperties);
 
+		let browserTab:Tab = await createTab(createProperties);
 		await this.addExistingTab(browserTab, tabBookmark.id);
 
 		if(this.windowId) {

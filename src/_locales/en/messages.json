@@ -185,10 +185,6 @@
 		"message": "Source code on GitHub"
 	},
 
-	"privileged_tab_text": {
-		"message": "Tabs Aside was unable to restore this tab with the following URL:"
-	},
-
 	"session_title_default": {
 		"message": "New session"
 	},
@@ -427,5 +423,30 @@
 
 	"tab_contextmenu_set_aside": {
 		"message": "&set aside"
+	},
+
+	"tab_error_title": {
+		"message": "Tabs Aside Tab Restore Error"
+	},
+
+	"tab_error_description": {
+		"message": "Tabs Aside was unable to restore this tab."
+	},
+
+	"tab_error_description_privileged": {
+		"message": "Extensions are not allowed to create tabs with privileged URLs. If you still want to access this page you can just copy the URL to the address bar."
+	},
+
+	"tab_error_description_container": {
+		"message": "The cookie container for this tab does not exist anymore or the container feature is disabled."
+	},
+
+	"tab_error_details": {
+		"message": "Details"
+	},
+
+	"tab_error_report": {
+		"message": "Report error on GitHub",
+		"description": "Link to GitHub issues, which are English-only"
 	}
 }

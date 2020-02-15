@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabs Aside Tab Error</title>
+
+    <link rel="stylesheet" href="../css/tab-error.css" />
+    <script type="module" src="../js/extension-pages/tab-error.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <h1 class="title-text" data-i18n="tab_error_title">Tabs Aside Tab Error</h1>
+        </div>
+        <div id="description" class="row-section">
+            <p data-i18n="tab_error_description"></p>
+        </div>
+        <div class="row-section">
+            <input id="url" type="text" readonly />
+            <input id="copy" type="button" title="copy url"/>
+        </div>
+        <div id="details-section" class="row-section optional">
+            <p data-i18n="tab_error_details">Details</p>
+            <pre id="code"></pre>
+        </div>
+        <div class="row-section">
+            <p>
+                <a href="https://github.com/tim-we/tabs-aside/issues" data-i18n="tab_error_report"></a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

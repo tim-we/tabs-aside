@@ -1,0 +1,112 @@
+@import 'base/fonts';
+
+:root {
+    background-color: #f9f9fa;
+    color: #0c0c0d;
+}
+
+a:link, a:visited { color: #0000FF; }
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        background-color: #2A2A2E;
+        color: rgb(249, 249, 250);
+    }
+
+    a:link, a:visited { color: rgb(69, 161, 255); }
+}
+
+body {
+    font-family: 'Open Sans', Segoe UI, sans-serif;
+    font-size: 15px;
+    font-weight: normal;
+
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: 100vh;
+    padding: 40px 48px;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.container {
+    min-width: 13em;
+    max-width: 52em;
+}
+
+.title {
+    background-position: left 0;
+    background-repeat: no-repeat;
+    background-size: 1.6em;
+    background-image: url(../img/warning.svg);
+
+    margin-inline-start: -2.3em;
+    padding-inline-start: 2.3em;
+    padding-top: 2px;
+    font-size: 2.2em;
+}
+
+.title-text {
+    font-size: inherit;
+    padding-bottom: 0.4em;
+}
+
+h1 {
+    font-weight: lighter;
+    line-height: 1.2;
+    margin: 0;
+    margin-bottom: .5em;
+}
+
+.row-section.optional {
+    display: none;
+}
+
+pre {
+    background-color: rgba(200,200,200,0.2);
+    padding: 4px 7px;
+    border-radius: 2px;
+    margin-top: 10px;
+}
+
+#description p:not(:first-of-type) {
+    margin-top: 10px;
+}
+
+#url {
+    width: calc(100% - 30px - 15px);
+    min-width: 420px;
+	max-width: 1000px;
+	border: none;
+	background-color: rgb(235,235,235);
+	font-size: 20px;
+	padding: 3px 3px;
+    height: 25px;
+    border-radius: 2px;
+}
+
+#copy {
+	position: relative;
+	top: -3px;
+
+	width: 25px;
+	height: 25px;
+	padding: 3px 3px;
+	box-sizing: content-box;
+
+    border: 0px;
+    border-radius: 2px;
+	background-color: rgb(235,235,235);
+
+	background-image: url('../img/copy.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+
+	cursor: pointer;
+}
+
+#copy:hover {
+	background-color: rgb(200,200,200);
+}

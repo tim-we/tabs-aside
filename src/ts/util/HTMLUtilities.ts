@@ -34,3 +34,11 @@ export function stringToParagraphs(str:string):HTMLParagraphElement[] {
 		return p;
 	});
 }
+
+export function $(query:string):HTMLElement {
+	return document.querySelector(query);
+}
+
+export function $$(id:string):HTMLElement {
+	return document.getElementById(id);
+}

@@ -12,7 +12,7 @@ import { Bookmark, SessionId, Tab } from "../util/Types.js";
 
 import * as  ActiveSessionManager from  "./ActiveSessionManager.js";
 import * as ClassicSessionManager from "./ClassicSessionManager.js";
-import { getCurrentWindowId } from "../util/WebExtAPIHelpers.js";
+import { getCurrentWindowId, createTab } from "../util/WebExtAPIHelpers.js";
 import * as WindowFocusHistory from "../background/WindowFocusHistory.js";
 
 type Command = (data:MSA|CSA) => void;
@@ -112,7 +112,7 @@ export async function restoreSingle(tabBookmarkId:string) {
 	} else {
 		// create a new tab (no active session) otherwise
 		let data:TabData = TabData.createFromBookmark(tabBookmark);
-		browser.tabs.create(data.getTabCreateProperties(true));
+		createTab(data.getTabCreateProperties(true));
 	}
 }
 

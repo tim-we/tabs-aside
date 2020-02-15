@@ -6,6 +6,7 @@ import { SessionCommand } from "../messages/Messages.js";
 import TabView from "./TabViews/TabView.js";
 import TabData from "../core/TabData.js";
 import * as OptionsManager from "../options/OptionsManager.js";
+import { createTab } from "../util/WebExtAPIHelpers.js";
 
 let _i18n = browser.i18n.getMessage;
 
@@ -28,7 +29,7 @@ export default class TabContextMenu extends OverlayMenu {
 					emptyTab = wnd.tabs[0];
 				}
 
-				await browser.tabs.create(createProps);
+				await createTab(createProps);
 
 				if(emptyTab) {
 					browser.tabs.remove(emptyTab.id);

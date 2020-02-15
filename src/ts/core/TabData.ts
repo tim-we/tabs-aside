@@ -62,7 +62,7 @@ export default class TabData {
 			url = undefined;
 		} else if(this.isPrivileged()) {
 			url = browser.runtime.getURL(
-				`html/privileged.html?url=${encodeURIComponent(url)}&title=${this.title}`
+				`html/tab-error.html?url=${encodeURIComponent(url)}&error=privileged`
 			);
 
 			// load this simple website to show the custom title
