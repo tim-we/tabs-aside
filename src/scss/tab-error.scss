@@ -64,6 +64,34 @@ h1 {
     display: none;
 }
 
+.button-container > button:first-child {
+    margin-inline-start: 0;
+}
+
+button {
+    padding: 0 1.5em;
+    min-width: 6.3em;
+    margin-left: 0px;
+    margin-right: 4px;
+    min-height: 32px;
+
+    background-color: rgb(0, 96, 223);
+    color: white;
+    font-size: 1em;
+    text-decoration: none;
+
+    border-radius: 2px;
+    border: 1px solid transparent;
+    box-shadow: rgba(10, 132, 255, 0.3) 0px 0px 0px 4px;
+    outline-offset: -1px;
+    outline: 2px solid #0a84ff;
+    -moz-outline-radius: 3px;
+}
+
+button:hover {
+    background-color: rgb(0, 62, 170);
+}
+
 pre {
     background-color: rgba(200,200,200,0.2);
     padding: 4px 7px;
@@ -109,4 +137,10 @@ pre {
 
 #copy:hover {
 	background-color: rgb(200,200,200);
+}
+
+#open {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: none;
 }

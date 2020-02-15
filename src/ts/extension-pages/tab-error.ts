@@ -13,7 +13,7 @@ import * as Clipboard from "../util/Clipboard.js";
     // expected URL parameters: url, error [, details]
     let params:URLSearchParams = new URL(window.location.href).searchParams;
     let url = params.get("url");
-    let error = params.get("error");
+    let error = params.get("error") as "privileged"|"container";
 
     // avoid linking to this page
     if(url.startsWith(browser.runtime.getURL(window.location.pathname))) {
@@ -28,12 +28,25 @@ import * as Clipboard from "../util/Clipboard.js";
         }
     }
 
-    // error description
+    // error description & open button
     if(["privileged", "container"].includes(error)) {
         const description = $$("description");
         HTMLUtils.stringToParagraphs(
             browser.i18n.getMessage("tab_error_description_" + error)
         ).forEach(p => description.appendChild(p));
+
+        if(error === "container") {
+            // open in default container button
+            const button = $$("open");
+            button.style.display = "block";
+            button.addEventListener("click", async () => {
+                const tab = await browser.tabs.getCurrent();
+                browser.tabs.update(tab.id, {
+                    url: url,
+                    loadReplace: true
+                });
+            });
+        }
     }
 
     // URL UI

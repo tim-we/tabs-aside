@@ -445,6 +445,10 @@
 		"message": "Details"
 	},
 
+	"tab_error_open": {
+		"message": "Open in default container"
+	},
+
 	"tab_error_report": {
 		"message": "Report error on GitHub",
 		"description": "Link to GitHub issues, which are English-only"
