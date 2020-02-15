@@ -152,8 +152,7 @@ export async function createSessionFromTabs(
 
 	// create session
 	if(activeSessionsEnabled) {
-		let session:ActiveSession;
-		session = await ActiveSessionManager.createSessionFromTabs(tabs, title);
+		let session = await ActiveSessionManager.createSessionFromTabs(tabs, title);
 		sessionId = session.bookmarkId;
 
 		if(setAside) {

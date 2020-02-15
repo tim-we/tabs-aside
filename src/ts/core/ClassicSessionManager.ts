@@ -14,7 +14,8 @@ export async function createSession(
 	let sessionBookmark:Bookmark = await browser.bookmarks.create({
 		title:sessionName||"session",
 		type: "folder",
-		parentId: rootFolderId
+		parentId: rootFolderId,
+		index: 0
 	});
 
 	let parentId:string = sessionBookmark.id;
