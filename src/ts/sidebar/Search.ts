@@ -53,10 +53,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     window.addEventListener("keydown", e => {
-        if(e.keyCode === 70 && e.ctrlKey) { // CTRL + F
+        if(e.key === "f" && e.ctrlKey) { // CTRL + F
             e.preventDefault();
 
             searchInput.focus();
+        }
+    });
+
+    searchInput.addEventListener("keydown", e => {
+        if(e.key === "Escape") {
+            clear();
         }
     });
 });
