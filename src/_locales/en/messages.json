@@ -298,6 +298,10 @@
 		"message": "Restore them later to pick up where you left off."
 	},
 
+	"sidebar_search_clear": {
+		"message": "clear search"
+	},
+
 	"sidebar_search_placeholder": {
 		"message": "search sessions..."
 	},

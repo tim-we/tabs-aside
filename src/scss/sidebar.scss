@@ -5,43 +5,48 @@
 @import 'sidebar/menu-items';
 @import 'modal-windows';
 
+:root {
+    --search-height: 32px;
+    --bgcolor: white;
+}
+
 body {
-	font-family: 'Open Sans', Segoe UI, sans-serif;
-	--search-height: 32px;
+    font-family: 'Open Sans', Segoe UI, sans-serif;
+    background-color: var(--bgcolor);
 }
 
 a, a:visited {
-	cursor: pointer;
-	color: rgb(0, 0, 238);
+    cursor: pointer;
+    color: rgb(0, 0, 238);
 }
 
 .state-info {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	padding: 5px;
-	font-size: 1.2rem;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 5px;
+    font-size: 1.2rem;
 }
 
 .state-info:not(.show) {
-	display: none;
+    display: none;
 }
 
 #no-sessions {
-	bottom: 0px;
-	background-color: white;
+    bottom: 0px;
+    background-color: white;
 }
 
 #sessions {
-	position: absolute;
-	top: 5px;
-	bottom: calc(var(--search-height) + 2px);
-	left: 0px;
-	right: 0px;
+    position: absolute;
+    top: 5px;
+    bottom: calc(var(--search-height) + 2px);
+    left: 0px;
+    right: 0px;
 
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
 }
