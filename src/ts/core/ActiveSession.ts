@@ -435,8 +435,6 @@ export default class ActiveSession {
 
                 // update sidebar
                 SessionContentUpdate.send(this.bookmarkId);
-            } else {
-                console.log("[TA] tab not added", tab);
             }
         };
 
