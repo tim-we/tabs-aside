@@ -26,7 +26,7 @@ export interface ActiveSessionData {
 
 export default class ActiveSession {
     public readonly bookmarkId:string;
-    private readonly title:string;
+    private title:string;
     private windowId:number;
     
     // maps tab ids to bookmark ids
@@ -318,6 +318,10 @@ export default class ActiveSession {
 
         // start tracking
         this.setEventListeners();
+    }
+
+    public setTitle(title:string):void {
+        this.title = title;
     }
 
     private async removeBookmarksFromQueue() {

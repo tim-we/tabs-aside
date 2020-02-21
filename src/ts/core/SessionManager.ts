@@ -5,6 +5,9 @@ import {
     DataRequest,
     CreateSessionArguments as CSA,
     ModifySessionArguments as MSA,
+    ModifySessionMetaArguments as MSMA,
+    SessionCMD as CmdId,
+    SessionEvent,
     StateInfoData
 } from "../messages/Messages.js";
 import * as OptionsManager from "../options/OptionsManager.js";
@@ -16,14 +19,14 @@ import { getCurrentWindowId, createTab } from "../util/WebExtAPIHelpers.js";
 import * as WindowFocusHistory from "../background/WindowFocusHistory.js";
 import { limit } from "../util/StringUtils.js";
 
-type Command = (data:MSA|CSA) => void;
+type CmdCallback = (data:MSA|CSA|MSMA) => void;
 
-const commands:Map<string, Command> = new Map();
+const commands:Map<CmdId, CmdCallback> = new Map();
 
-commands.set("restore",		   (data:MSA) => restore(data.sessionId, data.keepBookmarks || false));
+commands.set("restore",        (data:MSA) => restore(data.sessionId, data.keepBookmarks || false));
 commands.set("restore-single", (data:MSA) => restoreSingle(data.tabBookmarkId));
 
-commands.set("set-aside",	   async (data:MSA) => {
+commands.set("set-aside", async (data:MSA) => {
     await ActiveSessionManager.setAside(data.sessionId);
     updateBrowserActionContextMenu();
 });
@@ -36,8 +39,10 @@ commands.set("create", (data:CSA) =>
     )
 );
 
-commands.set("remove",	   (data:MSA) => removeSession(data.sessionId, data.keepTabs || false));
+commands.set("remove",     (data:MSA) => removeSession(data.sessionId, data.keepTabs || false));
 commands.set("remove-tab", (data:MSA) => removeTabFromSession(data.tabBookmarkId));
+
+commands.set("rename",     (data:MSMA) => renameSession(data.sessionId, data.title));
 
 export async function init() {
     WindowFocusHistory.init();
@@ -46,10 +51,10 @@ export async function init() {
 }
 
 export async function execCommand(sc:SessionCommand):Promise<any> {
-    let cmd = commands.get(sc.cmd);
+    let callback = commands.get(sc.cmd);
 
-    if(cmd) {
-        cmd(sc.argData);
+    if(callback) {
+        callback(sc.argData);
     } else {
         console.error("[TA] No such command: " + sc.cmd);
     }
@@ -240,11 +245,33 @@ export async function removeTabFromSession(tabBookmarkId:string):Promise<void> {
     if(session) {
         // session is active
         console.error("[TA] Removing a tab from an active session is currently not supported.");
+        //TODO
         return;
     } else {
         // session is not active
         ClassicSessionManager.removeTabFromSession(tabBookmark);
     }
+}
+
+async function renameSession(sessionId:SessionId, title:string):Promise<void> {
+    if(title.trim() === "") {
+        return Promise.reject("Invalid session name.");
+    }
+
+    let sessionBookmark = (await browser.bookmarks.get(sessionId))[0];
+    console.assert(sessionBookmark);
+
+    await browser.bookmarks.update(sessionId, {title: title});
+
+    // if the session is active, update it as well
+    let activeSession = ActiveSessionManager.getActiveSession(sessionId);
+    if(activeSession) {
+        activeSession.setTitle(title);
+    }
+
+    // update sidebar & menus
+    SessionEvent.send(sessionId, "meta-update");
+    updateBrowserActionContextMenu();
 }
 
 export async function getSessionBookmarks():Promise<Bookmark[]> {
