@@ -16,6 +16,7 @@ import { createTab } from "../util/WebExtAPIHelpers.js";
 
 type TabBookmark = [number, string];
 const TAB_REMOVE_DELAY = 250;
+const TAB_ERROR_PAGE_PREFIX = browser.runtime.getURL("html/tab-error.html");
 
 export interface ActiveSessionData {
     readonly bookmarkId;
@@ -446,10 +447,13 @@ export default class ActiveSession {
         this.tabUpdatedListener = async (tabId, changeInfo, tab) => {
             let tabBookmarkId:string = this.tabs.get(tabId);
 
-            // check if tab loaded & part of this session
+            // check if tab is part of this session
             if(tabBookmarkId) {
                 if(tab.url === "about:blank") {
                     // (discarded) loading tabs cycle through a phase where they are about:blank
+                    return;
+                } else if(tab.url.startsWith(TAB_ERROR_PAGE_PREFIX)) {
+                    // do not store tab error URL, keep the URL that could not be restored
                     return;
                 }
 

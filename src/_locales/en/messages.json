@@ -441,6 +441,10 @@
 		"message": "Extensions are not allowed to create tabs with privileged URLs. If you still want to access this page you can just copy the URL to the address bar."
 	},
 
+	"tab_error_description_files": {
+		"message": "Unfortunately extensions are not allowed to create tabs with URLs pointing to local files (file:///). You can still access this page by copying the URL to the address bar."
+	},
+
 	"tab_error_description_container": {
 		"message": "The cookie container for this tab does not exist anymore or the container feature is disabled."
 	},

@@ -11,15 +11,13 @@ import * as Clipboard from "../util/Clipboard.js";
     const urlBox:HTMLInputElement = <HTMLInputElement>document.getElementById("url");
 
     // expected URL parameters: url, error [, details]
-    let params:URLSearchParams = new URL(window.location.href).searchParams;
-    let url = params.get("url");
-    let error = params.get("error") as "privileged"|"container";
+    const params:URLSearchParams = new URL(window.location.href).searchParams;
+    const url = params.get("url");
+    const details = params.get("details") || "";
 
     // avoid linking to this page
     if(url.startsWith(browser.runtime.getURL(window.location.pathname))) {
-        params = new URL(url).searchParams;
-
-        if(params.has("url")) {
+        if(new URL(url).searchParams.has("url")) {
             setTimeout(() => {
                 window.location.href = url;
             }, 250);
@@ -28,14 +26,13 @@ import * as Clipboard from "../util/Clipboard.js";
         }
     }
 
-    // error description & open button
-    if(["privileged", "container"].includes(error)) {
-        const description = $$("description");
-        HTMLUtils.stringToParagraphs(
-            browser.i18n.getMessage("tab_error_description_" + error)
-        ).forEach(p => description.appendChild(p));
+    if(details !== "") {
+        const e = details.trim().toLowerCase();
+        let description:string;
 
-        if(error === "container") {
+        if(e.includes("cookie store") || e.includes("contextual identities")) {
+            description = browser.i18n.getMessage("tab_error_description_container");
+
             // open in default container button
             const button = $$("open");
             button.style.display = "block";
@@ -46,6 +43,18 @@ import * as Clipboard from "../util/Clipboard.js";
                     loadReplace: true
                 });
             });
+        } else if(e.includes("illegal url")) {
+            if(url.startsWith("file:///")) {
+                description = browser.i18n.getMessage("tab_error_description_files");
+            } else {
+                description = browser.i18n.getMessage("tab_error_description_privileged");
+            }
+        }
+
+        if(description) {
+            // show custom error description
+            const d = $$("description");
+            HTMLUtils.stringToParagraphs(description).forEach(p => d.appendChild(p));
         }
     }
 
@@ -55,7 +64,7 @@ import * as Clipboard from "../util/Clipboard.js";
     urlBox.select();
 
     // URL-copy button
-    let copyButton:HTMLElement = document.getElementById("copy");
+    const copyButton:HTMLElement = document.getElementById("copy");
     copyButton.onclick = () => {
         Clipboard.copyTextFromInput(urlBox);
     };
