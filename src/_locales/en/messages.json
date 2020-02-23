@@ -23,6 +23,10 @@
 		"message": "create folder"
 	},
 
+	"command_tabs_aside_description": {
+		"message": "Set the current set of tabs aside"
+	},
+
 	"error_noRootFolder": {
 		"message": "Error: No root folder selected."
 	},
@@ -38,6 +42,10 @@
 	"error_bgpNotResponding_solution": {
 		"message": "Try again",
 		"description": "Reloads the sidebar"
+	},
+
+	"extension_description": {
+		"message": "Set your tabs aside and store them in your bookmarks."
 	},
 
 	"menu_active-session-indicator": {
@@ -409,6 +417,10 @@
 	"sidebar_tab_open_remove": {
 		"message": "open and remove",
 		"description": "opens the tab and removes it from the session"
+	},
+
+	"sidebar_default_title": {
+		"message": "Tabs you've set aside"
 	},
 
 	"tab_contextmenu_title": {

@@ -1,80 +1,79 @@
 {
-	"manifest_version": 2,
-	"name": "Tabs Aside!",
-	"version": "3.3.0",
-	"description": "Set your tabs aside and store them in your bookmarks.",
-	"author": "Tim Weißenfels",
+    "manifest_version": 2,
+    "name": "Tabs Aside",
+    "version": "3.3.0",
+    "description": "__MSG_extension_description__",
+    "author": "Tim Weißenfels",
 
-	"default_locale": "en",
+    "default_locale": "en",
 
-	"icons": {
-		"48": "img/browserAction/dark.svg"
-	},
+    "icons": {
+        "48": "img/browserAction/dark.svg"
+    },
 
-	"applications": {
-		"gecko": {
-			"id": "{644e8eb0-c710-47e9-b81c-5dd69bfcf86b}",
-			"strict_min_version": "63.0"
-		}
-	},
+    "applications": {
+        "gecko": {
+            "id": "{644e8eb0-c710-47e9-b81c-5dd69bfcf86b}",
+            "strict_min_version": "63.0"
+        }
+    },
 
-	"permissions": [
-		"bookmarks",
-		"tabs",
-		"storage",
-		"menus",
-		"sessions",
-		"cookies"
-	],
+    "permissions": [
+        "bookmarks",
+        "tabs",
+        "storage",
+        "menus",
+        "sessions",
+        "cookies"
+    ],
 
-	"browser_action": {
-		"default_icon": {
-			"16": "img/browserAction/dark.svg",
-			"32": "img/browserAction/dark.svg"
-		},
-		"default_title": "Tabs Aside!",
-		"default_popup": "html/menu/main.html",
-		"browser_style": true,
-		"theme_icons": [{
-			"light": "img/browserAction/light.svg",
-			"dark": "img/browserAction/dark.svg",
-			"size": 16
-		  }, {
-			"light": "img/browserAction/light.svg",
-			"dark": "img/browserAction/dark.svg",
-			"size": 32
-		  }]
-	},
+    "browser_action": {
+        "default_icon": {
+            "16": "img/browserAction/dark.svg",
+            "32": "img/browserAction/dark.svg"
+        },
+        "default_title": "Tabs Aside!",
+        "default_popup": "html/menu/main.html",
+        "browser_style": true,
+        "theme_icons": [{
+            "light": "img/browserAction/light.svg",
+            "dark": "img/browserAction/dark.svg",
+            "size": 16
+          }, {
+            "light": "img/browserAction/light.svg",
+            "dark": "img/browserAction/dark.svg",
+            "size": 32
+          }]
+    },
 
-	"sidebar_action": {
-		"default_title": "Tabs you've set aside",
-		"default_panel": "html/sidebar.html",
-		"default_icon": "img/sidebar/icon.svg",
-		"open_at_install": false
-	},
+    "sidebar_action": {
+        "default_title": "__MSG_sidebar_default_title__",
+        "default_panel": "html/sidebar.html",
+        "default_icon": "img/sidebar/icon.svg",
+        "open_at_install": false
+    },
 
-	"background": {
-		"page": "html/background.html"
-	},
+    "background": {
+        "page": "html/background.html"
+    },
 
-	"options_ui": {
-		"page": "html/options.html",
-		"browser_style": true
-	},
+    "options_ui": {
+        "page": "html/options.html",
+        "browser_style": true
+    },
 
-	"commands": {
-		"tabs-aside": {
-			"suggested_key": {
-				"default": "Alt+Shift+Q"
-			},
-			"description": "Set the current set of tabs aside"
-		},
+    "commands": {
+        "tabs-aside": {
+            "suggested_key": {
+                "default": "Alt+Shift+Q"
+            },
+            "description": "__MSG_command_tabs_aside_description__"
+        },
 
-		"_execute_sidebar_action": {
-			"suggested_key": {
-				"default": "Alt+Q"
-			}
-		}
-	}
-
+        "_execute_sidebar_action": {
+            "suggested_key": {
+                "default": "Alt+Q"
+            }
+        }
+    }
 }
