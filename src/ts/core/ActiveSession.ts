@@ -28,7 +28,7 @@ export interface ActiveSessionData {
 export default class ActiveSession {
     public readonly bookmarkId:string;
     private title:string;
-    private windowId:number;
+    private windowId:number|null = null;
     
     // maps tab ids to bookmark ids
     private tabs:Map<number, string> = new Map();
@@ -241,6 +241,10 @@ export default class ActiveSession {
 
     private getTabsIds():number[] {
         return Array.from(this.tabs.keys());
+    }
+
+    public getWindowId():number|null {
+        return this.windowId;
     }
 
     private async createSessionWindow(sessionBookmark?:Bookmark):Promise<Window> {

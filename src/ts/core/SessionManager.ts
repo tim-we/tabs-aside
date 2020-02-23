@@ -15,7 +15,7 @@ import { Bookmark, SessionId, Tab } from "../util/Types.js";
 
 import * as  ActiveSessionManager from  "./ActiveSessionManager.js";
 import * as ClassicSessionManager from "./ClassicSessionManager.js";
-import { getCurrentWindowId, createTab } from "../util/WebExtAPIHelpers.js";
+import { getCurrentWindowId, createTab, getAnotherWindow } from "../util/WebExtAPIHelpers.js";
 import * as WindowFocusHistory from "../background/WindowFocusHistory.js";
 import { limit } from "../util/StringUtils.js";
 
@@ -190,16 +190,9 @@ export async function createSessionFromWindow(
         windowId = await getCurrentWindowId();
     }
 
-    let otherWindows = (await browser.windows.getAll({windowTypes:["normal"]}))
-                        .filter(wnd => wnd.id !== windowId);
-
-    // if there are no other windows open a new one
     // to prevent the browser from closing itself
-    if(otherWindows.length === 0) {
-        browser.windows.create({});
-        // hide the new window for now
-        browser.windows.update(windowId, {focused: true});
-    }
+    // make sure there is another window
+    await getAnotherWindow(windowId);
 
     if(title === undefined) {
         // if the `sessionTitle` value is not set `title` will still be undefined
