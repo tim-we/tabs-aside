@@ -327,6 +327,12 @@ export default class ActiveSession {
 
     public setTitle(title:string):void {
         this.title = title;
+
+        if(this.windowId) {
+            browser.windows.update(this.windowId, {
+                titlePreface: title + " | "
+            });
+        }
     }
 
     private async removeBookmarksFromQueue() {
