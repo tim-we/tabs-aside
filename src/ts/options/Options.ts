@@ -57,14 +57,6 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
 			group: "appearance"
 		},
 		{
-			id: "badgeCounter",
-			type: "boolean",
-			default: false,
-			group: "appearance",
-			activeOnly: true,
-			hidden: true
-		},
-		{
 			id: "confirmSessionRemoval",
 			type: "boolean",
 			default: true,
