@@ -74,6 +74,10 @@ export default class TabData {
         if(this.cookieStoreId) {
             createProperties.cookieStoreId = this.cookieStoreId;
         }
+
+        if(discardTab) {
+            createProperties.title = this.title;
+        }
         
         return createProperties;
     }

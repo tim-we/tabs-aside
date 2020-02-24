@@ -16,6 +16,7 @@ export type TabCreateProperties = {
 	discarded?: boolean;
 	cookieStoreId?: string;
 	index?:number;
+	title?:string;
 };
 
 export type BookmarkCreateDetails = browser.bookmarks.CreateDetails;
