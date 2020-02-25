@@ -1,146 +1,150 @@
 a:link, a:visited { color: #0000FF; }
 
 .section {
-	display: grid;
-	grid-template-columns: 1fr;
-	grid-column-start: 6px;
-	grid-column-end: 5px;
-	grid-row-gap: 6px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column-start: 6px;
+    grid-column-end: 5px;
+    grid-row-gap: 6px;
 }
 
 .row {
-	position: relative;
-	padding-top: 6px;
-	padding-left: 6px;
-	padding-right: 5px;
-	padding-bottom: 2px;
+    position: relative;
+    padding-top: 6px;
+    padding-left: 6px;
+    padding-right: 5px;
+    padding-bottom: 2px;
 }
 
 .row.browser-style {
-	padding-bottom: 0px;
-	margin-bottom: 1px;
+    padding-bottom: 0px;
+    margin-bottom: 1px;
 }
 
 .row:not(:nth-of-type(1)) {
-	border-top: 1px solid rgba(12, 12, 13, 0.4);
+    border-top: 1px solid rgba(12, 12, 13, 0.4);
 }
 
 label {
-	position: relative;
-	top: 3px;
-	font-size: 1.25rem;
+    position: relative;
+    top: 3px;
+    font-size: 1.25rem;
 }
 
 .row.select > label, .row.bookmark > label {
-	margin-right: 8px;
+    margin-right: 8px;
 }
 
 .row.select > select {
-	min-width: 110px;
-	min-height: 20px;
+    min-width: 110px;
+    min-height: 20px;
 }
 
 .info {
-	margin-top: 5px;
-	font-size: 1rem;
-	color: rgba(16,16,16,0.75);
+    margin-top: 5px;
+    font-size: 1rem;
+    color: rgba(16,16,16,0.75);
 }
 
 .info:last-child {
-	margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 div.bookmarkFolderView {
-	display: inline-block;
-	border: 1px solid rgb(100, 100, 100);
-	background-color: rgba(200,200,200,0.3);
-	background-image: url("../img/folder-16.svg");
-	background-position: 3px center;
-	background-repeat: no-repeat;
-	color: black;
-	padding: 2px;
-	padding-left: 23px;
-	padding-right: 5px;
-	margin-left: 3px;
-	min-width: 135px;
-	opacity: 0.65;
-	cursor: pointer;
+    display: inline-block;
+    border: 1px solid rgb(100, 100, 100);
+    background-color: rgba(200,200,200,0.3);
+    background-image: url("../img/folder-16.svg");
+    background-position: 3px center;
+    background-repeat: no-repeat;
+    color: black;
+    padding: 2px;
+    padding-left: 23px;
+    padding-right: 5px;
+    margin-left: 3px;
+    min-width: 135px;
+    opacity: 0.65;
+    cursor: pointer;
 }
 
 div.bookmarkFolderView:hover {
-	opacity: 0.75;
+    opacity: 0.75;
+}
+
+.row.string > label {
+    margin-right: 8px;
 }
 
 body:not(.active-sessions) .row.active-only::after {
-	content:"";
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(200,200,200,0.42);
-	padding-bottom: 2px;
-	padding-top: 6px;
+    content:"";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(200,200,200,0.42);
+    padding-bottom: 2px;
+    padding-top: 6px;
 }
 
 footer {
-	margin-top: 10px;
-	padding-left: 6px;
-	padding-right: 5px;
-	text-align: right;
+    margin-top: 10px;
+    padding-left: 6px;
+    padding-right: 5px;
+    text-align: right;
 }
 
 footer > a::before {
-	font-size: 0;
-	display: inline-block;
-	position: relative;
-	width: 16px;
-	height: 16px;
+    font-size: 0;
+    display: inline-block;
+    position: relative;
+    width: 16px;
+    height: 16px;
 }
 
 footer > a:not(:last-of-type) {
-	margin-right: 3px;
+    margin-right: 3px;
 }
 
 #source-code::before {
-	content: " ";
-	top: 4px;
-	margin-right: 1px;
-	background-image: url('../img/ionicons_svg_md-code.svg');
+    content: " ";
+    top: 4px;
+    margin-right: 1px;
+    background-image: url('../img/ionicons_svg_md-code.svg');
 }
 
 #report-issues::before {
-	content: " ";
-	top: 3px;
-	background-image: url('../img/report-issues.svg');
+    content: " ";
+    top: 3px;
+    background-image: url('../img/report-issues.svg');
 }
 
 @media (prefers-color-scheme: dark) {
-	body {
-		color: rgb(249, 249, 250);
-		background-color: rgb(32, 32, 35);
-	}
+    body {
+        color: rgb(249, 249, 250);
+        background-color: rgb(32, 32, 35);
+    }
 
-	a:link, a:visited {
-		color: rgb(69, 161, 255);
-	}
+    a:link, a:visited {
+        color: rgb(69, 161, 255);
+    }
 
-	.info {
-		color: rgb(177, 177, 179);
-	}
+    .info {
+        color: rgb(177, 177, 179);
+    }
 
-	div.bookmarkFolderView {
-		border: 1px solid rgb(177, 177, 177);
-		background-color: rgb(251,251,251);
-		color: rgb(32, 32, 35);
-		opacity: 1;
-	}
+    div.bookmarkFolderView {
+        border: 1px solid rgb(177, 177, 177);
+        background-color: rgb(251,251,251);
+        color: rgb(32, 32, 35);
+        opacity: 1;
+    }
 
-	div.bookmarkFolderView:hover {
-		opacity: 0.9;
-	}
+    div.bookmarkFolderView:hover {
+        opacity: 0.9;
+    }
 
-	.row:not(:nth-of-type(1)) {
-		border-top: 1px solid rgba(249, 249, 250, 0.2);
-	}
+    .row:not(:nth-of-type(1)) {
+        border-top: 1px solid rgba(249, 249, 250, 0.2);
+    }
 }

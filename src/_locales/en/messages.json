@@ -123,6 +123,10 @@
 		"description": "Should sessions be opened in a new window?"
 	},
 
+	"option_sessionTitleTemplate": {
+		"message": "New session title template"
+	},
+
 	"option_tabClosingBehavior": {
 		"message": "Tab closing behavior"
 	},

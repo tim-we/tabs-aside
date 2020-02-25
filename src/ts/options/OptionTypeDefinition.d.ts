@@ -18,10 +18,12 @@ interface DisplayOptions {
     activeOnly?:boolean; // requires active sessions to be on/off (true/false)
 }
 
-export type BooleanOption = GenericOption<"boolean", boolean>;
+export type BooleanOption  = GenericOption<"boolean", boolean>;
 export type BookmarkOption = GenericOption<"bookmark", string>;
+export type StringOption   = GenericOption<"string",   string>;
 
 export type Option = (SelectOption
                     | BooleanOption
-                    | BookmarkOption)
+                    | BookmarkOption
+                    | StringOption)
                     & DisplayOptions;

@@ -135,7 +135,9 @@ export async function createSessionFromTabs(
     setAside:boolean,
     title?:string
 ):Promise<SessionId> {
-    title = title ? title : browser.i18n.getMessage("session_title_default");
+    if(title === undefined) {
+        title = await OptionsManager.getValue<string>("sessionTitleTemplate");
+    }
 
     // load settings
     let activeSessionsEnabled:boolean = await OptionsManager.getValue<boolean>("activeSessions");
@@ -301,4 +303,8 @@ async function updateBrowserActionContextMenu():Promise<void> {
     ).catch(error => {
         console.error("[TA] Failed to create browser action context menu.", error);
     });
+}
+
+async function generateSessionTitle() {
+    
 }

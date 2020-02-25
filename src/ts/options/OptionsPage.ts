@@ -1,11 +1,12 @@
 import * as OptionsManager from "./OptionsManager.js";
 import Options from "./Options.js";
+import * as HTMLUtilities from "../util/HTMLUtilities.js";
+import * as MessageListener from "../messages/MessageListener.js";
 
 import * as BooleanControl from "./Controls/BooleanControl.js";
 import * as BookmarkControl from "./Controls/BookmarkControl.js";
 import * as SelectControl from "./Controls/SelectControl.js";
-import * as HTMLUtilities from "../util/HTMLUtilities.js";
-import * as MessageListener from "../messages/MessageListener.js";
+import * as StringControl from "./Controls/StringControl.js";
 
 MessageListener.setDestination("options-page");
 MessageListener.add("OptionUpdate", () => {
@@ -48,6 +49,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             await SelectControl.create(row, option);
         } else if(option.type === "bookmark") {
             await BookmarkControl.create(row, option);
+        } else if(option.type === "string") {
+            await StringControl.create(row, option);
         } else {
             console.warn("[TA] Unknown option type.", option);
             return;
