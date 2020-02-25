@@ -17,7 +17,7 @@ import * as  ActiveSessionManager from  "./ActiveSessionManager.js";
 import * as ClassicSessionManager from "./ClassicSessionManager.js";
 import { getCurrentWindowId, createTab, getAnotherWindow } from "../util/WebExtAPIHelpers.js";
 import * as WindowFocusHistory from "../background/WindowFocusHistory.js";
-import { limit } from "../util/StringUtils.js";
+import { limit, formatDate } from "../util/StringUtils.js";
 
 type CmdCallback = (data:MSA|CSA|MSMA) => void;
 
@@ -136,7 +136,7 @@ export async function createSessionFromTabs(
     title?:string
 ):Promise<SessionId> {
     if(title === undefined) {
-        title = await OptionsManager.getValue<string>("sessionTitleTemplate");
+        title = await generateSessionTitle();
     }
 
     // load settings
@@ -303,4 +303,14 @@ async function updateBrowserActionContextMenu():Promise<void> {
     ).catch(error => {
         console.error("[TA] Failed to create browser action context menu.", error);
     });
+}
+
+async function generateSessionTitle():Promise<string> {
+    let title = await OptionsManager.getValue<string>("sessionTitleTemplate");
+
+    if(title.includes("$")) {
+        title = formatDate(title, new Date());
+    }
+
+    return title;
 }
