@@ -1,26 +1,25 @@
 import { Option } from "../OptionTypeDefinition.js";
 import * as OptionsManager from "../OptionsManager.js";
 
-export function create(
-	row:HTMLDivElement,
-	i:number,
-	option:Option, value:boolean,
-	i18nMessageName:string
-):void {
-	let checkbox:HTMLInputElement = document.createElement("input");
-	checkbox.id = "checkbox" + i;
-	checkbox.type = "checkbox";
-	checkbox.classList.add("browser-style");
-	checkbox.checked = value;
+let instanceCounter = 0;
 
-	let label = document.createElement("label");
-	label.setAttribute("for", checkbox.id);
-	label.innerText = browser.i18n.getMessage(i18nMessageName);
+export async function create(row:HTMLDivElement, option:Option):Promise<void> {
+    instanceCounter++;
 
-	checkbox.addEventListener("change", () => {
-		OptionsManager.setValue(option.id, checkbox.checked);
-	});
+    let checkbox:HTMLInputElement = document.createElement("input");
+    checkbox.id = "checkbox" + instanceCounter;
+    checkbox.type = "checkbox";
+    checkbox.classList.add("browser-style");
+    checkbox.checked = await OptionsManager.getValue<boolean>(option.id);
 
-	row.appendChild(checkbox);
-	row.appendChild(label);
+    let label = document.createElement("label");
+    label.setAttribute("for", checkbox.id);
+    label.innerText = browser.i18n.getMessage("option_" + option.id);
+
+    checkbox.addEventListener("change", () => {
+        OptionsManager.setValue(option.id, checkbox.checked);
+    });
+
+    row.appendChild(checkbox);
+    row.appendChild(label);
 }
