@@ -14,18 +14,29 @@ export async function create(row:HTMLDivElement, option:StringOption) {
 
     let timeoutId:number;
 
+    async function update() {
+        timeoutId = undefined;
+
+        const newValue = input.value || option.default;
+        await OptionsManager.setValue<string>(option.id, newValue);
+        input.value = newValue;
+    }
+
     input.addEventListener("input", () => {
         if(timeoutId) {
             window.clearTimeout(timeoutId);
         }
 
-        timeoutId = window.setTimeout(async () => {
-            timeoutId = undefined;
+        timeoutId = window.setTimeout(update, 1500);
+    });
 
-            const newValue = input.value.trim() || option.default;
-            await OptionsManager.setValue<string>(option.id, newValue);
-            input.value = newValue;
-        }, 750);
+    input.addEventListener("blur", () => {
+        if(timeoutId) {
+            window.clearTimeout(timeoutId);
+        }
+
+        input.value = input.value.trim();
+        update();
     });
 
     let label = document.createElement("label");
