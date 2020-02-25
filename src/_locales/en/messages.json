@@ -123,10 +123,6 @@
 		"description": "Should sessions be opened in a new window?"
 	},
 
-	"option_sessionTitleTemplate": {
-		"message": "New session title template"
-	},
-
 	"option_tabClosingBehavior": {
 		"message": "Tab closing behavior"
 	},
@@ -171,6 +167,19 @@
 
 	"option_rootFolder_hint":{
 		"message": "Pick the folder where sessions are stored."
+	},
+
+	"option_sessionTitleTemplate": {
+		"message": "New session title template"
+	},
+
+	"option_sessionTitleTemplate_info": {
+		"message": "A list of available format specifiers can be found <a href=\"$URL$\">here</a>.",
+		"placeholders": {
+			"url": {
+				"content": "https://github.com/tim-we/tabs-aside/wiki/Session-template-format-specifiers"
+			}
+		}
 	},
 
 	"option_confirmSessionRemoval": {

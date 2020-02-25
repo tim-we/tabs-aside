@@ -34,7 +34,7 @@ export function formatDate(template:string, date:Date = new Date()):string {
     str = replaceAll(str, "$h", ((date.getHours() + 24) % 12 || 12)+"");
     str = replaceAll(str, "$m", nDigitNum(2, date.getMinutes()));
     str = replaceAll(str, "$s", nDigitNum(2, date.getSeconds()));
-    str = replaceAll(str, "$p", date.getHours() < 12 ? "a.m." : "p.m.");
+    str = replaceAll(str, "$p", date.getHours() < 12 ? "am" : "pm");
 
     return str;
 }

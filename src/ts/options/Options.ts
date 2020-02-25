@@ -65,7 +65,8 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
         {
             id: "sessionTitleTemplate",
             type: "string",
-            default: browser.i18n.getMessage("session_title_default")
+            default: browser.i18n.getMessage("session_title_default"),
+            info: true
         }
     ];
 
