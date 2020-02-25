@@ -20,7 +20,7 @@ browser.runtime.onMessage.addListener((message:Message) => {
 export async function create(row:HTMLDivElement, option:Option):Promise<void> {
     instanceCounter++;
     const i18nMessageName = "option_" + option.id;
-    const bookmarkId = await await OptionsManager.getValue<string>(option.id);
+    const bookmarkId = await OptionsManager.getValue<string>(option.id);
 
     let folderView:HTMLDivElement = document.createElement("div");
     folderView.title = browser.i18n.getMessage("bookmarkFolderSelector_tooltip");
