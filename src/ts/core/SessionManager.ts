@@ -304,7 +304,3 @@ async function updateBrowserActionContextMenu():Promise<void> {
         console.error("[TA] Failed to create browser action context menu.", error);
     });
 }
-
-async function generateSessionTitle() {
-    
-}
