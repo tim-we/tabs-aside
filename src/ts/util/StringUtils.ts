@@ -5,16 +5,23 @@ export function limit(str:string, maxLength:number):string {
 }
 
 // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Escaping
-function escapeRegExp(string) {
-    return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+function escapeRegExp(str:string):string {
+    return str.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
+/**
+ * Replaces all instances of `find` in `str` with `replace`
+ */
 export function replaceAll(str:string, find:string, replace:string):string {
     const re = new RegExp(escapeRegExp(find), 'g');
     return str.replace(re, replace);
 }
 
-export function formatDate(template:string, date:Date):string {
+/**
+ * Replaces date&time format specifiers in a template string
+ * @param template Template string that contains format specifiers (starting with `$`)
+ */
+export function formatDate(template:string, date:Date = new Date()):string {
     let str = template;
 
     // date
