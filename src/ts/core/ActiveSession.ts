@@ -199,10 +199,9 @@ export default class ActiveSession {
                 let tabIds:number[] = this.getTabsIds();
                 this.tabs = new Map();
                 await browser.tabs.remove(tabIds);
+                //TODO: prevent browser from closing
             }
         }
-
-        //TODO: prevent browser from closing
     }
 
     private async setAside() {
