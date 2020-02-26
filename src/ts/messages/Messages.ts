@@ -86,7 +86,7 @@ export class DataRequest extends Message {
 }
 
 export interface StateInfoData {
-    freeTabs:boolean;
+    availableTabs:number; // number of tabs that would be part of the new session
     sessions:ActiveSessionData[];
     currentWindowSessions:ActiveSessionData[];
     currentSession:ActiveSessionData;

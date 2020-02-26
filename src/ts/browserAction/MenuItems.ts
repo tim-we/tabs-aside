@@ -27,7 +27,7 @@ let menuItems:MenuItem[] = [
 				setAside: true
 			});
 		},
-		isApplicable: (state) => state.freeTabs,
+		isApplicable: (state) => state.availableTabs > 0,
 		hide: (state) => state.currentSession !== undefined
 	},
 	setAside = {
@@ -71,8 +71,8 @@ let menuItems:MenuItem[] = [
 				setAside: false
 			});
 		},
-		isApplicable: (state) => state.freeTabs,
-		hide: (state) => !state.freeTabs
+		isApplicable: (state) => state.availableTabs > 0,
+		hide: (state) => state.availableTabs === 0
 	},
 	{
 		id: "options",

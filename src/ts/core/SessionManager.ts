@@ -69,21 +69,23 @@ export async function dataRequest(req:DataRequest):Promise<any> {
             currentWindow: true
         });
 
-        let freeTabs:Tab[] = tabs.filter(tab => {
+        let availableTabs:Tab[] = tabs.filter(tab => {
+            // exclude tabs that are part of an active session
             for(let i=0; i<sessions.length; i++) {
                 if(sessions[i].tabs.includes(tab.id)) {
                     return false;
                 }
             }
 
-            return true;
+            // exclude privileged tabs
+            return !TabData.createFromTab(tab).isPrivileged();
         });
 
         let currentWindowId:number = await getCurrentWindowId();
         let currentTab:Tab = tabs.find(tab => tab.active);
 
         let stateInfo:StateInfoData = {
-            freeTabs: freeTabs.length > 0,
+            availableTabs: availableTabs.length,
             sessions: sessions,
             currentSession: sessions.find(
                 session => session.tabs.includes(currentTab.id)
