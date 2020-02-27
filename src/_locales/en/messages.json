@@ -174,10 +174,10 @@
 	},
 
 	"option_sessionTitleTemplate_info": {
-		"message": "A list of available format specifiers can be found <a href=\"$URL$\">here</a>.",
+		"message": "A list of available variables can be found <a href=\"$URL$\">here</a>.",
 		"placeholders": {
 			"url": {
-				"content": "https://github.com/tim-we/tabs-aside/wiki/Session-template-format-specifiers"
+				"content": "https://github.com/tim-we/tabs-aside/wiki/Session-title-template-variables"
 			}
 		}
 	},
