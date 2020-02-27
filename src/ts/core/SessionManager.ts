@@ -141,9 +141,12 @@ export async function createSessionFromTabs(
         title = await generateSessionTitle();
     }
 
+    const n = tabs.length;
+
     // load settings
-    let activeSessionsEnabled:boolean = await OptionsManager.getValue<boolean>("activeSessions");
-    let ignorePinned:boolean = await OptionsManager.getValue<boolean>("ignorePinned");
+    const activeSessionsEnabled:boolean = await OptionsManager.getValue("activeSessions");
+    const ignorePinned:boolean          = await OptionsManager.getValue("ignorePinned");
+    const windowedSession:boolean       = await OptionsManager.getValue("windowedSession");
 
     // filter tabs that cannot be restored
     tabs = tabs.filter(tab => !TabData.createFromTab(tab).isPrivileged());
@@ -170,7 +173,18 @@ export async function createSessionFromTabs(
 
     // create session
     if(activeSessionsEnabled) {
-        let session = await ActiveSessionManager.createSessionFromTabs(tabs, title);
+        let windowId:number|undefined = undefined;
+
+        if(windowedSession) {
+            if(tabs.length < n) {
+                // not all tabs of the current window will be part of the session
+                // -> create a new window [and move session tabs to that window (later)]
+                windowId = (await browser.windows.create()).id;
+            } else {
+                windowId = tabs[0].windowId;
+            }
+        }
+        const session = await ActiveSessionManager.createSessionFromTabs(tabs, title, windowId);
         sessionId = session.bookmarkId;
 
         if(setAside) {
@@ -263,7 +277,7 @@ async function renameSession(sessionId:SessionId, title:string):Promise<void> {
     // if the session is active, update it as well
     let activeSession = ActiveSessionManager.getActiveSession(sessionId);
     if(activeSession) {
-        activeSession.setTitle(title);
+        activeSession.updateTitle(title);
     }
 
     // update sidebar & menus

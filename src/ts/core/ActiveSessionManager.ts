@@ -12,7 +12,8 @@ let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
 export async function createSessionFromTabs(
     tabs:Tab[],
-    title:string
+    title:string,
+    windowId?:number
 ):Promise<ActiveSession> {
     // check if there are any tabs to create a session from
     if(tabs.length === 0) {
@@ -20,18 +21,20 @@ export async function createSessionFromTabs(
     }
 
     // create bookmark folder
-    let folder:Bookmark = await browser.bookmarks.create({
+    const folder:Bookmark = await browser.bookmarks.create({
         index: 0,
         parentId: await OptionsManager.getValue<string>("rootFolder"),
         title: title
     });
 
     // ActiveSession instance
-    let session:ActiveSession = new ActiveSession(folder);
-
-    let promises:Promise<void>[] = [];
+    const session:ActiveSession = new ActiveSession(folder);
+    if(windowId) {
+        session.setWindow(windowId);
+    }
 
     // add tabs to session
+    let promises:Promise<void>[] = [];
     for(const tab of tabs) {
         const data:TabData = TabData.createFromTab(tab);
 
@@ -44,7 +47,6 @@ export async function createSessionFromTabs(
         // in order to create new bookmarks
         promises.push(session.addExistingTab(tab, bm.id));
     }
-
     await Promise.all(promises);
 
     // add to activeSessions map

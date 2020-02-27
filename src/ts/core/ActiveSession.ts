@@ -67,7 +67,7 @@ export default class ActiveSession {
         let emptyTab:Tab = null;
         if(windowedSession) {
             // windowed mode
-            let wnd:Window = await activeSession.createSessionWindow(sessionBookmark);
+            let wnd:Window = await activeSession.createSessionWindow();
             // new window contains a "newtab" tab
             emptyTab = wnd.tabs[0];
         }
@@ -131,6 +131,15 @@ export default class ActiveSession {
             );
 
             tabBookmarkId = tabBookmark.id;
+        }
+
+        // if tab is not part of the session window -> move it
+        if(this.windowId && this.windowId !== tab.windowId) {
+            console.assert(this.tabMovedListener === undefined);
+            await browser.tabs.move(tab.id, {
+                windowId: this.windowId,
+                index: -1
+            });
         }
 
         // store session info via the sessions API
@@ -246,18 +255,24 @@ export default class ActiveSession {
         return this.windowId;
     }
 
-    private async createSessionWindow(sessionBookmark?:Bookmark):Promise<Window> {
-        // create session window
-        let wnd:Window = await browser.windows.create(
-            sessionBookmark ? {
-                titlePreface: sessionBookmark.title + " | "
-            } : {}
-        );
-
-        this.windowId = wnd.id;
-        await browser.sessions.setWindowValue(wnd.id, "sessionID", this.bookmarkId);
-
+    private async createSessionWindow():Promise<Window> {
+        let wnd:Window = await browser.windows.create();
+        await this.setWindow(wnd.id);
         return wnd;
+    }
+
+    public async setWindow(windowId:number):Promise<void> {
+        if(this.windowId) {
+            throw new Error("This session already has a window.");
+        } else if(this.tabs.size > 0) {
+            throw new Error("The window has to be set before tabs are added.");
+        }
+
+        this.windowId = windowId;
+        await browser.sessions.setWindowValue(windowId, "sessionID", this.bookmarkId);
+
+        const [bookmark] = await browser.bookmarks.get(this.bookmarkId);
+        this.updateTitle(bookmark.title);
     }
 
     public static async reactivateWindow(sessionId:string, windowId:number):Promise<ActiveSession> {
@@ -324,7 +339,7 @@ export default class ActiveSession {
         this.setEventListeners();
     }
 
-    public setTitle(title:string):void {
+    public updateTitle(title:string):void {
         this.title = title;
 
         if(this.windowId) {
