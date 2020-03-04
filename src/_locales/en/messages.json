@@ -128,7 +128,7 @@
 	},
 
 	"option_tabClosingBehavior_info": {
-		"message": "Controls what happens when you close tabs from active sessions."
+		"message": "Controls what happens when you close a tab that is part of an active sessions."
 	},
 
 	"option_tabClosingBehavior__remove-tab": {
