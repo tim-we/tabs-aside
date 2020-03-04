@@ -1,74 +1,71 @@
 .tab-view > ol {
-	padding-left: 1.2em;
-	font-family: 'Open Sans Condensed', sans-serif;
-	font-size: 1rem;
-	margin-top: 4px;
-	margin-bottom: 2px;
-	animation: simpleListExpand 0.05s;
-	animation-timing-function: ease-out;
+    padding-left: 1.2em;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 1rem;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    animation: simpleListExpand 0.05s;
+    animation-timing-function: ease-out;
 }
 
 .tab-view > ol.geq10 {
-	padding-left: 1.45em;
+    padding-left: 1.45em;
 }
 
 .tab-view > ol.geq100 {
-	padding-left: 1.8em;
+    padding-left: 1.8em;
 }
 
 .tab-view > ol > li {
-	transition: background .42s;
+    white-space: nowrap;
+    transition: background .42s;
 }
 
 .tab-view > ol a {
-	font-family: 'Open Sans', Segoe UI, sans-serif;
-	font-size: 1rem;
-}
-
-.tab-view > ol a.tab {
-	white-space: nowrap;
+    font-family: 'Open Sans', Segoe UI, sans-serif;
+    font-size: 1rem;
 }
 
 .tab-view > ol a.tab:not(:hover) {
-	color: #222426;
-	text-decoration: none;
+    color: #222426;
+    text-decoration: none;
 }
 
 .tab-view .state-icon {
-	display: inline-block;
-	width: 12px;
-	height: 12px;
-	margin-right: 1px;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: contain;
-	transform: translateY(2px);
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 1px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transform: translateY(2px);
 }
 
 .tab-view .state-icon:last-of-type {
-	margin-right: 2px;
+    margin-right: 2px;
 }
 
 .tab-view .state-icon.pinned {
-	background-image: url("../img/sidebar/pin-12.svg");
+    background-image: url("../img/sidebar/pin-12.svg");
 }
 
 .tab-view .state-icon.rm {
-	background-image: url("../img/sidebar/readermode.svg");
+    background-image: url("../img/sidebar/readermode.svg");
 }
 
 @keyframes simpleListExpand {
-	0% {
-		transform: translateY(-10px);
-		opacity: 0;
-		overflow: hidden;
-		max-height: 10px;
-	}
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+        overflow: hidden;
+        max-height: 10px;
+    }
 
-	100% {
-		transform: translateY(0px);
-		max-height: 500px;
-		overflow: hidden;
-		opacity: 1;
-	}
+    100% {
+        transform: translateY(0px);
+        max-height: 500px;
+        overflow: hidden;
+        opacity: 1;
+    }
 }
