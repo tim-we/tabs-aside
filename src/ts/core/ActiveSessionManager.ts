@@ -10,13 +10,16 @@ type TabBookmark = [number, SessionId];
 
 let activeSessions:Map<SessionId, ActiveSession> = new Map();
 
-export async function createSessionFromTabs(
-    tabs:Tab[],
-    title:string,
-    windowId?:number
-):Promise<ActiveSession> {
+type CreateSessionDetails = {
+    tabs: Tab[],
+    title: string,
+    windowId?:number,
+    newWindow:boolean;
+}
+
+export async function createSessionFromTabs(details:CreateSessionDetails):Promise<ActiveSession> {
     // check if there are any tabs to create a session from
-    if(tabs.length === 0) {
+    if(details.tabs.length === 0) {
         throw new Error("No tabs to create a session from. Sessions cannot be empty.");
     }
 
@@ -24,18 +27,22 @@ export async function createSessionFromTabs(
     const folder:Bookmark = await browser.bookmarks.create({
         index: 0,
         parentId: await OptionsManager.getValue<string>("rootFolder"),
-        title: title
+        title: details.title
     });
 
     // ActiveSession instance
     const session:ActiveSession = new ActiveSession(folder);
-    if(windowId) {
-        session.setWindow(windowId);
+    let emptyTab:Tab|undefined; //TODO: move this logic to ActiveSession.ts
+    if(details.newWindow) {
+        const wnd = await session.createSessionWindow();
+        emptyTab = wnd.tabs[0];
+    } else if(details.windowId) {
+        session.setWindow(details.windowId);
     }
 
     // add tabs to session
     let promises:Promise<void>[] = [];
-    for(const tab of tabs) {
+    for(const tab of details.tabs) {
         const data:TabData = TabData.createFromTab(tab);
 
         // create a bookmark for the tab
@@ -48,6 +55,11 @@ export async function createSessionFromTabs(
         promises.push(session.addExistingTab(tab, bm.id));
     }
     await Promise.all(promises);
+
+    //TODO: move to ActiveSession.ts
+    if(emptyTab) {
+        await browser.tabs.remove(emptyTab.id);
+    }
 
     // add to activeSessions map
     activeSessions.set(session.bookmarkId, session);

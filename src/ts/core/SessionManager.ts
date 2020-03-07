@@ -173,18 +173,15 @@ export async function createSessionFromTabs(
 
     // create session
     if(activeSessionsEnabled) {
-        let windowId:number|undefined = undefined;
+        // not all tabs of the current window will be part of the session
+        // -> create a new window [session tabs will be moved to that window]
+        const session = await ActiveSessionManager.createSessionFromTabs({
+            tabs: tabs,
+            title: title,
+            windowId: (tabs.length < n) ? undefined : tabs[0].windowId,
+            newWindow: tabs.length < n
+        });
 
-        if(windowedSession) {
-            if(tabs.length < n) {
-                // not all tabs of the current window will be part of the session
-                // -> create a new window [and move session tabs to that window (later)]
-                windowId = (await browser.windows.create()).id;
-            } else {
-                windowId = tabs[0].windowId;
-            }
-        }
-        const session = await ActiveSessionManager.createSessionFromTabs(tabs, title, windowId);
         sessionId = session.bookmarkId;
 
         if(setAside) {

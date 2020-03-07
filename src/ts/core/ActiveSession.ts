@@ -120,6 +120,7 @@ export default class ActiveSession {
     /**
      * Adds an existing tab to the active session.
      * If no bookmark id is passed as a second argument a new bookmark will be created.
+     * If the session has its own window the tab will be moved to that window.
      * @param tab - A browser tab
      * @param tabBookmarkId - (Optional) The id of the bookmark representing this tab
      */
@@ -136,9 +137,14 @@ export default class ActiveSession {
         // if tab is not part of the session window -> move it
         if(this.windowId && this.windowId !== tab.windowId) {
             console.assert(this.tabMovedListener === undefined);
+
             await browser.tabs.move(tab.id, {
                 windowId: this.windowId,
-                index: -1
+                index: -1 // moves tab to the end of the window
+            }).then(res => {
+                if(res instanceof Array && res.length === 0) {
+                    return Promise.reject("Tab " + tab.id + " could not be moved.");
+                }
             });
         }
 
@@ -255,8 +261,19 @@ export default class ActiveSession {
         return this.windowId;
     }
 
-    private async createSessionWindow():Promise<Window> {
-        let wnd:Window = await browser.windows.create();
+    public async createSessionWindow():Promise<Window> {
+        if(this.windowId) {
+            throw new Error("This session already has a window.");
+        } else if(this.tabs.size > 0) {
+            throw new Error("The window has to be set before tabs are added.");
+        }
+
+        const wnd:Window = await browser.windows.create();
+        const emptyTab:Tab = wnd.tabs[0];
+
+        // pin the empty tab to avoid problems when auto-moving pinned tabs to that window
+        await browser.tabs.update(emptyTab.id, {pinned:true});
+
         await this.setWindow(wnd.id);
         return wnd;
     }
