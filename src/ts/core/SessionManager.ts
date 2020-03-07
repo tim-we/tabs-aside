@@ -188,7 +188,7 @@ export async function createSessionFromTabs(
             ActiveSessionManager.setAside(sessionId);
         }
     } else {
-        ClassicSessionManager.createSession(tabs, setAside, title);
+        sessionId = await ClassicSessionManager.createSession(tabs, setAside, title);
     }
 
     updateBrowserActionContextMenu();
