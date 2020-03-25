@@ -1,5 +1,6 @@
 import * as OptionsManager from "../options/OptionsManager.js";
 import * as BrowserActionManager from "../browserAction/BrowserActionManager.js";
+import { attempt } from "../util/PromiseUtils.js";
 
 type StoredData = {
 	"version"?:number,
@@ -25,13 +26,13 @@ export async function setup():Promise<void> {
 	if(data.version == 1) {
 		if(data["bookmarkFolderID"]) {
 			// this will not be removed to keep old versions working
-			await browser.bookmarks.get(data["bookmarkFolderID"]).then(
+			await attempt(browser.bookmarks.get(data["bookmarkFolderID"]).then(
 				bms => {
 					if(bms[0].type === "folder") {
 						root = bms[0].id;
 					}
 				}
-			).catch();
+			));
 		}
 
 		if(data["ba-icon"]) {
