@@ -1,5 +1,6 @@
 import * as View from "./View.js";
 import * as OptionsManager from "../options/OptionsManager.js";
+import { attempt } from "../util/PromiseUtils.js";
 
 type BMTreeNode = browser.bookmarks.BookmarkTreeNode;
 
@@ -38,11 +39,11 @@ export async function init(option:string):Promise<any> {
     let folder:BMTreeNode;
     
     if (id) {
-        await browser.bookmarks.get(id).then(res => {
+        await attempt(browser.bookmarks.get(id).then(res => {
             folder = res[0];
             selectedFolderID = id;
             oldSelectedFolderID = id;
-        }).catch(() => {});
+        }));
     }
 
     if (!folder) {
