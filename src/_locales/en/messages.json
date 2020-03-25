@@ -15,6 +15,11 @@
 		"message": "You need to select a folder."
 	},
 
+	"bookmarkFolderSelector_missing": {
+		"message": "(missing)",
+		"description": "The bookmark folder with the given id does not exist anymore."
+	},
+
 	"bookmarkFolderSelector_select": {
 		"message": "Select"
 	},

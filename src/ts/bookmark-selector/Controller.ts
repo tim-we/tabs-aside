@@ -5,17 +5,7 @@ import * as OptionsManager from "../options/OptionsManager.js";
 const params = new URLSearchParams(document.location.search.substring(1));
 
 // is there a selected folder?
-var initPromise:Promise<void>;
-
-if (params.get("selected")) {
-	let selectedFolderID = params.get("selected");
-	initPromise = Model.init(
-		params.get("option"),
-		selectedFolderID
-	);
-} else {
-	initPromise = Model.init(params.get("option"));
-}
+var initPromise = Model.init(params.get("option"));
 
 Promise.all([
 	initPromise,

@@ -44,9 +44,13 @@ export async function create(row:HTMLDivElement, option:Option):Promise<void> {
 
 async function updateFolderView(view:HTMLDivElement, bookmarkId:string) {
     if(bookmarkId) {
-        let title:string = (await browser.bookmarks.get(bookmarkId))[0].title;
-
-        view.innerText = title;
+        browser.bookmarks.get(bookmarkId).then(res => {
+            let title:string = res[0].title;
+            view.innerText = title;
+        }, () => {
+            console.error(`[TA] Bookmark folder (id: ${bookmarkId}) not found.`);
+            view.innerText = browser.i18n.getMessage("bookmarkFolderSelector_missing");
+        });
     } else {
         view.innerText = "-";
     }
