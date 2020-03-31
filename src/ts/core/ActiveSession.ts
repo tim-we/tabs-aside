@@ -172,6 +172,7 @@ export default class ActiveSession {
         if(makeActive) {
             createProperties.active = true;
             createProperties.discarded = false;
+            createProperties.title = undefined;
         }
 
         if(this.windowId) {
