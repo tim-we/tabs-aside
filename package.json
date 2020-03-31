@@ -1,6 +1,6 @@
 {
   "name": "tabs-aside",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "tab/session manager",
   "scripts": {
     "build": "gulp --prod",
