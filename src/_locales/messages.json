@@ -1,0 +1,504 @@
+{	
+	"bookmarkFolderSelector_tooltip": {
+		"message": "apri il selettore della cartella dei segnalibri"
+	},
+
+	"bookmarkFolderSelector_rootError": {
+		"message": "Non è possibile creare cartelle nella cartella principale."
+	},
+
+	"bookmarkFolderSelector_newFolderDialog": {
+		"message": "Inserire il nome per la nuova cartella"
+	},
+
+	"bookmarkFolderSelector_noSelection": {
+		"message": "È necessario selezionare una cartella."
+	},
+
+	"bookmarkFolderSelector_missing": {
+		"message": "(mancante)",
+		"description": "La cartella dei segnalibri con l’id selezionato non esiste più."
+	},
+
+	"bookmarkFolderSelector_select": {
+		"message": "Seleziona"
+	},
+
+	"bookmarkFolderSelector_newFolderTooltip": {
+		"message": "Crea cartella"
+	},
+
+	"command_tabs_aside_description": {
+		"message": "Metti da parte le schede correnti"
+	},
+
+	"error_noRootFolder": {
+		"message": "Errore: Non è selezionata nessuna cartella principale."
+	},
+
+	"error_noRootFolder_solution": {
+		"message": "Configura"
+	},
+
+	"error_bgpNotResponding": {
+		"message": "Errore: La pagina in background non risponde."
+	},
+
+	"error_bgpNotResponding_solution": {
+		"message": "Prova ancora",
+		"description": "Ricarica la sidebar"
+	},
+
+	"extension_description": {
+		"message": "Metti da parte le tue schede e conservale nei segnalibri."
+	},
+
+	"menu_active-session-indicator": {
+		"message": "Sessione attiva: $SESSION$",
+		"description": "Mostra il titolo della sessione attiva.",
+		"placeholders": {
+			"session" : {
+				"content" : "$1"
+			}
+		}
+	},
+
+	"menu_active-session-indicator_tooltip": {
+		"message": "Sessione attiva"
+	},
+
+	"menu_tabs-aside_label": {
+		"message": "Tabs aside"
+	},
+
+	"menu_tabs-aside_tooltip": {
+		"message": "Metti da parte le schede di questa finestra e crea una nuova sessione"
+	},
+
+	"menu_set-aside_label": {
+		"message": "Metti da parte la sessione"
+	},
+
+	"menu_set-aside_tooltip": {
+		"message": "Metti da parte la sessione attiva."
+	},
+
+	"menu_create-session_label": {
+		"message": "Salva tabs come sessione"
+	},
+
+	"menu_create-session_tooltip": {
+		"message": "Trasforma in sessione le schede di questa finestra"
+	},
+
+	"menu_show-sessions_label": {
+		"message": "Mostra sessioni"
+	},
+
+	"menu_options_label": {
+		"message": "Opzioni"
+	},
+
+	"menu_action_not_applicable": {
+		"message": "Azione attualmente non applicabile."
+	},
+
+	"modal_window_button_ok": {
+		"message": "Ok"
+	},
+
+	"modal_window_button_cancel": {
+		"message": "Annulla"
+	},
+
+	"modal_window_button_close": {
+		"message": "Chiudi"
+	},
+	
+	"option_activeSessions": {
+		"message": "Sessioni attive"
+	},
+
+	"option_activeSessions_info": {
+		"message": "Traccia le modifiche alle schede e aggiorna i segnalibri in tempo reale mentre la sessione è attiva."
+	},
+
+	"option_windowedSession": {
+		"message": "Apri le sessioni in una nuova finestra.",
+		"description": "Aprire le sessioni in una nuova finestra?"
+	},
+
+	"option_tabClosingBehavior": {
+		"message": "Comportamento ala chiusura delle schede"
+	},
+
+	"option_tabClosingBehavior_info": {
+		"message": "Controlla cosa succede quando viene chiusa una scheda che è parte di una sessione attiva."
+	},
+
+	"option_tabClosingBehavior__remove-tab": {
+		"message": "Rimuovi dalla sessione"
+	},
+
+	"option_tabClosingBehavior__set-aside": {
+		"message": "Metti da parte"
+	},
+
+	"option_ignorePinned": {
+		"message": "Non mettere da parte le schede appuntate"
+	},
+
+	"option_ignorePinned_hint": {
+		"message": "schede appuntate che non sono ancora parte di una sessione"
+	},
+
+	"option_browserActionContextIcon": {
+		"message": "Usa il colore del browser"
+	},
+
+	"option_browserActionContextIcon_info": {
+		"message": "Rende l’ icona dello stesso colore delle icone native. Richiede <a href=\"$URL$\">specifiche impostazioni di Firefox</a>.",
+		"placeholders": {
+			"url": {
+				"content": "https://github.com/tim-we/tabs-aside/wiki/dynamic-icon"
+			}
+		}
+	},
+
+	"option_rootFolder":{
+		"message": "Cartella principale delle sessioni",
+		"description": "La cartella dei segnalibri dove le sessioni (sottocartelle dei segnalibri) saranno memorizzate"
+	},
+
+	"option_rootFolder_hint":{
+		"message": "Seleziona la cartella in cui memorizzare le sessioni."
+	},
+
+	"option_sessionTitleTemplate": {
+		"message": "Template del nome per la nuova sessione"
+	},
+
+	"option_sessionTitleTemplate_info": {
+		"message": "Una lista delle variabili disponibili può essere trovata <a href=\"$URL$\">qui</a>.",
+		"placeholders": {
+			"url": {
+				"content": "https://github.com/tim-we/tabs-aside/wiki/Session-title-template-variables"
+			}
+		}
+	},
+
+	"option_confirmSessionRemoval": {
+		"message": "Conferma rimozione della sessione"
+	},
+
+	"option_confirmSessionRemoval_info": {
+		"message": "Richedere una conferma prima della rimozione della sessione dalla sidebar."
+	},
+
+	"option_lazyLoading": {
+		"message": "caricamento delle schede sospese"
+	},
+
+	"option_lazyLoading_info": {
+		"message": "Il contenuto di una scheda ripristinata è caricato solo quando la scheda viene attivata. Consigliato per grandi sessioni."
+	},
+
+	"option_page_footer_issues":{
+		"message": "Segnala un problema"
+	},
+
+	"option_page_footer_code":{
+		"message": "Codice sorgente su GitHub"
+	},
+
+	"session_title_default": {
+		"message": "Nuova sessione"
+	},
+
+	"setup_browserAction_text": {
+		"message": "Tabs Aside 3 richiede alcune impostazioni prima di essere utilizzato."
+	},
+
+	"setup_browserAction_button": {
+		"message": "Inizia"
+	},
+
+	"setup_completed_close": {
+		"message": "Chiudi setup"
+	},
+
+	"setup_completed_options_page": {
+		"message": "Mostra tutte le opzioni",
+		"description": "Apre la pagina delle impostazioni aggiuntive"
+	},
+
+	"setup_changelog": {
+		"message": "Mostra novità",
+		"description": "Setup link text"
+	},
+
+	"setup_changelog_text": {
+		"message": "Curioso di sapere le novità?"
+	},
+	
+	"setup_completed_text": {
+		"message": "Setup completato.\nPuoi inoltre personalizzare la tua esperienza nella pagina delle impostazioni. Questo include la possibilità di impostare il colore del tema di Tabs Aside per corrispondere al tema del tuo browser."
+	},
+
+	"setup_info_text": {
+		"message": "Tutte le impostazioni possono essere cambiate nuovamente nella pagina delle impostazioni."
+	},
+
+	"setup_preset_active_sessions_disabled": {
+		"message": "Sessioni attive disattivate"
+	},
+
+	"setup_preset_windowed_sessions_disabled": {
+		"message": "Modalità finestra disattivata"
+	},
+
+	"setup_preset_default": {
+		"message": "Predefinito"
+	},
+
+	"setup_preset_classic": {
+		"message": "Come in Tabs Aside 2"
+	},
+
+	"setup_preset_edge": {
+		"message": "Come in Microsoft Edge"
+	},
+
+	"setup_preset_selection_text": {
+		"message": "Tabs Aside ha una funzione chiamata 'Sessioni attive', che è attivata di default. Se attivata i segnalibri della sessione si aggiornano automaticamente quando le tab subiscono delle modifiche.\nDi default ogni sessione avrà la sua finestra.\nQuale comportamento preferisci?"
+	},
+
+	"setup_recommended_option": {
+		"message": "Consigliato",
+		"description": "Tooltip on recommended options"
+	},
+
+	"setup_root_folder_auto_create":{
+		"message": "Crea una nuova cartella 'Tabs Aside'"
+	},
+
+	"setup_root_folder_keep":{
+		"message": "Mantieni le cartelle da un'installazione precedente"
+	},
+
+	"setup_root_folder_select":{
+		"message": "Imposta una cartella personalizzata"
+	},
+
+	"setup_root_folder_text": {
+		"message": "Tabs Aside ti permette di mettere da parte le schede. Queste schede sono memorizzate come segnalibri.\nQuesto ti da il pieno controllo sui dati e permette la sincronizzazione tramite Firefox Sync.\nTabs Aside richiede una cartella per conservare le schede, ogni sessione sarà memorizzata nella sua sottocartella."
+	},
+
+	"setup_skip": {
+		"message": "Salta il setup e vai alle opzioni"
+	},
+
+	"setup_title": {
+		"message": "Setup di Tabs Aside"
+	},
+
+	"setup_version": {
+		"message": "Versione $VERSION$",
+		"placeholders": {
+			"version" : {
+				"content" : "$1",
+				"example" : "3.0"
+			}
+		}
+	},
+
+	"sidebar_nosessions_bigtext": {
+		"message": "Metti da parte le tue schede"
+	},
+
+	"sidebar_nosessions_text1":{
+		"message": "Clicca sul pulsante sulla barra degli strumenti per mettere da parte le tue schede."
+	},
+
+	"sidebar_nosessions_text2":{
+		"message": "Ripristinale più tardi per riprendere da dovere avevi interrotto."
+	},
+
+	"sidebar_search_clear": {
+		"message": "cancella ricerche"
+	},
+
+	"sidebar_search_placeholder": {
+		"message": "cerca sessioni..."
+	},
+
+	"sidebar_search_noresults": {
+		"message": "Non è stata trovata nessuna sessione corrispondente."
+	},
+
+	"sidebar_session_restore": {
+		"message": "Ripristina",
+		"description": "Etichetta del pulsante per ripristinare la sessione"
+	},
+
+	"sidebar_session_restore_tooltip": {
+		"message": "ripristina tutte le schede di questa sessione"
+	},
+
+	"sidebar_session_aside": {
+		"message": "Metti da parte"
+	},
+
+	"sidebar_session_more": {
+		"message": "Altro"
+	},
+
+	"sidebar_session_number_of_tabs": {
+		"message": "$N$ schede",
+		"description": "numero delle schede (della sessione)",
+		"placeholders": {
+			"n" : {
+				"content" : "$1",
+				"example" : "42"
+			}
+		}
+	},
+
+	"sidebar_session_title_edit_placeholder": {
+		"message": "inserire un titolo"
+	},
+
+	"sidebar_session_restore_keep": {
+		"message": "ripristina & mantieni",
+		"description": "Opzioni della sessione (...) menu item to restore a session (non-attiva) ma mantenere il segnalibro"
+	},
+
+	"sidebar_session_remove": {
+		"message": "rimuovi sessione",
+		"description": "Session options (...) menu item to remove session"
+	},
+
+	"sidebar_session_remove_confirm": {
+		"message": "Vuoi davvero eliminare questa sessione?"
+	},
+
+	"sidebar_session_remove_keep_tabs": {
+		"message": "Questa sessione è attualmente attiva.\nVuoi tenere le schede aperte?"
+	},
+
+	"sidebar_session_rename": {
+		"message": "rinomina sessione",
+		"description": "Session options (...) menu item to rename session"
+	},
+
+	"sidebar_session_details": {
+		"message": "dettagli",
+		"description": "Session options (...) menu item to show session details"
+	},
+
+	"sidebar_session_details_modal_title": {
+		"message": "Dettagli della sessione",
+		"description": "Titolo della finestra modale che mostra i dettagli della sessione nella barra laterale"
+	},
+
+	"sidebar_session_details_name": {
+		"message": "Nome",
+		"description": "Nome della sessione (titolo del segnalibro)"
+	},
+
+	"sidebar_session_details_id": {
+		"message": "ID del segnalibro"
+	},
+
+	"sidebar_session_details_index": {
+		"message": "Indice",
+		"description": "Posizione del segnalibro nella cartella parente"
+	},
+
+	"sidebar_session_details_created": {
+		"message": "Creata",
+		"description": "data in cui la cartella della sessione è stata creata"
+	},
+
+	"sidebar_session_details_last_change": {
+		"message": "Ultimo cambiamento"
+	},
+
+	"sidebar_tab_copy_url": {
+		"message": "copia URL negli appunti"
+	},
+
+	"sidebar_tab_remove_from_session": {
+		"message": "rimuovi dalla sessione"
+	},
+
+	"sidebar_tab_open_remove": {
+		"message": "apri e rimuovi",
+		"description": "apre la scheda e la rimuove dalla sessione"
+	},
+
+	"sidebar_default_title": {
+		"message": "Schede che hai messo da parte"
+	},
+
+	"tab_contextmenu_title": {
+		"message": "&Tabs Aside!",
+		"description": "the ampersand (&) makes t the access key for this menu item"
+	},
+
+	"tab_contextmenu_add": {
+		"message": "&aggiungi questa scheda ad una sessione"
+	},
+
+	"tab_contextmenu_add_and_set_aside": {
+		"message": "aggiungi ad una sessione && &metti da parte",
+		"description": "a single ampersand (&) marks the next character as an access key for this item"
+	},
+
+	"tab_contextmenu_set_aside": {
+		"message": "&metti da parte"
+	},
+
+	"tab_error_title": {
+		"message": "Errore nel ripristinare una scheda di Tabs Aside"
+	},
+
+	"tab_error_description": {
+		"message": "Tabs Aside non è riuscito a ripristinare questa scheda."
+	},
+
+	"tab_error_description_privileged": {
+		"message": "Le estensioni non hanno il permesso di creare schede con URL priviliegiati. Se vuoi ancora accedere a questa pagina puoi copiare l’URL nella barra degli indirizzi."
+	},
+
+	"tab_error_description_files": {
+		"message": "Sfortunatamente le estensioni non hanno il permesso di creare schede con URL diretti a file locali (file:///). Puoi ancora accedere a questa pagina copiando l’URL nella barra degli indirizzi."
+	},
+
+	"tab_error_description_container": {
+		"message": "Il contenitore dei cookie per questa pagina non esiste più o la funzione di contenitore è disattivata."
+	},
+
+	"tab_error_details": {
+		"message": "Dettagli"
+	},
+
+	"tab_error_open": {
+		"message": "Apri nel contenitore di default"
+	},
+
+	"tab_error_report": {
+		"message": "Segnala errore su GitHub",
+		"description": "Link per la segnalazione di problemi su GitHub, solo in inglese"
+	},
+
+	"browser_action_quick_restore": {
+		"message": "Ripristina '$SESSION$'",
+		"placeholders": {
+			"session" : {
+				"content" : "$1",
+				"example" : "Nuova sessione"
+			}
+		}
+	}
+}
