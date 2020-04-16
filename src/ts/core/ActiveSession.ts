@@ -299,14 +299,17 @@ export default class ActiveSession {
 
         session.windowId = windowId;
 
+        // load tabs
         let tabs:Tab[] = await browser.tabs.query({windowId:windowId});
-
         await Promise.all(tabs.map(async tab => {
             let tabBookmarkId = (await browser.sessions.getTabValue(tab.id, "bookmarkID")) as string;
             session.tabs.set(tab.id, tabBookmarkId);
         }));
 
-        session.setEventListeners();
+        // restore window title
+        session.updateTitle(bookmark.title);
+
+        session.start();
 
         return session;
     }
