@@ -1,6 +1,6 @@
 {
   "name": "tabs-aside",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "description": "tab/session manager",
   "scripts": {
     "build": "gulp --prod",
@@ -37,7 +37,7 @@
     "stylelint-order": "^3.0.0",
     "stylelint-scss": "^3.14.2",
     "typescript": "^3.8.2",
-    "web-ext": "^3.2.1"
+    "web-ext": ">=4"
   },
   "browserslist": "Firefox 64"
 }
