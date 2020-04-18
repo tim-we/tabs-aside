@@ -25,7 +25,7 @@ type TitleData = {
  * 	cs: (string) cookieStoreId, for containers
  */
 const bmTitleParser = /^(\[(reading,|pinned,|src,|cs=[-\w]+?,)*(reading|pinned|src|cs=[-\w]+?)?\]\s)?(.*)$/;
-const validURL = /^https?:\/\//i;
+const validURL = /^(https?|moz-extension):\/\//i;
 
 const readerPrefix         = "about:reader?url=";
 const viewSourcePrefix     = "view-source:";
