@@ -144,11 +144,11 @@
 		"message": "Metti da parte"
 	},
 
-	"option_ignorePinned": {
-		"message": "Non mettere da parte le schede appuntate"
+	"option_asidePinnedTabs": {
+		"message": "Metti da parte le schede appuntate"
 	},
 
-	"option_ignorePinned_hint": {
+	"option_asidePinnedTabs_hint": {
 		"message": "schede appuntate che non sono ancora parte di una sessione"
 	},
 
