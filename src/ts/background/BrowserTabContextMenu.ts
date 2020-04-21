@@ -4,6 +4,7 @@ import { Tab, ContextMenuId, Bookmark, SessionId } from "../util/Types.js";
 import ActiveSession from "../core/ActiveSession.js";
 import TabData from "../core/TabData.js";
 import { SessionContentUpdate } from "../messages/Messages.js";
+import { createTab } from "../util/WebExtAPIHelpers.js";
 
 let shown:boolean = false;
 let dynamicMenus:ContextMenuId[] = [];
@@ -66,7 +67,7 @@ async function createMenuForTab(tab:Tab) {
 
 async function addToSessionMenu(
     sessions:Bookmark[],
-    currentSessionId:SessionId,
+    currentSessionId:SessionId|null,
     activeSessions:Set<SessionId>,
     tab:Tab
 ) {
@@ -93,9 +94,37 @@ async function addToSessionMenu(
             enabled: session.id !== currentSessionId,
             onclick: async (info) => {
                 const data = TabData.createFromTab(tab);
-                await browser.bookmarks.create(
-                    data.getBookmarkCreateDetails(session.id)
-                );
+                let added = false;
+
+                // move tab to active session
+                if(activeSessions.has(session.id)) {
+                    let as = ActiveSessionManager.getActiveSession(session.id);
+                    console.assert(as);
+
+                    // only if the target session has its own window
+                    if(as.getWindowId() !== null) {
+                        // move or copy tab to new session
+                        if(currentSessionId === null) {
+                            await browser.tabs.move(tab.id, {
+                                windowId: as.getWindowId(),
+                                index: tab.pinned ? 0 : -1
+                            });
+                        } else {
+                            // duplicate tab
+                            let details = data.getTabCreateProperties(true);
+                            details.windowId = as.getWindowId();
+                            await createTab(details);
+                        }
+                        added = true;
+                    }
+                }
+                
+                // otherwise just create the bookmark
+                if(!added) {
+                    await browser.bookmarks.create(
+                        data.getBookmarkCreateDetails(session.id)
+                    );
+                }
 
                 // update sidebar
                 SessionContentUpdate.send(session.id);
