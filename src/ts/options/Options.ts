@@ -36,9 +36,9 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
             info: true
         },
         {
-            id: "ignorePinned",
+            id: "asidePinnedTabs",
             type: "boolean",
-            default: true,
+            default: false,
             hint: true
         },
         {

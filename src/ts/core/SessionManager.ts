@@ -145,12 +145,12 @@ export async function createSessionFromTabs(
 
     // load settings
     const activeSessionsEnabled:boolean = await OptionsManager.getValue("activeSessions");
-    const ignorePinned:boolean          = await OptionsManager.getValue("ignorePinned");
+    const asidePinnedTabs:boolean       = await OptionsManager.getValue("asidePinnedTabs");
 
     // filter tabs that cannot be restored
     tabs = tabs.filter(tab => !TabData.createFromTab(tab).isPrivileged());
 
-    if(ignorePinned) {
+    if(!asidePinnedTabs) {
         tabs = tabs.filter(tab => !tab.pinned);
     }
 
