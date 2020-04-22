@@ -90,7 +90,9 @@ async function migrateFromVersion3_3_(data:StoredData) {
     console.assert(data.version === 2);
 
     if(data.options.ignorePinned !== undefined) {
+        console.log("[TA] Switching from ignorePinned to asidePinnedTabs");
         restartRequired = true;
         await OptionsManager.setValue("asidePinnedTabs", !data.options.ignorePinned);
+        await OptionsManager.removeUnused();
     }
 }
