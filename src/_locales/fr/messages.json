@@ -1,0 +1,504 @@
+{	
+	"bookmarkFolderSelector_tooltip": {
+		"message": "Ouvrir le sélecteur de dossier de marque-page"
+	},
+
+	"bookmarkFolderSelector_rootError": {
+		"message": "Vous ne pouvez pas créer de dossiers dans le dossier racine."
+	},
+
+	"bookmarkFolderSelector_newFolderDialog": {
+		"message": "Entrer un nom pour le nouveau dossier"
+	},
+
+	"bookmarkFolderSelector_noSelection": {
+		"message": "Vous devez choisir un dossier."
+	},
+
+	"bookmarkFolderSelector_missing": {
+		"message": "(manquant)",
+		"description": "The bookmark folder with the given id does not exist anymore."
+	},
+
+	"bookmarkFolderSelector_select": {
+		"message": "Sélectionner"
+	},
+
+	"bookmarkFolderSelector_newFolderTooltip": {
+		"message": "Créer un dossier"
+	},
+
+	"command_tabs_aside_description": {
+		"message": "Mettre les onglets ouverts de côté"
+	},
+
+	"error_noRootFolder": {
+		"message": "Erreur: Aucun dossier racine sélectionné."
+	},
+
+	"error_noRootFolder_solution": {
+		"message": "Configurer"
+	},
+
+	"error_bgpNotResponding": {
+		"message": "Erreur: La page d'arrière-plan ne répond pas."
+	},
+
+	"error_bgpNotResponding_solution": {
+		"message": "Réessayer",
+		"description": "Reloads the sidebar"
+	},
+
+	"extension_description": {
+		"message": "Mets vos onglet de côté et les sauvegarde dans vos marque-pages."
+	},
+
+	"menu_active-session-indicator": {
+		"message": "Session active: $SESSION$",
+		"description": "Shows the session title of the current active session.",
+		"placeholders": {
+			"session" : {
+				"content" : "$1"
+			}
+		}
+	},
+
+	"menu_active-session-indicator_tooltip": {
+		"message": "Session actuellement active"
+	},
+
+	"menu_tabs-aside_label": {
+		"message": "Onglets mis de côté"
+	},
+
+	"menu_tabs-aside_tooltip": {
+		"message": "Mettre les onglets de cette fenêtre de côté et créer une nouvelle session"
+	},
+
+	"menu_set-aside_label": {
+		"message": "Mettre la session de côté"
+	},
+
+	"menu_set-aside_tooltip": {
+		"message": "Mettre la session active de côté."
+	},
+
+	"menu_create-session_label": {
+		"message": "Sauvegarder les onglets dans une session"
+	},
+
+	"menu_create-session_tooltip": {
+		"message": "Changer les onglets de cette fenêtre en session"
+	},
+
+	"menu_show-sessions_label": {
+		"message": "Afficher les sessions"
+	},
+
+	"menu_options_label": {
+		"message": "Options"
+	},
+
+	"menu_action_not_applicable": {
+		"message": "Action actuellement indisponible."
+	},
+
+	"modal_window_button_ok": {
+		"message": "Ok"
+	},
+
+	"modal_window_button_cancel": {
+		"message": "Annuler"
+	},
+
+	"modal_window_button_close": {
+		"message": "Fermer"
+	},
+	
+	"option_activeSessions": {
+		"message": "Sessions actives"
+	},
+
+	"option_activeSessions_info": {
+		"message": "Monitore les changements des onglets pour mettre à jours les marque-page en temps réel pendant que la session est active."
+	},
+
+	"option_windowedSession": {
+		"message": "Ouvrir les sessions dans une nouvelle fenêtre.",
+		"description": "Should sessions be opened in a new window?"
+	},
+
+	"option_tabClosingBehavior": {
+		"message": "Comportement de fermeture d'onglet"
+	},
+
+	"option_tabClosingBehavior_info": {
+		"message": "Contrôle ce qui arrive lorsque vous fermez un onglet dans une session active."
+	},
+
+	"option_tabClosingBehavior__remove-tab": {
+		"message": "Enlever de la session"
+	},
+
+	"option_tabClosingBehavior__set-aside": {
+		"message": "Mettre de côté"
+	},
+
+	"option_asidePinnedTabs": {
+		"message": "Mettre de côté les onglets épinglés"
+	},
+
+	"option_asidePinnedTabs_hint": {
+		"message": "Onglets épinglés qui ne font pas encore parti d'une session"
+	},
+
+	"option_browserActionContextIcon": {
+		"message": "Utiliser la couleur contextuelle pour le bouton de la barre d'outil"
+	},
+
+	"option_browserActionContextIcon_info": {
+		"message": "Rendre l'icône de la même couleur que les icônes natifs. Nécessite un <a href=\"$URL$\">paramètre spécifique de Firefox</a>.",
+		"placeholders": {
+			"url": {
+				"content": "https://github.com/tim-we/tabs-aside/wiki/dynamic-icon"
+			}
+		}
+	},
+
+	"option_rootFolder":{
+		"message": "Dossier racine des sessions",
+		"description": "The bookmark folder where sessions (bookmark subfolders) will be stored"
+	},
+
+	"option_rootFolder_hint":{
+		"message": "Choisissez le dossier où les sessions sont sauvegardées."
+	},
+
+	"option_sessionTitleTemplate": {
+		"message": "Nouveau modèle de titre de session"
+	},
+
+	"option_sessionTitleTemplate_info": {
+		"message": "Une liste des variables disponibles peut être consultée <a href=\"$URL$\">ici</a>.",
+		"placeholders": {
+			"url": {
+				"content": "https://github.com/tim-we/tabs-aside/wiki/Session-title-template-variables"
+			}
+		}
+	},
+
+	"option_confirmSessionRemoval": {
+		"message": "Confirmer la suppression d'une session"
+	},
+
+	"option_confirmSessionRemoval_info": {
+		"message": "Demander la confirmation avant d'enlever une session depuis le panneau latéral."
+	},
+
+	"option_lazyLoading": {
+		"message": "Lazy loading des onglets"
+	},
+
+	"option_lazyLoading_info": {
+		"message": "Le contenu d'un onglet restauré est seulement chargé quand l'onglet est activé. Recommendé pour les grosses sessions."
+	},
+
+	"option_page_footer_issues":{
+		"message": "Rapporter un problème"
+	},
+
+	"option_page_footer_code":{
+		"message": "Code source sur GitHub"
+	},
+
+	"session_title_default": {
+		"message": "Nouvelle session"
+	},
+
+	"setup_browserAction_text": {
+		"message": "Tabs Aside 3 nécessite une brève configuration avant de pouvoir être utilisé."
+	},
+
+	"setup_browserAction_button": {
+		"message": "Commencer"
+	},
+
+	"setup_completed_close": {
+		"message": "Fermer la configuration"
+	},
+
+	"setup_completed_options_page": {
+		"message": "Afficher toutes les options",
+		"description": "Opens the addons options page"
+	},
+
+	"setup_changelog": {
+		"message": "Voir le changelog",
+		"description": "Setup link text"
+	},
+
+	"setup_changelog_text": {
+		"message": "Vous voulez savoir ce qui a changé?"
+	},
+	
+	"setup_completed_text": {
+		"message": "Configuration complétée.\nYou pouvez personnaliser votre expérience via la page des options. Cela inclue l'option de choisir la couleur du thème de Tabs Aside pour mieux s'agencer avec votre thème."
+	},
+
+	"setup_info_text": {
+		"message": "Tous les paramètres peuvent être changés plus tard via la page des options."
+	},
+
+	"setup_preset_active_sessions_disabled": {
+		"message": "Sessions actives désactivé"
+	},
+
+	"setup_preset_windowed_sessions_disabled": {
+		"message": "Mode fenêtré désactivé"
+	},
+
+	"setup_preset_default": {
+		"message": "Défaut"
+	},
+
+	"setup_preset_classic": {
+		"message": "Comme Tabs Aside 2"
+	},
+
+	"setup_preset_edge": {
+		"message": "Comme Microsoft Edge"
+	},
+
+	"setup_preset_selection_text": {
+		"message": "Tabs Aside a une fonctionnalité appelé 'Sessions Actives' qui est activé par défaut. Si activé, les marque-pages de la session seront mis à jour automatiquement à mesure que les onglets sont modifiés.\nPar défaut change session à sa propre fenêtre.\nQuel comportement préférez-vous?"
+	},
+
+	"setup_recommended_option": {
+		"message": "Recommendé",
+		"description": "Tooltip on recommended options"
+	},
+
+	"setup_root_folder_auto_create":{
+		"message": "Créer un nouveau dossier 'Tabs Aside'"
+	},
+
+	"setup_root_folder_keep":{
+		"message": "Garder le dossier de l'installation précédente"
+	},
+
+	"setup_root_folder_select":{
+		"message": "Sélectionner un dossier différent"
+	},
+
+	"setup_root_folder_text": {
+		"message": "Tabs Aside donne l'option de mettre des onglets de côté pour plus tard. Ces onglets sont sauvegardés comme marque-pages.\n Cela vous donne tout le contrôle sur les données et permet la synchronization entre les appareils via Firefox Sync.\nTabs Aside nécessite un dossier de marque-pages pour sauvegarder les onglets, chaque session sera sauvegardé dans son propre sous-dossier."
+	},
+
+	"setup_skip": {
+		"message": "Sauter la configuration et aller à la page des options"
+	},
+
+	"setup_title": {
+		"message": "Configuration de Tabs Aside"
+	},
+
+	"setup_version": {
+		"message": "Version $VERSION$",
+		"placeholders": {
+			"version" : {
+				"content" : "$1",
+				"example" : "3.0"
+			}
+		}
+	},
+
+	"sidebar_nosessions_bigtext": {
+		"message": "Mettre de côté vos onglets"
+	},
+
+	"sidebar_nosessions_text1":{
+		"message": "Cliquez sur le bouton de la barre d'outil pour mettre vos onglets de côté."
+	},
+
+	"sidebar_nosessions_text2":{
+		"message": "Restaurez-les plus tard pour reprendre où vous en étiez."
+	},
+
+	"sidebar_search_clear": {
+		"message": "Supprimer la recherche"
+	},
+
+	"sidebar_search_placeholder": {
+		"message": "Recherche de sessions..."
+	},
+
+	"sidebar_search_noresults": {
+		"message": "Aucune session trouvée."
+	},
+
+	"sidebar_session_restore": {
+		"message": "Restaurer",
+		"description": "Label of the session restore button"
+	},
+
+	"sidebar_session_restore_tooltip": {
+		"message": "Restaure tous les onglets de cette session"
+	},
+
+	"sidebar_session_aside": {
+		"message": "Mettre de côté"
+	},
+
+	"sidebar_session_more": {
+		"message": "Plus"
+	},
+
+	"sidebar_session_number_of_tabs": {
+		"message": "$N$ onglets",
+		"description": "number of tabs (in session)",
+		"placeholders": {
+			"n" : {
+				"content" : "$1",
+				"example" : "42"
+			}
+		}
+	},
+
+	"sidebar_session_title_edit_placeholder": {
+		"message": "Entrez un titre"
+	},
+
+	"sidebar_session_restore_keep": {
+		"message": "Restaurer et garder",
+		"description": "Session options (...) menu item to restore a session (non-active) but keep the bookmarks"
+	},
+
+	"sidebar_session_remove": {
+		"message": "Supprimer la session",
+		"description": "Session options (...) menu item to remove session"
+	},
+
+	"sidebar_session_remove_confirm": {
+		"message": "Voulez-vous vraiment supprimer cette session?"
+	},
+
+	"sidebar_session_remove_keep_tabs": {
+		"message": "Cette session est présentement active. Voulez-vous garder les onglets ouverts?"
+	},
+
+	"sidebar_session_rename": {
+		"message": "Renommer la session",
+		"description": "Session options (...) menu item to rename session"
+	},
+
+	"sidebar_session_details": {
+		"message": "Détails",
+		"description": "Session options (...) menu item to show session details"
+	},
+
+	"sidebar_session_details_modal_title": {
+		"message": "Détails de la session",
+		"description": "Title of the modal window showing session details in the sidebar"
+	},
+
+	"sidebar_session_details_name": {
+		"message": "Nom",
+		"description": "Session name (bookmark title)"
+	},
+
+	"sidebar_session_details_id": {
+		"message": "ID du marque-page"
+	},
+
+	"sidebar_session_details_index": {
+		"message": "Index",
+		"description": "Position of the bookmark within the parent folder"
+	},
+
+	"sidebar_session_details_created": {
+		"message": "Créé",
+		"description": "date the session folder was created"
+	},
+
+	"sidebar_session_details_last_change": {
+		"message": "Dernier changement"
+	},
+
+	"sidebar_tab_copy_url": {
+		"message": "Copie l'URL dans le presse-papier"
+	},
+
+	"sidebar_tab_remove_from_session": {
+		"message": "Supprimer de la session"
+	},
+
+	"sidebar_tab_open_remove": {
+		"message": "Ouvrir et supprimer",
+		"description": "opens the tab and removes it from the session"
+	},
+
+	"sidebar_default_title": {
+		"message": "Onglets que vous avez mis de côté"
+	},
+
+	"tab_contextmenu_title": {
+		"message": "&Tabs Aside!",
+		"description": "the ampersand (&) makes t the access key for this menu item"
+	},
+
+	"tab_contextmenu_add": {
+		"message": "&Ajouter cet onglet à une session"
+	},
+
+	"tab_contextmenu_add_and_set_aside": {
+		"message": "Ajouter à une session && &mettre de côté",
+		"description": "a single ampersand (&) marks the next character as an access key for this item"
+	},
+
+	"tab_contextmenu_set_aside": {
+		"message": "&Mettre de côté"
+	},
+
+	"tab_error_title": {
+		"message": "Tabs Aside Erreur de restauration de l'onglet"
+	},
+
+	"tab_error_description": {
+		"message": "Tabs Aside n'a pas été en mesure de restaurer cet onglet."
+	},
+
+	"tab_error_description_privileged": {
+		"message": "Les extensions ne sont pas autorisées à créer des onglets avec des URL prévilégiés. Si vous voulez toujours accéder à cette page, vous pouvez copier l'URL dans la barre d'adresse."
+	},
+
+	"tab_error_description_files": {
+		"message": "Malheureusement les extensiosn ne sont pas autorisées à créer des onglets avec des URLS qui pointent vers des fichiers locaux (file:///). Vous pouvez toujours accéder à cette page en copiant l'URL dans la barre d'adresse."
+	},
+
+	"tab_error_description_container": {
+		"message": "Le container de cookie pour cet onglet n'existe plus ou la fonctionalité des container a été désactivé."
+	},
+
+	"tab_error_details": {
+		"message": "Détails"
+	},
+
+	"tab_error_open": {
+		"message": "Ouvrir dans le container par défaut"
+	},
+
+	"tab_error_report": {
+		"message": "Rapporter l'erreur sur GitHub (anglais seulement)",
+		"description": "Link to GitHub issues, which are English-only"
+	},
+
+	"browser_action_quick_restore": {
+		"message": "Restaurer '$SESSION$'",
+		"placeholders": {
+			"session" : {
+				"content" : "$1",
+				"example" : "Nouvelle session"
+			}
+		}
+	}
+}
