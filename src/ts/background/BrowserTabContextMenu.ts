@@ -34,12 +34,11 @@ export async function init() {
 
             console.assert(selection.length >= 1);
 
-            if(!selection.find(t => t.id === tab.id)) {
-                console.error(`[TA] Unexpected tab selection`, selection);
-                return;
+            if(selection.find(t => t.id === tab.id)) {
+                createMenuForTabs(selection);
+            } else {
+                createMenuForTabs([tab]);
             }
-
-            createMenuForTabs(selection);
         }
     });
 
