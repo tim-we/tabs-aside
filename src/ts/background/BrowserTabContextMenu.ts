@@ -1,5 +1,6 @@
 import * as SessionManager from "../core/SessionManager.js";
 import * as ActiveSessionManager from "../core/ActiveSessionManager.js";
+import * as ClassicSessionManager from "../core/ClassicSessionManager.js";
 import { Tab, ContextMenuId, Bookmark, SessionId } from "../util/Types.js";
 import ActiveSession from "../core/ActiveSession.js";
 import TabData from "../core/TabData.js";
@@ -125,14 +126,14 @@ async function addToSessionMenu(
             "16": "img/browserMenu/add.svg",
             "32": "img/browserMenu/add.svg"
         },
-        onclick: () => SessionManager.createSessionFromTabs(tabs, false)
+        onclick: () => ClassicSessionManager.createSession(tabs, false)
     });
 
     if(sessions.length > 0) {
         browser.menus.create({
             parentId: "add",
             type: "separator"
-        })
+        });
     }
 
     // add to existing session
@@ -194,36 +195,50 @@ async function addAndSetAsideMenu(
     activeSessions:Set<SessionId>,
     tabs:Tab[]
 ) {
+    dynamicMenus.push(
+        browser.menus.create({
+            parentId: "parent",
+            id: "add-n-close",
+            title: browser.i18n.getMessage("tab_contextmenu_add_and_set_aside"),
+        })
+    );
+
+    // ignore active sessions as this operation does not make sense
+    sessions = sessions.filter(session => !activeSessions.has(session.id));
+
+    // create new session
+    browser.menus.create({
+        parentId: "add-n-close",
+        title: browser.i18n.getMessage("tab_contextmenu_create_new"),
+        icons: {
+            "16": "img/browserMenu/add.svg",
+            "32": "img/browserMenu/add.svg"
+        },
+        onclick: () => ClassicSessionManager.createSession(tabs, true)
+    });
+
     if(sessions.length > 0) {
-        dynamicMenus.push(
-            browser.menus.create({
-                parentId: "parent",
-                id: "add-n-close",
-                title: browser.i18n.getMessage("tab_contextmenu_add_and_set_aside"),
-            })
-        );
-
-        sessions
-            // ignore active sessions as this operation does not make sense
-            .filter(session => !activeSessions.has(session.id))
-            .forEach(session => browser.menus.create(
-                {
-                    parentId: "add-n-close",
-                    title: "&" + session.title.replace(/&/ig, "&&").trim(),
-                    onclick: async (info) => {
-                        for(let tab of tabs) {
-                            const data = TabData.createFromTab(tab);
-                            await browser.bookmarks.create(
-                                data.getBookmarkCreateDetails(session.id)
-                            );
-
-                            browser.tabs.remove(tab.id);
-                        }
-                        
-                        // update sidebar
-                        SessionContentUpdate.send(session.id);
-                    }
-                }
-            ));
+        browser.menus.create({
+            parentId: "add-n-close",
+            type: "separator"
+        });
     }
+
+    sessions.forEach(session => browser.menus.create({
+        parentId: "add-n-close",
+        title: "&" + session.title.replace(/&/ig, "&&").trim(),
+        onclick: async (info) => {
+            for(let tab of tabs) {
+                const data = TabData.createFromTab(tab);
+                await browser.bookmarks.create(
+                    data.getBookmarkCreateDetails(session.id)
+                );
+
+                browser.tabs.remove(tab.id);
+            }
+            
+            // update sidebar
+            SessionContentUpdate.send(session.id);
+        }
+    }));
 }

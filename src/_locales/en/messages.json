@@ -459,6 +459,10 @@
 		"description": "a single ampersand (&) marks the next character as an access key for this item"
 	},
 
+	"tab_contextmenu_create_new": {
+		"message": "&create new session"
+	},
+
 	"tab_contextmenu_set_aside": {
 		"message": "&set aside"
 	},
