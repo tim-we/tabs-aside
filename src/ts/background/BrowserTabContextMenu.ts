@@ -22,10 +22,24 @@ const parentOptions = {
 export async function init() {
     browser.menus.create(parentOptions);
 
-    browser.menus.onShown.addListener((info, tab) => {
+    browser.menus.onShown.addListener(async (info, tab) => {
         if(info.contexts.includes("tab")) {
             shown = true;
-            createMenuForTab(tab);
+
+            // get selected/highlighted tabs
+            let selection = await browser.tabs.query({
+                currentWindow: true,
+                highlighted: true
+            });
+
+            console.assert(selection.length >= 1);
+
+            if(!selection.find(t => t.id === tab.id)) {
+                console.error(`[TA] Unexpected tab selection`, selection);
+                return;
+            }
+
+            createMenuForTabs(selection);
         }
     });
 
@@ -39,44 +53,67 @@ export async function init() {
     });
 }
 
-async function createMenuForTab(tab:Tab) {
-    let currentSession:ActiveSession = ActiveSessionManager.getSessionFromTab(tab);
-    let currentSessionId:SessionId = currentSession ? currentSession.bookmarkId : null;
+async function createMenuForTabs(tabs:Tab[]) {
+    // collect active sessions of selected tabs
+    let currentSessions   = new Set<ActiveSession>();
+    let currentSessionIds = new Set<SessionId>();
+    tabs.forEach(tab => {
+        let activeSession = ActiveSessionManager.getSessionFromTab(tab);
+        if(activeSession) {
+            currentSessions.add(activeSession);
+            currentSessionIds.add(activeSession.bookmarkId);
+        }
+    });
+
+    // get list of sessions (active + non-active)
     let sessions:Bookmark[] = await SessionManager.getSessionBookmarks();
     let activeSessions:Set<SessionId> = new Set(
         ActiveSessionManager.getActiveSessions().map(data => data.bookmarkId)
     );
+    
+    addToSessionMenu(sessions, currentSessionIds, activeSessions, tabs);
 
-    addToSessionMenu(sessions, currentSessionId, activeSessions, tab);
-
-    if(currentSession) {
+    if(currentSessions.size === 1) {
         dynamicMenus.push(browser.menus.create({
             parentId: "parent",
             id: "set-aside",
             title: browser.i18n.getMessage("tab_contextmenu_set_aside"),
-            onclick: info => {
-                currentSession.setTabAside(tab.id);
+            onclick: async (info) => {
+                let currentSession:ActiveSession = currentSessions.values().next().value;
+
+                // set aside all selected/highlighted tabs
+                for(let tab of tabs) {
+                    await currentSession.setTabAside(tab.id);
+                }
             }
         }));
-    } else {
-        addAndSetAsideMenu(sessions, activeSessions, tab);
+    } else if(currentSessions.size === 0) {
+        addAndSetAsideMenu(sessions, activeSessions, tabs);
     }
 
-    browser.menus.refresh();
+    if(shown) {
+        // rebuilding a shown menu is an expensive operation, only invoke this method when necessary
+        browser.menus.refresh();
+    }
 }
 
 async function addToSessionMenu(
     sessions:Bookmark[],
-    currentSessionId:SessionId|null,
+    currentSessionIds:Set<SessionId>,
     activeSessions:Set<SessionId>,
-    tab:Tab
+    tabs:Tab[]
 ) {
+    console.assert(tabs.length > 0);
+
     if(sessions.length > 0) {
         dynamicMenus.push(
             browser.menus.create({
                 parentId: "parent",
                 id: "add",
-                title: browser.i18n.getMessage("tab_contextmenu_add"),
+                title: browser.i18n.getMessage(tabs.length > 1 ? 
+                    "tab_contextmenu_add_multiple" :
+                    "tab_contextmenu_add"
+                ),
                 icons: {
                     "16": "img/browserMenu/add.svg",
                     "32": "img/browserMenu/add.svg"
@@ -91,29 +128,32 @@ async function addToSessionMenu(
                 "16": "img/browserMenu/active.svg",
                 "32": "img/browserMenu/active.svg"
             } : undefined,
-            enabled: session.id !== currentSessionId,
+            enabled: !currentSessionIds.has(session.id),
             onclick: async (info) => {
-                const data = TabData.createFromTab(tab);
                 let added = false;
 
-                // move tab to active session
+                // move tabs to active session
                 if(activeSessions.has(session.id)) {
                     let as = ActiveSessionManager.getActiveSession(session.id);
                     console.assert(as);
 
                     // only if the target session has its own window
                     if(as.getWindowId() !== null) {
-                        // move or copy tab to new session
-                        if(currentSessionId === null) {
-                            await browser.tabs.move(tab.id, {
-                                windowId: as.getWindowId(),
-                                index: tab.pinned ? 0 : -1
-                            });
+                        // move or copy tabs to new session
+                        if(currentSessionIds.size === 0) {
+                            for(let tab of tabs) {
+                                await browser.tabs.move(tab.id, {
+                                    windowId: as.getWindowId(),
+                                    index: tab.pinned ? 0 : -1
+                                });
+                            }
                         } else {
-                            // duplicate tab
-                            let details = data.getTabCreateProperties(true);
-                            details.windowId = as.getWindowId();
-                            await createTab(details);
+                            // duplicate tabs
+                            for(let tab of tabs) {
+                                let details = TabData.createFromTab(tab).getTabCreateProperties(true);
+                                details.windowId = as.getWindowId();
+                                await createTab(details);
+                            }
                         }
                         added = true;
                     }
@@ -121,9 +161,11 @@ async function addToSessionMenu(
                 
                 // otherwise just create the bookmark
                 if(!added) {
-                    await browser.bookmarks.create(
-                        data.getBookmarkCreateDetails(session.id)
-                    );
+                    for(let tab of tabs) {
+                        await browser.bookmarks.create(
+                            TabData.createFromTab(tab).getBookmarkCreateDetails(session.id)
+                        );
+                    }
                 }
 
                 // update sidebar
@@ -136,7 +178,7 @@ async function addToSessionMenu(
 async function addAndSetAsideMenu(
     sessions:Bookmark[],
     activeSessions:Set<SessionId>,
-    tab:Tab
+    tabs:Tab[]
 ) {
     if(sessions.length > 0) {
         dynamicMenus.push(
@@ -155,13 +197,15 @@ async function addAndSetAsideMenu(
                     parentId: "add-n-close",
                     title: "&" + session.title.replace(/&/ig, "&&").trim(),
                     onclick: async (info) => {
-                        const data = TabData.createFromTab(tab);
-                        await browser.bookmarks.create(
-                            data.getBookmarkCreateDetails(session.id)
-                        );
+                        for(let tab of tabs) {
+                            const data = TabData.createFromTab(tab);
+                            await browser.bookmarks.create(
+                                data.getBookmarkCreateDetails(session.id)
+                            );
 
-                        browser.tabs.remove(tab.id);
-
+                            browser.tabs.remove(tab.id);
+                        }
+                        
                         // update sidebar
                         SessionContentUpdate.send(session.id);
                     }

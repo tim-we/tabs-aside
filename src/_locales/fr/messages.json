@@ -450,6 +450,10 @@
 		"message": "&Ajouter cet onglet à une session"
 	},
 
+	"tab_contextmenu_add_multiple": {
+		"message": "&Ajouter des onglets à une session"
+	},
+
 	"tab_contextmenu_add_and_set_aside": {
 		"message": "Ajouter à une session && &mettre de côté",
 		"description": "a single ampersand (&) marks the next character as an access key for this item"
