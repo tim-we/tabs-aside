@@ -102,76 +102,91 @@ async function addToSessionMenu(
     activeSessions:Set<SessionId>,
     tabs:Tab[]
 ) {
-    console.assert(tabs.length > 0);
+    dynamicMenus.push(
+        browser.menus.create({
+            parentId: "parent",
+            id: "add",
+            title: browser.i18n.getMessage(tabs.length > 1 ? 
+                "tab_contextmenu_add_multiple" :
+                "tab_contextmenu_add"
+            ),
+            icons: {
+                "16": "img/browserMenu/add.svg",
+                "32": "img/browserMenu/add.svg"
+            }
+        })
+    );
+    
+    // create new session
+    browser.menus.create({
+        parentId: "add",
+        title: "&create new session",
+        icons: {
+            "16": "img/browserMenu/add.svg",
+            "32": "img/browserMenu/add.svg"
+        },
+        onclick: () => SessionManager.createSessionFromTabs(tabs, false)
+    });
 
     if(sessions.length > 0) {
-        dynamicMenus.push(
-            browser.menus.create({
-                parentId: "parent",
-                id: "add",
-                title: browser.i18n.getMessage(tabs.length > 1 ? 
-                    "tab_contextmenu_add_multiple" :
-                    "tab_contextmenu_add"
-                ),
-                icons: {
-                    "16": "img/browserMenu/add.svg",
-                    "32": "img/browserMenu/add.svg"
-                }
-            })
-        );
-
-        sessions.forEach(session => browser.menus.create({
+        browser.menus.create({
             parentId: "add",
-            title: "&" + session.title.replace(/&/ig, "&&").trim(),
-            icons: activeSessions.has(session.id) ? {
-                "16": "img/browserMenu/active.svg",
-                "32": "img/browserMenu/active.svg"
-            } : undefined,
-            enabled: !currentSessionIds.has(session.id),
-            onclick: async (info) => {
-                let added = false;
-
-                // move tabs to active session
-                if(activeSessions.has(session.id)) {
-                    let as = ActiveSessionManager.getActiveSession(session.id);
-                    console.assert(as);
-
-                    // only if the target session has its own window
-                    if(as.getWindowId() !== null) {
-                        // move or copy tabs to new session
-                        if(currentSessionIds.size === 0) {
-                            for(let tab of tabs) {
-                                await browser.tabs.move(tab.id, {
-                                    windowId: as.getWindowId(),
-                                    index: tab.pinned ? 0 : -1
-                                });
-                            }
-                        } else {
-                            // duplicate tabs
-                            for(let tab of tabs) {
-                                let details = TabData.createFromTab(tab).getTabCreateProperties(true);
-                                details.windowId = as.getWindowId();
-                                await createTab(details);
-                            }
-                        }
-                        added = true;
-                    }
-                }
-                
-                // otherwise just create the bookmark
-                if(!added) {
-                    for(let tab of tabs) {
-                        await browser.bookmarks.create(
-                            TabData.createFromTab(tab).getBookmarkCreateDetails(session.id)
-                        );
-                    }
-                }
-
-                // update sidebar
-                SessionContentUpdate.send(session.id);
-            }
-        }));
+            type: "separator"
+        })
     }
+
+    // add to existing session
+    sessions.forEach(session => browser.menus.create({
+        parentId: "add",
+        title: "&" + session.title.replace(/&/ig, "&&").trim(),
+        icons: activeSessions.has(session.id) ? {
+            "16": "img/browserMenu/active.svg",
+            "32": "img/browserMenu/active.svg"
+        } : undefined,
+        enabled: !currentSessionIds.has(session.id),
+        onclick: async (info) => {
+            let added = false;
+
+            // move tabs to active session
+            if(activeSessions.has(session.id)) {
+                let as = ActiveSessionManager.getActiveSession(session.id);
+                console.assert(as);
+
+                // only if the target session has its own window
+                if(as.getWindowId() !== null) {
+                    // move or copy tabs to new session
+                    if(currentSessionIds.size === 0) {
+                        for(let tab of tabs) {
+                            await browser.tabs.move(tab.id, {
+                                windowId: as.getWindowId(),
+                                index: tab.pinned ? 0 : -1
+                            });
+                        }
+                    } else {
+                        // duplicate tabs
+                        for(let tab of tabs) {
+                            let details = TabData.createFromTab(tab).getTabCreateProperties(true);
+                            details.windowId = as.getWindowId();
+                            await createTab(details);
+                        }
+                    }
+                    added = true;
+                }
+            }
+            
+            // otherwise just create the bookmark
+            if(!added) {
+                for(let tab of tabs) {
+                    await browser.bookmarks.create(
+                        TabData.createFromTab(tab).getBookmarkCreateDetails(session.id)
+                    );
+                }
+            }
+
+            // update sidebar
+            SessionContentUpdate.send(session.id);
+        }
+    }));
 }
 
 async function addAndSetAsideMenu(
