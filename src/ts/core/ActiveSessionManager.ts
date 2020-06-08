@@ -37,6 +37,7 @@ export async function createSessionFromTabs(details:CreateSessionDetails):Promis
         const wnd = await session.createSessionWindow();
         emptyTab = wnd.tabs[0];
     } else if(details.windowId) {
+        //TODO: only this if window[details.windowId].tabs = details.tabs
         session.setWindow(details.windowId);
     }
 

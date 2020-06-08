@@ -12,7 +12,7 @@ export async function createSession(
     const rootFolderId:string = await OptionsManager.getValue<string>("rootFolder");
 
     const sessionBookmark:Bookmark = await browser.bookmarks.create({
-        title: sessionName||"session",
+        title: sessionName||"session",//TODO
         type: "folder",
         parentId: rootFolderId,
         index: 0
