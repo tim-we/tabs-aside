@@ -37,7 +37,7 @@
     "stylelint-order": "^3.0.0",
     "stylelint-scss": "^3.14.2",
     "typescript": "^3.8.2",
-    "web-ext": "^4.2.0"
+    "web-ext": "^5.0.0"
   },
   "browserslist": "Firefox 64"
 }
