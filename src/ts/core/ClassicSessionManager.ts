@@ -3,6 +3,7 @@ import TabData from "./TabData.js";
 import { Tab, Window, Bookmark, SessionId } from "../util/Types.js";
 import { SessionEvent, SessionContentUpdate } from "../messages/Messages.js";
 import { createTab } from "../util/WebExtAPIHelpers.js";
+import { generateSessionTitle } from "./SessionTitleGenerator.js";
 
 export async function createSession(
     tabs:Tab[],
@@ -10,6 +11,10 @@ export async function createSession(
     sessionName?:string
 ):Promise<SessionId> {
     const rootFolderId:string = await OptionsManager.getValue<string>("rootFolder");
+
+    if(!sessionName) {
+        sessionName = await generateSessionTitle();
+    }
 
     const sessionBookmark:Bookmark = await browser.bookmarks.create({
         title: sessionName||"session",//TODO

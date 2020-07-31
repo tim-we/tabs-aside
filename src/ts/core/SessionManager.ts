@@ -17,7 +17,8 @@ import * as  ActiveSessionManager from  "./ActiveSessionManager.js";
 import * as ClassicSessionManager from "./ClassicSessionManager.js";
 import { getCurrentWindowId, createTab, getAnotherWindow } from "../util/WebExtAPIHelpers.js";
 import * as WindowFocusHistory from "../background/WindowFocusHistory.js";
-import { limit, formatDate } from "../util/StringUtils.js";
+import { limit } from "../util/StringUtils.js";
+import { generateSessionTitle } from "./SessionTitleGenerator.js";
 
 type CmdCallback = (data:MSA|CSA|MSMA) => void;
 
@@ -315,14 +316,4 @@ async function updateBrowserActionContextMenu():Promise<void> {
     ).catch(error => {
         console.error("[TA] Failed to create browser action context menu.", error);
     });
-}
-
-async function generateSessionTitle():Promise<string> {
-    let title = await OptionsManager.getValue<string>("sessionTitleTemplate");
-
-    if(title.includes("$")) {
-        title = formatDate(title, new Date());
-    }
-
-    return title;
 }
