@@ -25,6 +25,8 @@ export function formatDate(template:string, date:Date = new Date()):string {
     let str = template;
 
     // date
+    str = replaceAll(str, "$dd", nDigitNum(2, date.getDate()));
+    str = replaceAll(str, "$MM", nDigitNum(2, date.getMonth()+1));
     str = replaceAll(str, "$d", date.getDate()+"");
     str = replaceAll(str, "$M", (date.getMonth()+1)+"");
     str = replaceAll(str, "$y", date.getFullYear()+"");
@@ -39,7 +41,7 @@ export function formatDate(template:string, date:Date = new Date()):string {
     return str;
 }
 
-function nDigitNum(n:number, num:number):string {
+function nDigitNum(digits:number, num:number):string {
     let str = ""+num;
-    return str.length < n ? "0".repeat(n-str.length)+str : str;
+    return str.length < digits ? "0".repeat(digits-str.length)+str : str;
 }
