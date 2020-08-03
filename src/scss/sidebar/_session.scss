@@ -136,6 +136,19 @@
 	cursor: pointer;
 }
 
+@media (max-width: 300px) {
+	.session > .header .controls {
+		padding-right: 1px;
+	}
+
+	.session > .header .more {
+		width: 14px;
+		background-position: center 8px;
+		background-image: url("../img/sidebar/more-16-thin.svg");
+		margin-left: 1px;
+	}
+}
+
 .session > .header .more:hover {
 	background-color: rgba(0,0,0,0.1);
 	transition: .2s;
