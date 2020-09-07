@@ -31,22 +31,102 @@ const readerPrefix         = "about:reader?url=";
 const viewSourcePrefix     = "view-source:";
 const defaultCookieStoreId = "firefox-default";
 
+interface TabDetails {
+    pinned:boolean;
+    isInReaderMode:boolean;
+    title:string;
+    url:string;
+    favIconUrl:string|undefined;
+    viewSource:boolean;
+    cookieStoreId:string|undefined;
+    index:number;
+}
+
 export default class TabData {
-    public readonly pinned:boolean;
-    public readonly isInReaderMode:boolean;
-    public readonly title:string;
-    public readonly url:string;
-    public readonly favIconUrl:string;
-    public readonly viewSource:boolean;
-    public readonly cookieStoreId:string;
-    public readonly index:number;
+    public pinned:boolean;
+    public isInReaderMode:boolean;
+    public title:string;
+    public url:string;
+    public favIconUrl:string|undefined;
+    public viewSource:boolean;
+    public cookieStoreId:string|undefined;
+    public index:number;
+
+    private constructor(details:TabDetails) {
+        this.pinned = details.pinned;
+        this.isInReaderMode = details.isInReaderMode;
+        this.title = details.title;
+        this.url = details.url;
+        this.favIconUrl = details.favIconUrl;
+        this.viewSource = details.viewSource;
+        this.cookieStoreId = details.cookieStoreId;
+        this.index = details.index;
+
+        let title = details.title.trim();
+        this.title = title === "" ? this.getHostname() : title;
+
+        // TabData instances should be immutable
+        Object.freeze(this);
+    }
 
     public static createFromTab(tab:Tab):TabData {
-        return new TabData(tab, null);
+        let details = {
+            pinned: tab.pinned,
+            title: tab.title,
+            url: tab.url,
+            favIconUrl: tab.favIconUrl,
+            viewSource: false,
+            index: tab.index,
+            cookieStoreId: undefined,
+            isInReaderMode: false
+        };
+        
+
+        if(tab.cookieStoreId !== defaultCookieStoreId) {
+            details.cookieStoreId = tab.cookieStoreId;
+        }
+        
+        if(tab.isInReaderMode) {
+            details.isInReaderMode = true;
+            // URL format
+            // "about:reader?url=https%3A%2F%2Fexample.com%2Freader-compatible-page"
+            details.url = decodeURIComponent(
+                tab.url.substr(readerPrefix.length)
+            );
+        }
+
+        if(tab.url.startsWith(viewSourcePrefix)) {
+            details.url = tab.url.substr(viewSourcePrefix.length);
+            details.viewSource = true;
+        }
+
+        return new TabData(details);
     }
 
     public static createFromBookmark(bookmark:Bookmark):TabData {
-        return new TabData(null, bookmark);
+        let data:TitleData = this.decodeTitle(bookmark.title);
+
+        let details = {
+            url: bookmark.url,
+            title: data.title,
+            pinned: data.flags.has("pinned"),
+            isInReaderMode: data.flags.has("reading"),
+            viewSource: false,
+            index: bookmark.index,
+            favIconUrl: this.getFavIconURL(bookmark.url),
+            cookieStoreId: undefined
+        };
+
+        if(data.flags.has("src")) {
+            details.url = viewSourcePrefix + bookmark.url;
+            details.viewSource = true;
+        }
+
+        if(data.variables.has("cs")) {
+            details.cookieStoreId = data.variables.get("cs");
+        }
+
+        return new TabData(details);
     }
 
     public getTabCreateProperties(active:boolean = false):TabCreateProperties {
@@ -106,59 +186,6 @@ export default class TabData {
         return (new URL(this.url)).hostname;
     }
 
-    private constructor(tab:Tab, bookmark:Bookmark) {
-        if(tab) { // create from tab
-            this.pinned = tab.pinned;
-            this.title = tab.title;
-            this.url = tab.url;
-            this.favIconUrl = tab.favIconUrl;
-            this.viewSource = tab.url.startsWith(viewSourcePrefix);
-            this.index = tab.index;
-
-            if(tab.cookieStoreId !== defaultCookieStoreId) {
-                this.cookieStoreId = tab.cookieStoreId;
-            }
-            
-            if(tab.isInReaderMode) {
-                this.isInReaderMode = true;
-                // URL format
-                // "about:reader?url=https%3A%2F%2Fexample.com%2Freader-compatible-page"
-                this.url = decodeURIComponent(
-                    tab.url.substr(readerPrefix.length)
-                );
-            } else {
-                this.isInReaderMode = false;
-            }
-
-            if(this.viewSource) {
-                this.url = this.url.substr(viewSourcePrefix.length);
-            }
-        } else if(bookmark) { // create from bookmark
-            let data:TitleData = this.decodeTitle(bookmark.title);
-
-            this.url = bookmark.url;
-            this.title = data.title;
-            this.pinned = data.flags.has("pinned");
-            this.isInReaderMode = data.flags.has("reading");
-            this.viewSource = data.flags.has("src");
-            this.index = bookmark.index;
-
-            this.favIconUrl = this.getFavIconURL(bookmark.url);
-
-            if(this.viewSource) {
-                this.url = viewSourcePrefix + this.url;
-            }
-
-            if(data.variables.has("cs")) {
-                this.cookieStoreId = data.variables.get("cs");
-            }
-        }
-
-        if(this.title.trim() === "") {
-            this.title = this.getHostname();
-        }
-    }
-
     private encodeTitle():string {
         let tabOptions:string[] = [];
 
@@ -184,7 +211,7 @@ export default class TabData {
         return prefix + this.title;
     }
 
-    private decodeTitle(title:string):TitleData {
+    private static decodeTitle(title:string):TitleData {
         let matches:string[] = title.match(bmTitleParser);
 
         let data:string = matches[1] || "";
@@ -209,7 +236,7 @@ export default class TabData {
         };
     }
 
-    private getFavIconURL(url:string):string {
+    private static getFavIconURL(url:string):string {
         // guess the favicon path
         return (new URL(url)).origin + "/favicon.ico";
 
