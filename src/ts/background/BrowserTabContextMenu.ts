@@ -151,7 +151,7 @@ async function addToSessionMenu(
             // move tabs to active session
             if(activeSessions.has(session.id)) {
                 let as = ActiveSessionManager.getActiveSession(session.id);
-                console.assert(as);
+                console.assert(as, "ActiveSession instance not found.");
 
                 // only if the target session has its own window
                 if(as.getWindowId() !== null) {
@@ -168,6 +168,7 @@ async function addToSessionMenu(
                         for(let tab of tabs) {
                             let details = TabData.createFromTab(tab).getTabCreateProperties(true);
                             details.windowId = as.getWindowId();
+                            delete details.index;
                             await createTab(details);
                         }
                     }
@@ -178,9 +179,9 @@ async function addToSessionMenu(
             // otherwise just create the bookmark
             if(!added) {
                 for(let tab of tabs) {
-                    await browser.bookmarks.create(
-                        TabData.createFromTab(tab).getBookmarkCreateDetails(session.id)
-                    );
+                    let createDetails = TabData.createFromTab(tab).getBookmarkCreateDetails(session.id);
+                    delete createDetails.index;
+                    await browser.bookmarks.create(createDetails);
                 }
             }
 
@@ -230,9 +231,9 @@ async function addAndSetAsideMenu(
         onclick: async (info) => {
             for(let tab of tabs) {
                 const data = TabData.createFromTab(tab);
-                await browser.bookmarks.create(
-                    data.getBookmarkCreateDetails(session.id)
-                );
+                let createDetails = data.getBookmarkCreateDetails(session.id);
+                delete createDetails.index;
+                await browser.bookmarks.create(createDetails);
 
                 browser.tabs.remove(tab.id);
             }
