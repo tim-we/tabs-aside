@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Tabs Aside",
-    "version": "3.5.0",
+    "version": "3.5.1",
     "description": "__MSG_extension_description__",
     "author": "Tim Weißenfels",
 
