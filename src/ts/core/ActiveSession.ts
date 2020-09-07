@@ -64,12 +64,17 @@ export default class ActiveSession {
         const windowedSession:boolean = await OptionsManager.getValue("windowedSession");
         const discardTabs:boolean = await OptionsManager.getValue("lazyLoading");
 
+        let indexOffset = 0;
+
         let emptyTab:Tab = null;
         if(windowedSession) {
             // windowed mode
             let wnd:Window = await activeSession.createSessionWindow();
             // new window contains a "newtab" tab
             emptyTab = wnd.tabs[0];
+            // increment tab index by 1 to avoid the first tab rotating
+            // to the end due to the empty tab being pinned
+            indexOffset = 1;
         }
 
         // open a single tab or all tabs
@@ -78,7 +83,7 @@ export default class ActiveSession {
         // add tabs
         await Promise.all(
             tabsToOpen.map(
-                bookmark => activeSession.openBookmarkTab(bookmark, !discardTabs || tabBookmark !== undefined, false)
+                bookmark => activeSession.openBookmarkTab(bookmark, !discardTabs || tabBookmark !== undefined, false, indexOffset)
             )
         );
 
@@ -162,8 +167,9 @@ export default class ActiveSession {
      * @param tabBookmark - A bookmark from this session
      * @param makeActive (optional) Make this tab the active tab
      * @param skipCreateEvent (optional) Ignore the `tab created event` for this tab
+     * @param offset (optional) Change the tab position (new index = old index + offset)
      */
-    public async openBookmarkTab(tabBookmark:Bookmark, makeActive:boolean=false, skipCreateEvent:boolean = true):Promise<Tab> {
+    public async openBookmarkTab(tabBookmark:Bookmark, makeActive:boolean=false, skipCreateEvent:boolean = true, offset:number = 0):Promise<Tab> {
         console.assert(tabBookmark && tabBookmark.parentId === this.bookmarkId);
 
         let data:TabData = TabData.createFromBookmark(tabBookmark);
@@ -183,6 +189,7 @@ export default class ActiveSession {
             this.ignoreNextCreatedTab = true;
         }
 
+        createProperties.index += offset;
         let browserTab:Tab = await createTab(createProperties);
         await this.addExistingTab(browserTab, tabBookmark.id);
 
