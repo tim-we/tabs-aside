@@ -63,6 +63,8 @@ export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promis
         // create window for the tabs
         let wnd:Window = await browser.windows.create();
         newTabId = wnd.tabs[0].id;
+        // avoid conflicts with pinned tabs
+        await browser.tabs.update(newTabId, {pinned: true});
 
         if(keepBookmarks) {
             browser.sessions.setWindowValue(wnd.id, "sessionID", this.bookmarkId);
@@ -79,6 +81,10 @@ export async function restore(sessionId:SessionId, keepBookmarks:boolean):Promis
 
             if(!lazyLoading && createProperties.discarded) {
                 createProperties.discarded = false;
+            }
+
+            if(newTabId !== undefined) {
+                createProperties.index += 1;
             }
 
             return createTab(createProperties);
