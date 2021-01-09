@@ -26,7 +26,7 @@ export function edit(element:HTMLElement, placeholder:string = "", minLength:num
 	input.focus();
 
 	// a promise that resolves when user input is "completed"
-	let editComplete:Promise<any> = new Promise((resolve,reject) => {
+	let editComplete = new Promise<void>((resolve,reject) => {
 		rejectors.set(element, reject);
 
 		// set up user input events
@@ -35,9 +35,9 @@ export function edit(element:HTMLElement, placeholder:string = "", minLength:num
 		input.addEventListener("keydown", e => {
 			e.stopPropagation();
 
-			if (e.keyCode === 13) { // ENTER
+			if (e.code === "Enter") {
 				resolve();
-			} else if (e.keyCode === 27) { // ESC
+			} else if (e.code === "Escape") {
 				reject();
 			}
 		});

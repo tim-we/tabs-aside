@@ -9,7 +9,7 @@ var initPromise = Model.init(params.get("option"));
 
 Promise.all([
 	initPromise,
-	new Promise(resolve => {
+	new Promise<void>(resolve => {
 		window.addEventListener("load", () => {
 			View.init();
 
