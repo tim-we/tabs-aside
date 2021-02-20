@@ -140,7 +140,10 @@ step2.addOption({
 step2.addOption({
 	text: "setup_preset_classic",
 	action: () => apply(Classic),
-	detailList: ["setup_preset_windowed_sessions_disabled"]
+	detailList: [
+		"setup_preset_windowed_sessions_disabled",
+		"setup_preset_pinned_tabs_disabled"
+	]
 });
 
 step3.addOption({

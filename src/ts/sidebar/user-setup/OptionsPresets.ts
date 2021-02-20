@@ -14,7 +14,8 @@ export let Edge:OptionsPreset = {
 export let Classic:OptionsPreset = {
 	options: {
 		"activeSessions": true,
-		"windowedSession": false
+		"windowedSession": false,
+		"asidePinnedTabs": false
 	}
 };
 

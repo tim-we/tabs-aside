@@ -253,6 +253,10 @@
 		"message": "Active sessions disabled"
 	},
 
+	"setup_preset_pinned_tabs_disabled": {
+		"message": "Pinned tabs won't be set aside"
+	},
+
 	"setup_preset_windowed_sessions_disabled": {
 		"message": "Windowed mode disabled"
 	},
