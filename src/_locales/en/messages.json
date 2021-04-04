@@ -211,6 +211,10 @@
 		"message": "Source code on GitHub"
 	},
 
+	"option_sidebarAutoOpen": {
+		"message": "Open sidebar when creating a new session"
+	},
+
 	"session_title_default": {
 		"message": "New session"
 	},

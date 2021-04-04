@@ -50,6 +50,11 @@ let optionsMap:Map<string, Option> = new Map<string, Option>();
             group: "appearance"
         },
         {
+            id: "sidebarAutoOpen",
+            type: "boolean",
+            default: true
+        },
+        {
             id: "browserActionContextIcon",
             type: "boolean",
             default: false,

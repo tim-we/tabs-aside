@@ -3,7 +3,9 @@ import { SessionCommand } from "../messages/Messages.js";
 import { SessionId } from "../util/Types.js";
 import { getCurrentWindowId } from "../util/WebExtAPIHelpers.js";
 import { getCommandByName } from "../util/WebExtAPIHelpers.js";
+import * as OptionsManager from "../options/OptionsManager.js";
 
+let autoOpenSidebar = false;
 let showSessions:MenuItem, tabsAside:MenuItem, setAside:MenuItem;
 
 let menuItems:MenuItem[] = [
@@ -18,9 +20,11 @@ let menuItems:MenuItem[] = [
 		icon: "aside.svg",
 		tooltip: true,
 		onclick: async () => {
-			// the sidebar can only be opened as
-			// a direct response to a user event
-			browser.sidebarAction.open();
+			if(autoOpenSidebar) {
+				// the sidebar can only be opened as
+				// a direct response to a user event
+				browser.sidebarAction.open();
+			}
 
 			SessionCommand.send("create", {
 				windowId: await getCurrentWindowId(),
@@ -46,13 +50,13 @@ let menuItems:MenuItem[] = [
 				 * So lets waste some time and hope it works...
 				 */
 				var n=0;
-				for(let i=0; i<100; i++) {
+				for(let i=0; i<4200; i++) {
 					if(Math.random()<0.5) {
 						n++;
 					}
 				}
 
-				if(n>100 /*false*/) {
+				if(n>4200 /*false*/) {
 					throw new Error();
 				}
 			}
@@ -83,6 +87,10 @@ let menuItems:MenuItem[] = [
 ];
 
 (async () => {
+	// load auto-open config
+	autoOpenSidebar = await OptionsManager.getValue("sidebarAutoOpen");
+
+	// load keyboard shortcuts
 	let sidebarCmd = await getCommandByName("_execute_sidebar_action");
 	let asideCmd   = await getCommandByName("tabs-aside");
 
