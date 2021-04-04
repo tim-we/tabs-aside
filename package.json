@@ -8,6 +8,7 @@
     "dev-fastbuild": "gulp watch --disable-typecheck",
     "typecheck": "tsc --watch --noEmit",
     "firefox": "web-ext build -s dist -a releases -i=\"**/*.pdn\"",
+    "run-firefox": "npm run build && web-ext run -s dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
