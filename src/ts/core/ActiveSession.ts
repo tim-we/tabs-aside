@@ -415,6 +415,13 @@ export default class ActiveSession {
                 this.tabs.delete(tabId);
 
                 if(removeTabs) {
+                    const [ bookmark ] = await browser.bookmarks.get(tabBookmarkId);
+
+                    // the user might have moved the bookmark (see #117)
+                    if(!bookmark || bookmark.parentId !== this.bookmarkId) {
+                        return;
+                    }
+
                     if(this.removeTimeoutId > 0) {
                         window.clearTimeout(this.removeTimeoutId);
                     }
@@ -442,8 +449,12 @@ export default class ActiveSession {
                 // tab still exists -> remove tab values
                 await this.removeTabValues(tabId);
 
-                // remove associated bookmark
-                await browser.bookmarks.remove(tabBookmarkId);
+                const [ bookmark ] = await browser.bookmarks.get(tabBookmarkId);
+
+                if(bookmark && bookmark.parentId === this.bookmarkId) {
+                    // remove associated bookmark (if it still exists & is part of this session, see #117)
+                    await browser.bookmarks.remove(tabBookmarkId);
+                }
 
                 // update sidebar
                 SessionContentUpdate.send(this.bookmarkId);
