@@ -31,7 +31,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-tap": "^2.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
-    "stylelint": "^15.6.0",
+    "stylelint": "^15.10.1",
     "stylelint-config-sass-guidelines": "^10.0.0",
     "stylelint-no-unsupported-browser-features": "^4.1.4",
     "stylelint-order": "^4.1.0",
