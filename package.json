@@ -24,7 +24,7 @@
   "devDependencies": {
     "@types/firefox-webext-browser": "^67.0.2",
     "del": "^6.0.0",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-if": "^3.0.0",
     "gulp-sass": "^4.1.0",
